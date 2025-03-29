@@ -9,8 +9,10 @@ router.get('/phones', whatsappController.getPhoneNumbers);
 
 router.get('/test-env', (req, res) => {
     res.json({
-      token: process.env.WHATSAPP_TOKEN || 'No definida',
+      token: process.env.TOKEN_DEV || 'No definida',
       phoneId: process.env.PHONE_NUMBER_ID || 'No definida',
+      url: process.URL_GRAPH || 'No definida',
+      version: process.env.VERSION_GRAPH || 'No definida',
       businessId: process.env.BUSINESS_ID || 'No definida'
     });
   });

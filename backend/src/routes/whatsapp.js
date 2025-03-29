@@ -1,10 +1,20 @@
 const express = require('express');
 const router = express.Router();
+const whatsappController = require('../controllers/whatsappController');
 
-router.post('/send-message', (req, res) => {
-  const { phone, message } = req.body;
-  console.log(`Mensaje para ${phone}: ${message}`);
-  res.json({ status: 'enviado', phone, message });
-});
+router.post('/send-message', whatsappController.sendMessage);
+router.post('/send-message-template', whatsappController.sendMessageTemplate);
+router.get('/templates', whatsappController.getTemplates);
+router.get('/phones', whatsappController.getPhoneNumbers);
 
 module.exports = router;
+
+// This code defines an Express router for handling WhatsApp-related routes.
+
+// It imports the necessary modules and the controller functions.
+// The router defines three routes:
+// 1. POST /send-message: Calls the sendMessage function from the controller.
+// 2. GET /templates: Calls the getTemplates function from the controller.
+// 3. GET /phones: Calls the getPhoneNumbers function from the controller.
+
+// Finally, it exports the router for use in other parts of the application.

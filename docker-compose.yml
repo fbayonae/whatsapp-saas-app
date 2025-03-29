@@ -14,7 +14,7 @@ services:
     build: ./frontend
     container_name: whatsapp_frontend
     ports:
-      - "3002:80"
+      - "3000:80"
     restart: unless-stopped
 
   nginx:

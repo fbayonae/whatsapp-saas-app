@@ -2,7 +2,7 @@ const axios = require('axios');
 const token = process.env.TOKEN_DEV;
 const phoneId = process.env.PHONE_NUMBER_ID;
 const businessId = process.env.BUSINESS_ID;
-const url_base = process.env.URL_GRAPH;
+const url_base = "https://graph.facebook.com/";
 const version = process.env.VERSION_GRAPH;
 
 exports.sendTextMessage = async (to, message) => {

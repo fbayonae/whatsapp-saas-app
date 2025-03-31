@@ -16,6 +16,10 @@ router.get('/test-env', (req, res) => {
     });
   });
   
+  router.get('/debug', (req, res) => {
+    console.log('🔍 Entró a /api/debug');
+    res.json({ status: 'ok' });
+  });
 
 module.exports = router;
 

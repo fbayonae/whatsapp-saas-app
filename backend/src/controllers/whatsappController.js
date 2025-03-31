@@ -24,7 +24,6 @@ exports.getTemplates = async (req, res) => {
   try {
     const response = await whatsappService.getTemplates();
     res.json(response);
-    //res.json({ mensaje: 'Ruta /api/templates funcionando' });
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener plantillas' });
   }

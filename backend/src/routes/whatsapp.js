@@ -7,20 +7,6 @@ router.post('/send-message-template', whatsappController.sendMessageTemplate);
 router.get('/templates', whatsappController.getTemplates);
 router.get('/phones', whatsappController.getPhoneNumbers);
 
-router.get('/test-env', (req, res) => {
-    res.json({
-      token: process.env.TOKEN_DEV || 'No definida',
-      phoneId: process.env.PHONE_NUMBER_ID || 'No definida',
-      version: process.env.VERSION_GRAPH || 'No definida',
-      businessId: process.env.BUSINESS_ID || 'No definida'
-    });
-  });
-  
-  router.get('/debug', (req, res) => {
-    console.log('🔍 Entró a /api/debug');
-    res.json({ status: 'ok' });
-  });
-
 module.exports = router;
 
 // This code defines an Express router for handling WhatsApp-related routes.

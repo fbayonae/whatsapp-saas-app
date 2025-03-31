@@ -52,6 +52,8 @@ exports.sendTextMessageTemplate = async (to, id_template ) => {
 exports.getTemplates = async () => {
   const url = `${url_base}${version}/${businessId}/message_templates`;
   console.log(url);
+  console.log(businessId);
+  console.log(url_base);
   const headers = { Authorization: `Bearer ${token}` };
   const res = await axios.get(url, { headers });
   return res.data;

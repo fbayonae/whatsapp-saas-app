@@ -18,9 +18,6 @@ services:
     container_name: whatsapp_frontend
     ports:
       - "3000:80"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     restart: unless-stopped
     networks:
       - whatsapp-net

@@ -20,15 +20,41 @@ exports.sendMessageTemplate = async (req, res) => {
     }
   };
 
+/**
+  * 
+  * TEMPLATES
+  * 
+  * */
 exports.getTemplates = async (req, res) => {
   try {
-    const response = await whatsappService.getTemplates();
-    res.json(response);
+    const response = await whatsappService.getTemplates();      
+      res.json(response);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener plantillas' });
   }
 };
 
+exports.getTemplateByName = async (req, res) => {
+  try {
+    const templateName = req.params.name;
+    const template = await whatsappService.findTemplateByName(templateName);
+  
+    if (!template) {
+      return res.status(404).json({ error: 'Plantilla no encontrada' });
+    }
+  
+    res.json(template);
+  } catch (error) {
+    console.error('Error al obtener plantilla:', error.message);
+    res.status(500).json({ error: 'Error al buscar plantilla' });
+  }
+};
+
+/**
+ * 
+ * PHONE NUMBERS
+ * 
+ * */
 exports.getPhoneNumbers = async (req, res) => {
   try {
     const response = await whatsappService.getPhoneNumbers();

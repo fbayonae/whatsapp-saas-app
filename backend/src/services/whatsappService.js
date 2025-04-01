@@ -57,6 +57,20 @@ exports.getTemplates = async () => {
   return res.data;
 };
 
+//Get template by name
+exports.findTemplateByName = async (name) => {
+  const url = `${url_base}${version}/${businessId}/message_templates?name=${name}`;
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+
+  const res = await axios.get(url, { headers });
+  const templates = res.data?.data || [];
+
+  // Buscar la plantilla por nombre
+  const template = templates.find(t => t.name === name);
+  return template || null;
+};
 
 
 exports.getPhoneNumbers = async () => {

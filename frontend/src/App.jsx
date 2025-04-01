@@ -1,29 +1,18 @@
-import { useState } from 'react'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import SidebarLayout from "./components/SidebarLayout";
+import Templates from "./pages/Templates";
+import Contacts from "./pages/Contacts";
+import Chats from "./pages/Chats";
 
-function App() {
-  const [phone, setPhone] = useState('')
-  const [message, setMessage] = useState('')
-
-  const handleSend = async () => {
-    const res = await fetch('/api/send-message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, message })
-    })
-    const data = await res.json()
-    alert(JSON.stringify(data))
-  }
-
+export default function App() {
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Enviar mensaje WhatsApp</h2>
-      <input placeholder="Número" onChange={e => setPhone(e.target.value)} />
-      <br />
-      <textarea placeholder="Mensaje" onChange={e => setMessage(e.target.value)} />
-      <br />
-      <button onClick={handleSend}>Enviar</button>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<SidebarLayout />}>
+        <Route path="plantillas" element={<Templates />} />
+        <Route path="contactos" element={<Contacts />} />
+        <Route path="chats" element={<Chats />} />
+      </Route>
+    </Routes>
+  );
 }
-
-export default App

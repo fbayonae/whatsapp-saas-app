@@ -1,7 +1,18 @@
 FROM node:18-alpine
+
+# Crear directorio de trabajo
 WORKDIR /app
+
+# Copiar package.json y package-lock.json
 COPY package*.json ./
-RUN npm install
+
+# Instalar dependencias y nodemon globalmente
+RUN npm install && npm install -g nodemon
+# Copiar el resto de los archivos de la aplicación
 COPY . .
+
+# Exponer el puerto de la aplicación
 EXPOSE 3001
-CMD ["node", "src/index.js"]
+
+# Usar nodemon en lugar de node
+CMD ["nodemon", "src/index.js"]

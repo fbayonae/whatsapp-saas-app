@@ -4,11 +4,11 @@ services:
     container_name: whatsapp_backend
     ports:
       - "3001:3001"
+    volumes:
+      - ./backend:/app
     environment:
       - PORT=3001
     restart: unless-stopped
-    networks:
-      - whatsapp-net
 
   frontend:
     build: ./frontend
@@ -16,8 +16,6 @@ services:
     ports:
       - "3000:80"
     restart: unless-stopped
-    networks:
-      - whatsapp-net
 
   nginx:
     image: nginx:alpine
@@ -33,8 +31,4 @@ services:
       - frontend
       - backend
     restart: unless-stopped
-    networks:
-      - whatsapp-net
-      
-networks:
-  whatsapp-net:
+    

@@ -14,7 +14,9 @@ services:
       - whatsapp-net
 
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: whatsapp_frontend
     ports:
       - "3000:80"

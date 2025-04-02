@@ -14,5 +14,8 @@ COPY . .
 # Exponer el puerto de la aplicación
 EXPOSE 3001
 
+# Compila el cliente de Prisma
+RUN npx prisma generate || echo "Sin schema definido todavía"
+
 # Usar nodemon en lugar de node
 CMD ["nodemon", "src/index.js"]

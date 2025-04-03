@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
-export const registerUser = async (req, res) => {
+exports.registerUser = async (req, res) => {
   const { email, password, name, role } = req.body;
 
   try {

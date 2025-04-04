@@ -1,4 +1,4 @@
-const { whatsappService } = require('../services/whatsappService');
+const  whatsappService  = require('../services/whatsappService');
 const  templatesService  = require('../services/dbService');
 
 const syncTemplates = async (req, res) => {

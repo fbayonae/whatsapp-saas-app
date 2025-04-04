@@ -26,6 +26,33 @@ const saveTemplateToDB = async (template) => {
   }
 };
 
+const saveComponentToDB = async (component, templateId) => {
+    const savedComponent = await prisma.component.create({
+      data: {
+        type: component.type,
+        format: component.format || '',
+        text: component.text || '',
+        template: { connect: { id: templateId } }
+      }
+    });
+  
+    if (component.type === 'BUTTON' && component.buttons?.length) {
+      for (const btn of component.buttons) {
+        await prisma.button.create({
+          data: {
+            type: btn.type,
+            text: btn.text,
+            url: btn.url || null,
+            component: { connect: { id: savedComponent.id } }
+          }
+        });
+      }
+    }
+  
+    return savedComponent;
+  };
+  
+
 const getTemplatesFromDB = async () => {
     return await prisma.template.findMany({
       include: {
@@ -41,5 +68,6 @@ const getTemplatesFromDB = async () => {
 
 module.exports = {
   saveTemplateToDB,
-  getTemplatesFromDB
+  getTemplatesFromDB,
+  saveComponentToDB
 };

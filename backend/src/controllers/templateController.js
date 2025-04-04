@@ -7,13 +7,21 @@ const syncTemplates = async (req, res) => {
     const results = [];
 
     for (const tpl of templates) {
-      const saved = await templatesService.saveTemplateToDB(tpl);
-      results.push(saved);
+        const savedTpl = await templatesDB.saveTemplateToDB(tpl);
+
+        if (tpl.components?.length) {
+          for (const comp of tpl.components) {
+            await templatesDB.saveComponentToDB(comp, savedTpl.id);
+          }
+        }
+  
+        results.push(savedTpl.name);
     }
     
     res.json({
-      message: 'Plantillas sincronizadas correctamente',
-      total: results.length
+        message: '✅ Plantillas y componentes sincronizados',
+        total: results.length,
+        nombres: results
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al sincronizar plantillas' });

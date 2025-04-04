@@ -9,6 +9,7 @@ export default function Templates() {
   useEffect(() => {
     axios.get("/api/templates")
       .then(response => {
+        console.log(reponse);
         setTemplates(response || []);
         setLoading(false);
       })

@@ -25,7 +25,8 @@ router.get("/", (req, res) => {
 //Ruta para recibir mensajes
 router.post("/", (req, res) => {
   const body = req.body;
-
+  console.log("ENTRA");  
+  
   // 1. Confirmar recepción para Meta (muy importante)
   res.sendStatus(200);
 

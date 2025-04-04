@@ -1,9 +1,9 @@
 const express = require('express');
-const { templateCtrl  } = require('../controllers/templateController');
+const { templateController } = require('../controllers/templateController');
 
 const router = express.Router();
 
-router.post('/sync', templateCtrl.syncTemplates);
-router.get('/', templateCtrl.getTemplates);
+router.post('/sync', templateController.syncTemplates);
+router.get('/', templateController.getTemplates);
 
 module.exports = router;

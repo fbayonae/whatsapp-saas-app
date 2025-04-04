@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["auth", "whatsapp]
+  schemas  = ["auth", "whatsapp"]
 }
 
 model User {

@@ -27,6 +27,7 @@ const saveTemplateToDB = async (template) => {
 };
 
 const saveComponentToDB = async (component, templateId) => {
+    console.log("saveComponentToDB");
     const savedComponent = await prisma.component.create({
       data: {
         type: component.type,

@@ -5,7 +5,7 @@ const syncTemplates = async (req, res) => {
   try {
     const templates = await getTemplatesFromMeta();
     const results = [];
-
+    
     for (const tpl of templates) {
       const saved = await saveTemplateToDB(tpl);
       results.push(saved);

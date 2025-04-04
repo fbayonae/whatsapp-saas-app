@@ -59,7 +59,7 @@ model Template {
   category    String
   language    String
   status      String
-  id_meta     String
+  id_meta     String      @unique
   createdAt   DateTime    @default(now())
 
   components  Component[]

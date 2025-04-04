@@ -10,6 +10,7 @@ app.use(express.json());
 //app.use('/api', whatsappRoutes);
 app.use('/api/templates', templatesRoutes);
 app.use('/auth', authRoutes);
+app.use('/webhook', webhookRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -7,11 +7,12 @@ const webhookRoutes = require('./routes/webhookRoutes');
 
 dotenv.config();
 const app = express();
-app.use(express.json());
+
 //app.use('/api', whatsappRoutes);
 
 // necesario para leer POST de Meta
-app.use(express.json({ limit: '2mb' })); 
+app.use(express.json({ limit: '5mb' })); 
+app.use(express.json());
 
 app.use('/api/templates', templatesRoutes);
 app.use('/auth', authRoutes);

@@ -8,8 +8,7 @@ const url_base = "https://graph.facebook.com/";
 const version = process.env.VERSION_GRAPH;
 
 const getTemplatesFromMeta = async () => {
-  const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
-  const token = process.env.WHATSAPP_TOKEN;
+  //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
   try {
     const response = await axios.get(`${url_base}${version}/${businessId}/message_templates`, {

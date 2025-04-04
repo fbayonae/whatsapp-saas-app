@@ -7,9 +7,8 @@ export default function Templates() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("https://whatsapp.technologygroup.es/api/templates")
+    axios.get("/api/templates")
       .then(response => {
-        console.log("Plantillas cargadas:", response);
         setTemplates(response.data || []);
         setLoading(false);
       })

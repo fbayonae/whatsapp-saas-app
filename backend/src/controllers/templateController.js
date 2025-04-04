@@ -9,10 +9,11 @@ const syncTemplates = async (req, res) => {
     console.log("templateController");
 
     for (const tpl of templates) {
+      console.log(tpl);
       const saved = await saveTemplateToDB(tpl);
       results.push(saved);
     }
-    console.log(results);
+    
     res.json({
       message: 'Plantillas sincronizadas correctamente',
       total: results.length

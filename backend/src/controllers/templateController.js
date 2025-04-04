@@ -10,17 +10,12 @@ const syncTemplates = async (req, res) => {
     const results = [];
     
     for (const tpl of templates) {
-        console.log(tpl);
-        console.log(tpl.components?.length)
-        const savedTpl = await templatesDB.saveTemplateToDB(tpl);
-        console.log(savedTpl.id);
+        const savedTpl = await templatesService.saveTemplateToDB(tpl);
         if (tpl.components?.length) {
-            console.log("Componentes");
-          for (const comp of tpl.components) {
-            await templatesDB.saveComponentToDB(comp, savedTpl.id);
-          }
+            for (const comp of tpl.components) {
+                await templatesService.saveComponentToDB(comp, savedTpl.id);
+            }
         }
-  
         results.push(savedTpl.name);
     }
     

@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const saveTemplateToDB = async (template) => {
+  console.log("saveTemplateToDB");
   return prisma.template.upsert({
     where: { name: template.name },
     update: {

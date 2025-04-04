@@ -5,7 +5,7 @@ const saveTemplateToDB = async (template) => {
   console.log("saveTemplateToDB");
   try {
     return await prisma.template.upsert({
-      where: { name: template.name },
+      where: { id_meta: template.id },
       update: {
         category: template.category,
         language: template.language,

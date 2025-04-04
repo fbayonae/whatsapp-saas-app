@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["auth"]
+  schemas  = ["auth", "whatsapp]
 }
 
 model User {
@@ -51,4 +51,82 @@ model Session {
 
   @@map("sessions")
   @@schema("auth")
+}
+
+model Template {
+  id          Int         @id @default(autoincrement())
+  name        String
+  category    String
+  language    String
+  status      String
+  createdAt   DateTime    @default(now())
+
+  components  Component[]
+
+  @@map("templates")
+  @@schema("whatsapp")
+}
+
+model Component {
+  id          Int        @id @default(autoincrement())
+  type        String     // header, body, footer, button, etc.
+  format      String
+  text        String
+  templateId  Int
+
+  template    Template   @relation(fields: [templateId], references: [id])
+  buttons     Button[]
+
+  @@map("components")
+  @@schema("whatsapp")
+}
+
+model Button {
+  id           Int        @id @default(autoincrement())
+  type         String     // quick_reply, url, call_to_action, etc.
+  text         String
+  url          String?
+  componentId  Int
+
+  component    Component  @relation(fields: [componentId], references: [id])
+
+  @@map("buttons")
+  @@schema("whatsapp")
+}
+
+model Contact {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phoneNumber String     @unique
+  createdAt   DateTime   @default(now())
+
+  conversations Conversation[]
+
+  @@map("contacts")
+  @@schema("whatsapp")
+}
+
+model Conversation {
+  id         Int       @id @default(autoincrement())
+  contactId  Int
+  startedAt  DateTime  @default(now())
+
+  contact    Contact   @relation(fields: [contactId], references: [id])
+  messages   Message[]
+
+  @@map("conversations")
+  @@schema("whatsapp")
+}
+
+model Message {
+  id             Int       @id @default(autoincrement())
+  content        String
+  direction      String    // 'incoming' o 'outgoing'
+  sentAt         DateTime  @default(now())
+  conversationId Int
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@map("messages")
+  @@schema("whatsapp")
 }

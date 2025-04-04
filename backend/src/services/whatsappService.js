@@ -9,7 +9,7 @@ const version = process.env.VERSION_GRAPH;
 
 const getTemplatesFromMeta = async () => {
   //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
-  console.log(whatsappService);
+  console.log("whatsappService");
   try {
     const response = await axios.get(`${url_base}${version}/${businessId}/message_templates`, {
       headers: {

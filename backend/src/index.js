@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const whatsappRoutes = require('./routes/whatsapp');
 const authRoutes = require('./routes/authRoutes');
 const templatesRoutes = require('./routes/templatesRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 dotenv.config();
 const app = express();

@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTemplates } = require('../controllers/templateController');
+const { syncTemplates  } = require('../controllers/templateController');
 
 const router = express.Router();
 

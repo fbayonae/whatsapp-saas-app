@@ -5,9 +5,11 @@ const syncTemplates = async (req, res) => {
   try {
 
     console.log("syncTemplates");
+
     const templates = await whatsappService.getTemplatesFromMeta();
     const results = [];
-    console.log(templates);
+
+    console.log("plantillas"+templates);
         for (const tpl of templates) {
         const savedTpl = await templatesDB.saveTemplateToDB(tpl);
         console.log(savedTpl.id);

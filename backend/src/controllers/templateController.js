@@ -11,6 +11,7 @@ const syncTemplates = async (req, res) => {
     for (const tpl of templates) {
       console.log(tpl);
       const saved = await saveTemplateToDB(tpl);
+      console.log(saved);
       results.push(saved);
     }
     

@@ -3,22 +3,27 @@ const prisma = new PrismaClient();
 
 const saveTemplateToDB = async (template) => {
   console.log("saveTemplateToDB");
-  return prisma.template.upsert({
-    where: { name: template.name },
-    update: {
-      category: template.category,
-      language: template.language,
-      status: template.status,
-      id_meta: template.id
-    },
-    create: {
-      name: template.name,
-      category: template.category,
-      language: template.language,
-      status: template.status,
-      id_meta: template.id
-    }
-  });
+  try {
+    return await prisma.template.upsert({
+      where: { name: template.name },
+      update: {
+        category: template.category,
+        language: template.language,
+        status: template.status,
+        id_meta: template.id
+      },
+      create: {
+        name: template.name,
+        category: template.category,
+        language: template.language,
+        status: template.status,
+        id_meta: template.id
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error guardando plantilla:', template.name, error);
+    return null;
+  }
 };
 
 module.exports = {

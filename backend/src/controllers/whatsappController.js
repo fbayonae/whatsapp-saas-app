@@ -25,12 +25,14 @@ exports.sendMessageTemplate = async (req, res) => {
   * TEMPLATES
   * 
   * */
-exports.getTemplates = async (req, res) => {
+exports.getTemplatesFromMeta = async () => {
   try {
-    const response = await whatsappService.getTemplates();      
-      res.json(response);
+    const response = await whatsappService.getTemplatesFromMeta();      
+    res.json(response);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener plantillas' });
+    console.error('❌ Error obteniendo plantillas de Meta:', error.message);
+    throw error;
+    //res.status(500).json({ error: 'Error al obtener plantillas' });
   }
 };
 

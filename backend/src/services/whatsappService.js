@@ -7,75 +7,22 @@ const businessId = process.env.BUSINESS_ID;
 const url_base = "https://graph.facebook.com/";
 const version = process.env.VERSION_GRAPH;
 
+const getTemplatesFromMeta = async () => {
+  const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
+  const token = process.env.WHATSAPP_TOKEN;
 
+  try {
+    const response = await axios.get(`${url_base}${version}/${businessId}/message_templates`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-exports.sendTextMessage = async (to, message) => {
-  const url = `${url_base}${version}/${phoneId}/messages`;
-  const body = {
-    messaging_product: "whatsapp",
-    to,
-    type: "text",
-    text: { body: message }
-  };
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  };
-  const res = await axios.post(url, body, { headers });
-  return res.data;
+    return response.data.data;
+  } catch (error) {
+    console.error('❌ Error obteniendo plantillas de Meta:', error.message);
+    throw error;
+  }
 };
 
-exports.sendTextMessageTemplate = async (to, id_template ) => {
-    const url = `${url_base}${version}/${phoneId}/messages`;
-    const body = {
-      messaging_product: "whatsapp",
-      to,
-      type: "template",
-      template: { name: id_template },
-      language: { code: "es" }
-    };
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
-    const res = await axios.post(url, body, { headers });
-    return res.data;
-};
-
-/** 
- * 
- * TEMPLATES
- * 
- * */ 
-
-// Get all templates  
-exports.getTemplates = async () => {
-  const url = `${url_base}${version}/${businessId}/message_templates`;
-  const headers = { Authorization: `Bearer ${token}` };
-  const res = await axios.get(url, { headers });
-  console.log(res.data);
-  return res.data;
-};
-
-//Get template by name
-exports.findTemplateByName = async (name) => {
-  const url = `${url_base}${version}/${businessId}/message_templates?name=${name}`;
-  const headers = {
-    Authorization: `Bearer ${token}`
-  };
-
-  const res = await axios.get(url, { headers });
-  const templates = res.data?.data || [];
-
-  // Buscar la plantilla por nombre
-  const template = templates.find(t => t.name === name);
-  return template || null;
-};
-
-
-exports.getPhoneNumbers = async () => {
-  const url = `${url_base}${version}/${businessId}/phone_numbers`;
-  const headers = { Authorization: `Bearer ${token}` };
-  const res = await axios.get(url, { headers });
-  return res.data;
-};
+module.exports = { getTemplatesFromMeta };

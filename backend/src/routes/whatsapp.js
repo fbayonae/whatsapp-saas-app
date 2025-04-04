@@ -4,7 +4,7 @@ const whatsappController = require('../controllers/whatsappController');
 
 router.post('/send-message', whatsappController.sendMessage);
 router.post('/send-message-template', whatsappController.sendMessageTemplate);
-router.get('/templates', whatsappController.getTemplates);
+router.get('/templates', whatsappController.getTemplatesFromMeta);
 router.get('/templates/:name', whatsappController.getTemplateByName);
 router.get('/phones', whatsappController.getPhoneNumbers);
 

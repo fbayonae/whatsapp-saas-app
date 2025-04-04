@@ -7,7 +7,7 @@ export default function Templates() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("/api/templates")
+    axios.get("https://whatsapp.technologygroup.es/api/templates")
       .then(response => {
         console.log("Plantillas cargadas:", response);
         setTemplates(response.data || []);
@@ -47,7 +47,7 @@ export default function Templates() {
                 <th className="px-4 py-2 text-left">Nombre</th>
                 <th className="px-4 py-2 text-left">Idioma</th>
                 <th className="px-4 py-2 text-left">Estado</th>
-                <th className="px-4 py-2 text-left">Última Actualización</th>
+                <th className="px-4 py-2 text-left">Creado</th>
               </tr>
             </thead>
             <tbody>
@@ -57,8 +57,8 @@ export default function Templates() {
                   <td className="px-4 py-2">{template.language || "-"}</td>
                   <td className="px-4 py-2">{template.status || "-"}</td>
                   <td className="px-4 py-2">
-                    {template.last_updated_time
-                      ? new Date(template.last_updated_time).toLocaleString()
+                    {template.createdAt
+                      ? new Date(template.createdAt).toLocaleString()
                       : "-"}
                   </td>
                 </tr>

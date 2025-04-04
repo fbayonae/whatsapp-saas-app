@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 const saveTemplateToDB = async (template) => {
   console.log("saveTemplateToDB");
   try {
-    return await prisma.template.upsert({
+    const saved = await prisma.template.upsert({
       where: { id_meta: template.id },
       update: {
         category: template.category,
@@ -20,6 +20,7 @@ const saveTemplateToDB = async (template) => {
         id_meta: template.id
       }
     });
+    return saved; 
   } catch (error) {
     console.error('❌ Error guardando plantilla:', template.name, error);
     return null;

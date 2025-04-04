@@ -26,6 +26,20 @@ const saveTemplateToDB = async (template) => {
   }
 };
 
+const getTemplatesFromDB = async () => {
+    return await prisma.template.findMany({
+      include: {
+        components: {
+          include: {
+            buttons: true
+          }
+        }
+      }
+    });
+  };
+  
+
 module.exports = {
-  saveTemplateToDB
+  saveTemplateToDB,
+  getTemplatesFromDB
 };

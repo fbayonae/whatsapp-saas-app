@@ -1,17 +1,13 @@
-const { getTemplatesFromMeta } = require('../services/whatsappService');
-const { saveTemplateToDB } = require('../services/dbService');
+const { whatsappService } = require('../services/whatsappService');
+const { templatesService } = require('../services/dbService');
 
 const syncTemplates = async (req, res) => {
   try {
-    const templates = await getTemplatesFromMeta();
+    const templates = await whatsappService.getTemplatesFromMeta();
     const results = [];
 
-    console.log("templateController");
-
     for (const tpl of templates) {
-      console.log(tpl);
-      const saved = await saveTemplateToDB(tpl);
-      console.log(saved);
+      const saved = await templatesService.saveTemplateToDB(tpl);
       results.push(saved);
     }
     
@@ -24,4 +20,17 @@ const syncTemplates = async (req, res) => {
   }
 };
 
-module.exports = { syncTemplates };
+const getTemplates = async (req, res) => {
+    try {
+      const templates = await templatesService.getTemplatesFromDB();
+      res.json(templates);
+    } catch (error) {
+      console.error('❌ Error obteniendo plantillas:', error);
+      res.status(500).json({ error: 'Error al obtener las plantillas' });
+    }
+  };
+
+module.exports = { 
+    syncTemplates,
+    getTemplates 
+};

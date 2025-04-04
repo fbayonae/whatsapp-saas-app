@@ -7,13 +7,15 @@ const saveTemplateToDB = async (template) => {
     update: {
       category: template.category,
       language: template.language,
-      status: template.status
+      status: template.status,
+      id_meta: template.id
     },
     create: {
       name: template.name,
       category: template.category,
       language: template.language,
-      status: template.status
+      status: template.status,
+      id_meta: template.id
     }
   });
 };

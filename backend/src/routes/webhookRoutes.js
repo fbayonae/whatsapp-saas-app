@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const webhookControler  = require('../controllers/webhookController');
 
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN; 
 
@@ -24,43 +25,33 @@ router.get("/", (req, res) => {
 
 // Ruta para recibir mensajes
 router.post("/", (req, res) => {
-  const body = req.body;
-  console.log("ENTRA");  
+    // ✅ Confirmación para Meta
+    res.sendStatus(200);
   
-  // 1. Confirmar recepción para Meta (muy importante)
-  res.sendStatus(200);
-
-  // 2. Registrar datos para desarrollo
-  console.log("📥 Webhook recibido:", JSON.stringify(body, null, 2));
-
-  // 3. Procesar mensajes (ejemplo básico)
-  if (body.object && body.entry) {
-    body.entry.forEach(entry => {
+    const entries = req.body.entry || [];
+  
+    entries.forEach(entry => {
       const changes = entry.changes || [];
+  
       changes.forEach(change => {
+        const field = change.field;
         const value = change.value;
-        const metadata = value.metadata;
-        const messages = value.messages;
-
-        if (messages && messages.length > 0) {
-          messages.forEach(msg => {
-            const from = msg.from;
-            const type = msg.type;
-
-            if (type === "text") {
-              const text = msg.text.body;
-              console.log(`💬 Mensaje recibido de ${from}: ${text}`);
-            } else {
-              console.log(`📦 Otro tipo de mensaje (${type}) de ${from}`);
-            }
-
-            // Aquí podrías insertar en tu BBDD con Prisma...
-          });
+  
+        switch (field) {
+          case "messages":
+            webhookControler.handleWebhookMessage(value);
+            break;
+  
+          case "message_template_status_update":
+            webhookControler.handleTemplateStatusUpdate(value);
+            break;
+  
+          default:
+            console.log(`⚠️ Webhook recibido con campo desconocido: ${field}`);
         }
       });
     });
-  }
-});
+  });
 
 
 module.exports = router;

@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 // ✅ Procesa mensajes entrantes
 const handleWebhookMessage = async (value) => {
   const messages = value.messages || [];
+  const contact = value.contacts || [];
 
   for (const msg of messages) {
     try {
@@ -15,6 +16,7 @@ const handleWebhookMessage = async (value) => {
       const text = msg.text?.body || '';
       const type = msg.type;
       const meta_id = msg.id;
+      const name = contact[0]?.profile?.name || 'desconocido';
       const timestamp = new Date(Number(msg.timestamp) * 1000);
 
       console.log(`💬 Recibido mensaje de ${from}: ${text}`);
@@ -37,7 +39,9 @@ const handleWebhookMessage = async (value) => {
         contact = await prisma.contact.upsert({
           where: { phoneNumber: from },
           update: {},
-          create: { phoneNumber: from }
+          create: { 
+            phoneNumber: from,
+            name: name}
         });
 
         // 3. Crear nueva conversación

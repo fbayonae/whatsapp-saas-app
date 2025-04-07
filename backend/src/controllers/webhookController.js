@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const prisma = require('../../prisma/client'); // o tu instancia de Prisma
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 //const VERIFY_TOKEN = process.env.VERIFY_TOKEN; // defínelo en tu .env
 

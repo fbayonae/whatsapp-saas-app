@@ -68,7 +68,7 @@ const handleWebhookMessage = async (value) => {
       await prisma.message.create({
         data: {
           conversationId: conversation.id,
-          from: from,
+          //from: from,
           direction: 'INBOUND',
           content: text,
           timestamp: timestamp,

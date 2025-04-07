@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const prisma = require('../prisma/client'); // o tu instancia de Prisma
 
-
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN; // defínelo en tu .env
+//const VERIFY_TOKEN = process.env.VERIFY_TOKEN; // defínelo en tu .env
 
 // ✅ Procesa mensajes entrantes
 const handleWebhookMessage = async (value) => {
@@ -13,6 +12,8 @@ const handleWebhookMessage = async (value) => {
     try {
       const from = msg.from;
       const text = msg.text?.body || '';
+      const type = msg.type;
+      const meta_id = msg.id;
       const timestamp = new Date(Number(msg.timestamp) * 1000);
 
       console.log(`💬 Recibido mensaje de ${from}: ${text}`);
@@ -21,7 +22,7 @@ const handleWebhookMessage = async (value) => {
       let conversation = await prisma.conversation.findFirst({
         where: {
           contact: {
-            phone: from
+            phoneNumber: from
           }
         },
         include: {
@@ -33,9 +34,9 @@ const handleWebhookMessage = async (value) => {
       let contact;
       if (!conversation) {
         contact = await prisma.contact.upsert({
-          where: { phone: from },
+          where: { phoneNumber: from },
           update: {},
-          create: { phone: from }
+          create: { phoneNumber: from }
         });
 
         // 3. Crear nueva conversación
@@ -65,7 +66,9 @@ const handleWebhookMessage = async (value) => {
           from: from,
           direction: 'INBOUND',
           content: text,
-          timestamp: timestamp
+          timestamp: timestamp,
+          type: type,
+          id_meta: meta_id
         }
       });
 

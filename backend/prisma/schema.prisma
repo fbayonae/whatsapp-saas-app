@@ -108,9 +108,9 @@ model Contact {
 }
 
 model Conversation {
-  id         Int       @id @default(autoincrement())
-  contactId  Int
-  startedAt  DateTime  @default(now())
+  id             Int       @id @default(autoincrement())
+  contactId      Int
+  startedAt      DateTime  @default(now())
   lastMessageAt  DateTime
 
   contact    Contact   @relation(fields: [contactId], references: [id])

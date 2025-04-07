@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 // ✅ Procesa mensajes entrantes
 const handleWebhookMessage = async (value) => {
   const messages = value.messages || [];
-  const contact = value.contacts || [];
+  const contact_wa = value.contacts || [];
 
   for (const msg of messages) {
     try {
@@ -16,7 +16,7 @@ const handleWebhookMessage = async (value) => {
       const text = msg.text?.body || '';
       const type = msg.type;
       const meta_id = msg.id;
-      const name = contact[0]?.profile?.name || 'desconocido';
+      const name = contact_wa[0]?.profile?.name || 'desconocido';
       const timestamp = new Date(Number(msg.timestamp) * 1000);
 
       console.log(`💬 Recibido mensaje de ${from}: ${text}`);

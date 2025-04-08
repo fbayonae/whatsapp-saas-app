@@ -24,7 +24,6 @@ const sendMessage = async (req, res) => {
     
     const savedMessage = await dbService.createMessageToDB({
         conversationId,
-        from: phoneNumber,
         content: text,
         id_meta: response.messages?.[0]?.id || null
       });

@@ -85,7 +85,7 @@ const getConversationsFromDB = async () => {
 
 const getMessagesFromDB = async (conversationId) => {
     return await prisma.message.findMany({
-        where: { conversationId },
+        where: { conversationId: conversationId },
         orderBy: { timestamp: 'asc' }
     });
 };

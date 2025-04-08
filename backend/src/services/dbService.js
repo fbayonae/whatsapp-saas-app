@@ -120,5 +120,6 @@ module.exports = {
   getContactsFromDB,
   getConversationsFromDB, 
   getMessagesFromDB,
-  getConversationFromDB
+  getConversationFromDB,
+  createMessageToDB
 };

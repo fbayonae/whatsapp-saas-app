@@ -65,11 +65,19 @@ const getTemplatesFromDB = async () => {
         }
       }
     });
-  };
+};
+
+const getContactsFromDB = async () => {
+    return await prisma.contact.findMany({
+        orderBy: { createdAt: 'desc' }
+    });
+   
+};
   
 
 module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
-  saveComponentToDB
+  saveComponentToDB,
+  getContactsFromDB
 };

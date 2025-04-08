@@ -1,5 +1,5 @@
 const  whatsappService  = require('../services/whatsappService');
-const  templatesService  = require('../services/dbService');
+const  dbService  = require('../services/dbService');
 
 const syncTemplates = async (req, res) => {
   try {
@@ -10,10 +10,10 @@ const syncTemplates = async (req, res) => {
     const results = [];
     
     for (const tpl of templates) {
-        const savedTpl = await templatesService.saveTemplateToDB(tpl);
+        const savedTpl = await dbService.saveTemplateToDB(tpl);
         if (tpl.components?.length) {
             for (const comp of tpl.components) {
-                await templatesService.saveComponentToDB(comp, savedTpl.id);
+                await dbService.saveComponentToDB(comp, savedTpl.id);
             }
         }
         results.push(savedTpl.name);
@@ -31,7 +31,7 @@ const syncTemplates = async (req, res) => {
 
 const getTemplates = async (req, res) => {
     try {
-      const templates = await templatesService.getTemplatesFromDB();
+      const templates = await dbService.getTemplatesFromDB();
       res.json(templates);
     } catch (error) {
       console.error('❌ Error obteniendo plantillas:', error);

@@ -94,5 +94,7 @@ module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
   saveComponentToDB,
-  getContactsFromDB
+  getContactsFromDB,
+  getConversationsFromDB, 
+  getMessagesFromDB
 };

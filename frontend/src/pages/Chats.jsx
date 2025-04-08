@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import axios from "axios";
 
 export default function Chats() {
@@ -6,12 +7,38 @@ export default function Chats() {
   const [selectedConv, setSelectedConv] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     axios.get("/api/chats")
       .then(res => setConversations(res.data))
       .catch(err => console.error("❌ Error cargando conversaciones", err));
   }, []);
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (!selectedConv) return;
+  
+    // Cargar mensajes iniciales
+    axios.get(`/api/chats/${selectedConv.id}/messages`)
+      .then(res => setMessages(res.data))
+      .catch(err => console.error("❌ Error cargando mensajes", err));
+  
+    // ⏱️ Iniciar refresco periódico
+    const interval = setInterval(() => {
+      axios.get(`/api/chats/${selectedConv.id}/messages`)
+        .then(res => setMessages(res.data))
+        .catch(err => console.error("❌ Error refrescando mensajes", err));
+    }, 5000); // cada 5 segundos
+  
+    return () => clearInterval(interval); // limpiar al cambiar de conversación
+  }, [selectedConv]);
+  
 
   const handleSelect = (conv) => {
     setSelectedConv(conv);
@@ -81,7 +108,10 @@ export default function Chats() {
             </div>
             </div>
             ))}
-            {selectedConv && (
+            
+            <div ref={bottomRef} />
+        </div>
+        {selectedConv && (
             <form
                 onSubmit={handleSendMessage}
                 className="mt-4 flex items-center gap-2 border-t pt-4"
@@ -101,7 +131,6 @@ export default function Chats() {
                 </button>
             </form>
             )}
-        </div>
 
       </div>
     </div>

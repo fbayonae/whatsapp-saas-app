@@ -21,7 +21,7 @@ const sendMessage = async (req, res) => {
 
     const response = await whatsappService.sendTextMessage(phoneNumber, text);
     
-    const savedMessage = await dbService.saveOutboundMessage({
+    const savedMessage = await dbService.createMessageToDB({
         conversationId,
         from: phoneNumber,
         content: text,

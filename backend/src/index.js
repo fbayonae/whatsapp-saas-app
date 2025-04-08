@@ -6,6 +6,9 @@ const templatesRoutes = require('./routes/templatesRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
 const contactRoutes = require("./routes/contactRoutes");
 const chatRoutes = require("./routes/chatsRoutes");
+const messageRoutes = require("./routes/messageRoutes");
+
+
 
 dotenv.config();
 const app = express();
@@ -18,6 +21,7 @@ app.use('/auth', authRoutes);
 app.use('/webhook', webhookRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

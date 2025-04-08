@@ -23,4 +23,29 @@ const getTemplatesFromMeta = async () => {
   }
 };
 
-module.exports = { getTemplatesFromMeta };
+const sendTextMessage = async (phone, message) => {
+  try {
+    const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
+      messaging_product: "whatsapp",
+      to: phone,
+      type: "text",
+      text: {
+        body: message
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error enviando mensaje:', error.message);
+    throw error;
+  }
+};
+
+module.exports = { 
+  getTemplatesFromMeta,
+  sendTextMessage 
+};

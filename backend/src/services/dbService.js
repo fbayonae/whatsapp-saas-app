@@ -79,7 +79,16 @@ const getConversationsFromDB = async () => {
         orderBy: { lastMessageAt: 'desc' },
         include: {
           contact: true
-    }
+        }
+    });
+};
+
+const getConversationFromDB = async (conversationId) => {
+    return await prisma.conversation.findUnique({
+        where: { id: parseInt(conversationId) },
+        include: { 
+            contact: true 
+        }
     });
 };
 
@@ -90,11 +99,26 @@ const getMessagesFromDB = async (conversationId) => {
     });
 };
 
+const createMessageToDB = async (message) => {
+    try {
+        const saved = await prisma.message.create({
+            data: message
+        });
+        return saved; 
+    }
+    catch (error) {
+        console.error('❌ Error al crear mensaje en db:', error);
+        return null;
+    }
+    
+};
+
 module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
   saveComponentToDB,
   getContactsFromDB,
   getConversationsFromDB, 
-  getMessagesFromDB
+  getMessagesFromDB,
+  getConversationFromDB
 };

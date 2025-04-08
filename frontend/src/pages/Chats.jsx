@@ -1,6 +1,29 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const [newMessage, setNewMessage] = useState("");
+
+const handleSendMessage = async (e) => {
+    e.preventDefault();
+  
+    if (!newMessage.trim()) return;
+  
+    try {
+      const res = await axios.post("/api/messages/send", {
+        conversationId: selectedConv.id,
+        text: newMessage.trim()
+      });
+  
+      // Añadir el mensaje al estado actual
+      setMessages((prev) => [...prev, res.data.message]);
+      setNewMessage("");
+    } catch (err) {
+      console.error("❌ Error al enviar mensaje:", err);
+      alert("Error al enviar el mensaje");
+    }
+  };
+  
+
 export default function Chats() {
   const [conversations, setConversations] = useState([]);
   const [selectedConv, setSelectedConv] = useState(null);

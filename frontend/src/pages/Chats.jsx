@@ -111,6 +111,7 @@ export default function Chats() {
             
             <div ref={bottomRef} />
         </div>
+        <div>
         {selectedConv && (
             <form
                 onSubmit={handleSendMessage}
@@ -131,7 +132,7 @@ export default function Chats() {
                 </button>
             </form>
             )}
-
+        </div>
       </div>
     </div>
   );

@@ -73,7 +73,22 @@ const getContactsFromDB = async () => {
     });
    
 };
-  
+
+const getConversationsFromDB = async () => {
+    return await prisma.conversation.findMany({
+        orderBy: { lastMessageAt: 'desc' },
+        include: {
+          contact: true
+    }
+    });
+};
+
+const getMessagesFromDB = async (conversationId) => {
+    return await prisma.message.findMany({
+        where: { conversationId },
+        orderBy: { timestamp: 'asc' }
+    });
+};
 
 module.exports = {
   saveTemplateToDB,

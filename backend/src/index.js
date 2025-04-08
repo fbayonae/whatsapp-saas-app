@@ -5,7 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const templatesRoutes = require('./routes/templatesRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
 const contactRoutes = require("./routes/contactRoutes");
-const chatRoutes = require("./routes/chatRoutes");
+const chatRoutes = require("./routes/chatsRoutes");
 
 dotenv.config();
 const app = express();

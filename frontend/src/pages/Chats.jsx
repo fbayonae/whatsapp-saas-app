@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const [newMessage, setNewMessage] = useState("");
+export default function Chats() {
+  const [conversations, setConversations] = useState([]);
+  const [selectedConv, setSelectedConv] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
 
-const handleSendMessage = async (e) => {
+  useEffect(() => {
+    axios.get("/api/chats")
+      .then(res => setConversations(res.data))
+      .catch(err => console.error("❌ Error cargando conversaciones", err));
+  }, []);
+
+  const handleSelect = (conv) => {
+    setSelectedConv(conv);
+    axios.get(`/api/chats/${conv.id}/messages`)
+      .then(res => setMessages(res.data))
+      .catch(err => console.error("❌ Error cargando mensajes", err));
+  };
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
   
     if (!newMessage.trim()) return;
@@ -21,25 +38,6 @@ const handleSendMessage = async (e) => {
       console.error("❌ Error al enviar mensaje:", err);
       alert("Error al enviar el mensaje");
     }
-  };
-  
-
-export default function Chats() {
-  const [conversations, setConversations] = useState([]);
-  const [selectedConv, setSelectedConv] = useState(null);
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    axios.get("/api/chats")
-      .then(res => setConversations(res.data))
-      .catch(err => console.error("❌ Error cargando conversaciones", err));
-  }, []);
-
-  const handleSelect = (conv) => {
-    setSelectedConv(conv);
-    axios.get(`/api/chats/${conv.id}/messages`)
-      .then(res => setMessages(res.data))
-      .catch(err => console.error("❌ Error cargando mensajes", err));
   };
 
   return (

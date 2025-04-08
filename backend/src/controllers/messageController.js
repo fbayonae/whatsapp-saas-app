@@ -26,7 +26,7 @@ const sendMessage = async (req, res) => {
         conversationId,
         from: phoneNumber,
         content: text,
-        id_meta: response.data.messages?.[0]?.id || null
+        id_meta: response.messages?.[0]?.id || null
       });
   
     res.json({ success: true, message: savedMessage });

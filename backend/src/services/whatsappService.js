@@ -27,6 +27,7 @@ const sendTextMessage = async (phone, message) => {
   try {
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
+      recipient_type: "individual",
       to: phone,
       type: "text",
       text: {

@@ -10,9 +10,11 @@ export default function Contacts() {
     axios.get("/api/contacts")
       .then((res) => {
         setContacts(res.data || []);
+        setLoading(false);
       })
       .catch((err) => {
         console.error("❌ Error al obtener contactos:", err);
+        setLoading(false);
       })
       .finally(() => {
         setLoading(false);
@@ -20,11 +22,7 @@ export default function Contacts() {
   }, []);
 
   const filteredContacts = contacts.filter((c) => {
-    const q = search.toLowerCase();
-    return (
-      c.name.toLowerCase().includes(q) ||
-      c.phoneNumber.includes(q)
-    );
+    c.name.toLowerCase().includes(search.toLowerCase())
   });
 
   return (

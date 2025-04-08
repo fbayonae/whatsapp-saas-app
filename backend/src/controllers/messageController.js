@@ -21,19 +21,15 @@ const sendMessage = async (req, res) => {
 
     const response = await whatsappService.sendTextMessage(phoneNumber, text);
     
-    const res = createMessageToDB ({
-      data: {
-        conversationId: conversation.id,
+    const savedMessage = await dbService.saveOutboundMessage({
+        conversationId,
         from: phoneNumber,
-        direction: "OUTBOUND",
         content: text,
-        type: "text",
-        id_meta: response.data.messages?.[0]?.id || "manual",
-        timestamp: new Date()
-      }
-    });
+        id_meta: response.data.messages?.[0]?.id || null
+      });
+  
+    res.json({ success: true, message: savedMessage });
 
-    res.json({ success: true, messageId: response.data.messages?.[0]?.id });
   } catch (error) {
     console.error("❌ Error enviando mensaje:", error?.response?.data || error.message);
     res.status(500).json({ error: "Error al enviar el mensaje" });

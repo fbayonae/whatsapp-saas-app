@@ -99,19 +99,25 @@ const getMessagesFromDB = async (conversationId) => {
     });
 };
 
-const createMessageToDB = async (message) => {
+const createMessageToDB = async ({ conversationId, from, content, id_meta }) => {
     try {
-        const saved = await prisma.message.create({
-            data: message
-        });
-        return saved; 
+      const savedMessage = await prisma.message.create({
+        data: {
+          conversationId,
+          from,
+          direction: "OUTBOUND",
+          content,
+          type: "text",
+          id_meta: id_meta || "manual",
+          timestamp: new Date()
+        }
+      });
+      return savedMessage;
+    } catch (error) {
+      console.error("❌ Error guardando mensaje outbound:", error);
+      throw error;
     }
-    catch (error) {
-        console.error('❌ Error al crear mensaje en db:', error);
-        return null;
-    }
-    
-};
+  };
 
 module.exports = {
   saveTemplateToDB,

@@ -4,6 +4,8 @@ const whatsappRoutes = require('./routes/whatsapp');
 const authRoutes = require('./routes/authRoutes');
 const templatesRoutes = require('./routes/templatesRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
+const contactRoutes = require("./routes/contactRoutes");
+
 
 dotenv.config();
 const app = express();
@@ -17,6 +19,7 @@ app.use(express.json({ limit: '5mb' }));
 app.use('/api/templates', templatesRoutes);
 app.use('/auth', authRoutes);
 app.use('/webhook', webhookRoutes);
+app.use("/api/contacts", contactRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

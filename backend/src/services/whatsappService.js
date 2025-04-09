@@ -46,7 +46,34 @@ const sendTextMessage = async (phone, message) => {
   }
 };
 
+const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
+  try {
+    const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: phone,
+      type: media_type,
+      [media_type]: {
+        id: media_id,
+        ...(caption ? { caption } : {})
+      }
+    },{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    return response.data;
+  }catch (error) {
+    console.error('❌ Error enviando mensaje de media:', error.message);
+    throw error;
+  }
+};
+
+
+
 module.exports = { 
   getTemplatesFromMeta,
-  sendTextMessage 
+  sendTextMessage,
+  sendMediaMessage 
 };

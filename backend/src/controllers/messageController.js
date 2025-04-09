@@ -48,7 +48,10 @@ const sendMessageMedia = async (req, res) => {
         if (!file || !phone) {
           return res.status(400).json({ error: "Faltan el archivo o el número de teléfono" });
         }
-        
+
+        // Detectar tipo de media (image, audio, document...)
+        const detectedMediaType = mediaUtils.detectMediaType(file.mimetype);
+
         // ✅ Validar archivo
         const { valid, reason, type: media_type } = mediaUtils.validateMediaFile(file);
 
@@ -59,14 +62,11 @@ const sendMessageMedia = async (req, res) => {
         // 1. Subir el archivo a Meta
         const media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
 
-        // Detectar tipo de media (image, audio, document...)
-        const media_type = mediaUtils.detectMediaType(file.mimetype);
-
         // 2. Enviar el mensaje con ese media_id
         const response = await whatsappService.sendMediaMessage({
           phoneNumber: phone,
           media_id,
-          media_type, // o "image", según lo que esperes
+          detectedMediaType, // o "image", según lo que esperes
           caption
         });
     

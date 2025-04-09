@@ -42,9 +42,18 @@ const sendMessage = async (req, res) => {
 
 const sendMessageMedia = async (req, res) => {
     try {
-        const { phone, caption } = req.body;
+        const { conversationId, caption } = req.body;
         const file = req.file;
-    
+
+        // 1. Obtener conversación y número
+        const conversation = await dbService.getConversationFromDB(conversationId);
+
+        if (!conversation) {
+        return res.status(404).json({ error: "Conversación no encontrada" });
+        }
+
+        const phone = conversation.contact.phoneNumber;
+
         if (!file || !phone) {
           return res.status(400).json({ error: "Faltan el archivo o el número de teléfono" });
         }
@@ -62,7 +71,7 @@ const sendMessageMedia = async (req, res) => {
         // 1. Subir el archivo a Meta
         const media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
         console.log("media_id", media_id);  
-        
+
         // 2. Enviar el mensaje con ese media_id
         const response = await whatsappService.sendMediaMessage({
           phoneNumber: phone,

@@ -1,6 +1,9 @@
 require('dotenv').config();
 
 const axios = require('axios');
+const fs = require("fs");
+const FormData = require("form-data");
+
 const token = process.env.TOKEN_DEV;
 const phoneId = process.env.PHONE_NUMBER_ID;
 const businessId = process.env.BUSINESS_ID;
@@ -68,6 +71,27 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
     console.error('❌ Error enviando mensaje de media:', error.message);
     throw error;
   }
+};
+
+
+const uploadMedia = async (filePath, mimetype) => {
+  const form = new FormData();
+  form.append("file", fs.createReadStream(filePath));
+  form.append("type", mimetype); // ej: application/pdf
+  form.append("messaging_product", "whatsapp");
+
+  const response = await axios.post(
+    `${url_base}${version}/${phoneId}/media`,
+    form,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        ...form.getHeaders(),
+      },
+    }
+  );
+
+  return response.data.id; // <- media_id
 };
 
 

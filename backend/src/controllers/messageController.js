@@ -1,6 +1,10 @@
+const axios = require('axios');
+const fs = require("fs");
+
 const dbService  = require('../services/dbService');
 const whatsappService  = require('../services/whatsappService');
-const axios = require('axios');
+const mediaUtils  = require("../utils/mediaUtils");
+
 
 const sendMessage = async (req, res) => {
   const { conversationId, text } = req.body;
@@ -36,6 +40,50 @@ const sendMessage = async (req, res) => {
   }
 };
 
+const sendMessageMedia = async (req, res) => {
+    try {
+        const { phone, caption } = req.body;
+        const file = req.file;
+    
+        if (!file || !phone) {
+          return res.status(400).json({ error: "Faltan el archivo o el número de teléfono" });
+        }
+        
+        // ✅ Validar archivo
+        const { valid, reason, type: media_type } = mediaUtils.validateMediaFile(file);
+
+        if (!valid) {
+        return res.status(400).json({ error: `Archivo no soportado: ${reason}` });
+        }
+
+        // 1. Subir el archivo a Meta
+        const media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
+
+        // Detectar tipo de media (image, audio, document...)
+        const media_type = mediaUtils.detectMediaType(file.mimetype);
+
+        // 2. Enviar el mensaje con ese media_id
+        const response = await whatsappService.sendMediaMessage({
+          phoneNumber: phone,
+          media_id,
+          media_type, // o "image", según lo que esperes
+          caption
+        });
+    
+        // 3. Limpiar archivo temporal
+        fs.unlinkSync(file.path);
+    
+        res.json({
+          success: true,
+          messageId: response?.data?.messages?.[0]?.id || null,
+        });
+      } catch (error) {
+        console.error("❌ Error en sendMedia:", error.response?.data || error.message);
+        res.status(500).json({ error: "Error al enviar archivo por WhatsApp" });
+      } 
+}; 
+
 module.exports = {
-  sendMessage
+  sendMessage,
+  sendMessageMedia
 };

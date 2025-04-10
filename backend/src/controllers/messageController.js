@@ -90,7 +90,8 @@ const sendMessageMedia = async (req, res) => {
             id_meta: response.messages?.[0]?.id || null,
             contextId: '',
             status: 'SENT',
-            media_id: media_id
+            media_id: media_id,
+            media_type: detectedMediaType
           });
       
         res.json({ success: true, message: savedMessage });

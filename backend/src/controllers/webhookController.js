@@ -30,6 +30,7 @@ const handleWebhookMessage = async (value) => {
           mimeType: msg.image.mime_type,
           sha256: msg.image.sha256,
         };
+
       } else if (msg.type === "document" && msg.document?.id) {
         mediaInfo = {
           mediaId: msg.document.id,
@@ -50,6 +51,17 @@ const handleWebhookMessage = async (value) => {
         };
       }
 
+      // guardamos archivo
+      if (mediaInfo) {
+        try {
+          const url = await getMediaUrlFromMeta(msg.image.id);
+          const localFile = await downloadMediaFile(url, msg.image.id, msg.image.mime_type);
+      
+          console.log("📥 Archivo guardada en:", localFile);
+        } catch (error) {
+          console.error("❌ Error al descargar archivo multimedia:", error.message);
+        }
+      }
 
       console.log(`💬 Recibido mensaje de ${from}: ${text}`);
 
@@ -113,7 +125,7 @@ const handleWebhookMessage = async (value) => {
           media_sha256: mediaInfo?.sha256
         }
       });
-
+      
       console.log(`✅ Mensaje guardado en conversación ${conversation.id}`);
     } catch (error) {
       console.error(`❌ Error procesando mensaje: ${error.message}`, error);

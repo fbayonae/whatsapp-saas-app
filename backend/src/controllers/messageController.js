@@ -78,7 +78,9 @@ const sendMessageMedia = async (req, res) => {
           media_type: detectedMediaType, // o "image", según lo que esperes
           caption
         });
-    
+
+        console.log(response);
+        
         // 3. Limpiar archivo temporal
         fs.unlinkSync(file.path);
 

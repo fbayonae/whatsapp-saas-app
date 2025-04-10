@@ -81,10 +81,13 @@ const sendMessageMedia = async (req, res) => {
 
         console.log(response);
 
+        // 3. Obtener información del archivo subido 
         const media_response = await whatsappService.getMediaData(media_id);
-        // 3. Limpiar archivo temporal
+
+        // 4. Limpiar archivo temporal
         fs.unlinkSync(file.path);
 
+        // 5. Guardar mensaje en la base de datos
         const savedMessage = await dbService.createMessageToDB({
             conversationId: parseInt(conversationId),
             content: caption || '',
@@ -95,7 +98,19 @@ const sendMessageMedia = async (req, res) => {
             media_mimeType: media_response.mime_type,
             media_sha256: media_response.sha256
           });
-      
+        
+        // 6. Guardar el documento en downloads 
+        if (media_response) {
+            try {
+                const url = await whatsappService.getMediaUrl(media_id);
+                const localFile = await whatsappService.downloadMediaFile(url, media_id, media_response.mime_type);
+              
+                console.log("📥 Archivo guardada en:", localFile);
+            } catch (error) {
+                console.error("❌ Error al descargar archivo multimedia:", error.message);
+            }
+        }
+
         res.json({ success: true, message: savedMessage });
        
       } catch (error) {

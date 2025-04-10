@@ -119,7 +119,7 @@ const handleWebhookMessage = async (value) => {
           conversationId: conversation.id,
           //from: from,
           direction: 'INBOUND',
-          content: text || medioInfo?.caption || '',
+          content: text || mediaInfo?.caption || '',
           timestamp: timestamp,
           type: type,
           id_meta: meta_id,

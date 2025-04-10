@@ -70,7 +70,7 @@ const sendMessageMedia = async (req, res) => {
 
         // 1. Subir el archivo a Meta
         const media_response = await whatsappService.uploadMedia(file.path, file.mimetype); 
-
+        console.log(media_response);
         // 2. Enviar el mensaje con ese media_id
         const response = await whatsappService.sendMediaMessage({
           phone,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import ImagePreview from "../components/ImagePreview";
 import MessageInput from "../components/MessageInput";
+import MessageBubble from "../components/MessageBubble";
 import axios from "axios";
 
 export default function Chats() {
@@ -94,36 +95,9 @@ export default function Chats() {
           {selectedConv ? `Chat con ${selectedConv.contact?.name || selectedConv.contact?.phoneNumber}` : "Selecciona una conversación"}
         </h2>
         <div className="flex-1 overflow-y-auto space-y-4 pr-4">
-        {messages.map((msg) => {
-            const isInbound = msg.direction === "INBOUND";
-            const alignment = isInbound ? "self-start text-left bg-gray-500" : "self-end text-right bg-indigo-600";
-
-            return (
-                <div
-                key={msg.id}
-                className={`max-w-[70%] px-4 py-2 rounded-lg shadow text-white ${alignment}`}
-                >
-                {/* Mostrar imagen si es de tipo imagen */}
-                {msg.media_mimeType?.startsWith("image/") && (
-                    <ImagePreview message={msg} />
-                )}
-
-                {/* Mostrar texto si existe */}
-                {msg.content && (
-                    <div className={`text-sm mt-2 ${isInbound ? "text-left" : "text-right"}`}>
-                    {msg.content}
-                    </div>
-                )}
-
-                {/* Hora */}
-                <div className="text-xs text-white/70 mt-1">
-                    {new Date(msg.timestamp).toLocaleTimeString()}
-                </div>
-                </div>
-            );
-            })}
-
-            
+        {messages.map((msg) => (
+            <MessageBubble key={msg.id} message={msg} />
+        ))}
             <div ref={bottomRef} />
         </div>
         <div>

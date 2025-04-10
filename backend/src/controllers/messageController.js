@@ -61,6 +61,8 @@ const sendMessageMedia = async (req, res) => {
         // Detectar tipo de media (image, audio, document...)
         const detectedMediaType = mediaUtils.detectMediaType(file.mimetype);
         console.log("detectedMediaType", detectedMediaType);
+        console.log("file.mimetype", file.mimetype);
+
         // ✅ Validar archivo
         const { valid, reason, type: media_type } = mediaUtils.validateMediaFile(file);
 

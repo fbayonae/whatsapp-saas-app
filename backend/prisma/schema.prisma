@@ -128,7 +128,7 @@ model Message {
   status         String    @default("sent")
   contextId      String?
   direction      String    // 'inbound' o 'outbound'
-  media_id       Int?
+  media_id       String?
   media_mimeType String?
   media_sha256   String?
   createdAt      DateTime  @default(now())

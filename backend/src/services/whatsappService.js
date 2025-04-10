@@ -85,7 +85,7 @@ const uploadMedia = async (filePath, mimetype) => {
     form,
     {
       headers: {
-        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         ...form.getHeaders(),
       },
     }

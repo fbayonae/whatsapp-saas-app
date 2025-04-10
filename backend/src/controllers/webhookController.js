@@ -45,7 +45,6 @@ const handleWebhookMessage = async (value) => {
           mediaId: msg.audio.id,
           mimeType: msg.audio.mime_type,
           sha256: msg.audio.sha256,
-          caption: msg.image.caption,
         };
       } else if (msg.type === "video" && msg.video?.id) {
         mediaInfo = {

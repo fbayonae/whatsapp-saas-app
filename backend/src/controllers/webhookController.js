@@ -102,7 +102,7 @@ const handleWebhookMessage = async (value) => {
           id_meta: meta_id,
           contextId: contextId,
           status: 'RECEIVED',
-          media_id: mediaInfo?.mediaId,
+          media_id: parseInt(mediaInfo?.mediaId),
           media_mimeType: mediaInfo?.mimeType,
           media_sha256: mediaInfo?.sha256
         }

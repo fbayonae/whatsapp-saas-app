@@ -125,12 +125,11 @@ export default function Chats() {
         </div>
         <div>
         <MessageInput
-            conversationId={selectedConversation?.id}
-            onMessageSent={(newMessage) => {
-                setMessages((prev) => [...prev, newMessage]);
+            conversationId={selectedConv?.id}
+            onMessageSent={(msg) => {
+                setMessages((prev) => [...prev, msg]);
             }}
         />
-
         </div>
       </div>
     </div>

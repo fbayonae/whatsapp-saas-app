@@ -94,7 +94,7 @@ const uploadMedia = async (filePath, mimetype) => {
     }
   );
 
-  return response.data.id; // <- media_id
+  return response.data; // <- media_id
 };
 
 const getMediaUrl = async (media_id) => {

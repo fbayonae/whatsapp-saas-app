@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-
+import ImagePreview from "../components/ImagePreview";
 import axios from "axios";
 
 export default function Chats() {
@@ -97,15 +97,18 @@ export default function Chats() {
             <div
                 key={msg.id}
                 className={`max-w-[70%] px-4 py-2 rounded-lg shadow text-white ${
-                    msg.direction === "INBOUND"
+                msg.direction === "INBOUND"
                     ? "bg-gray-500 self-start text-left"
                     : "bg-indigo-600 self-end text-right"
                 }`}
             >
-            <div className="text-sm">{msg.content}</div>
-            <div className="text-xs text-white/70 mt-1">
+                {msg.mimeType?.startsWith("image/") && <ImagePreview message={msg} />}
+                {msg.content && <div className="text-sm mt-2">{msg.content}</div>}
+
+
+                <div className="text-xs text-white/70 mt-1">
                 {new Date(msg.timestamp).toLocaleTimeString()}
-            </div>
+                </div>
             </div>
             ))}
             

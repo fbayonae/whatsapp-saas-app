@@ -53,7 +53,7 @@ const handleWebhookMessage = async (value) => {
       }
 
       // guardamos archivo
-      if ( mediaInfo) {
+      if (mediaInfo) {
         try {
           const url = await whatsappService.getMediaUrl(msg.image.id);
           const localFile = await whatsappService.downloadMediaFile(url, msg.image.id, msg.image.mime_type);

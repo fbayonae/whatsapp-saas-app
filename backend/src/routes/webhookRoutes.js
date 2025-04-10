@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
     // ✅ Confirmación para Meta
     res.sendStatus(200);
-  
+    console.log("✅ Webhook recibido.");
     const entries = req.body.entry || [];
   
     entries.forEach(entry => {

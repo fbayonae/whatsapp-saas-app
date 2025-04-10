@@ -80,12 +80,12 @@ const sendMessageMedia = async (req, res) => {
         });
 
         console.log(response);
-        
+
         // 3. Limpiar archivo temporal
         fs.unlinkSync(file.path);
 
         const savedMessage = await dbService.createMessageToDB({
-            conversationId,
+            conversationId: parseInt(conversationId),
             content: caption || '',
             id_meta: response.messages?.[0]?.id || null
           });

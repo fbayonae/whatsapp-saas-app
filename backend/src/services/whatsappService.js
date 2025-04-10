@@ -137,5 +137,6 @@ module.exports = {
   sendTextMessage,
   sendMediaMessage,
   uploadMedia,
-  getMediaUrl 
+  getMediaUrl,
+  downloadMediaFile 
 };

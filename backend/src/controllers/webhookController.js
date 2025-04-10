@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const whatsappService = require("../services/whatsappService");
 
 //const VERIFY_TOKEN = process.env.VERIFY_TOKEN; // defínelo en tu .env
 
@@ -52,10 +53,10 @@ const handleWebhookMessage = async (value) => {
       }
 
       // guardamos archivo
-      if ( mediaInfo.mediaId) {
+      if ( mediaInfo) {
         try {
-          const url = await getMediaUrlFromMeta(msg.image.id);
-          const localFile = await downloadMediaFile(url, msg.image.id, msg.image.mime_type);
+          const url = await whatsappService.getMediaUrl(msg.image.id);
+          const localFile = await whatsappService.downloadMediaFile(url, msg.image.id, msg.image.mime_type);
       
           console.log("📥 Archivo guardada en:", localFile);
         } catch (error) {

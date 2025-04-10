@@ -87,7 +87,10 @@ const sendMessageMedia = async (req, res) => {
         const savedMessage = await dbService.createMessageToDB({
             conversationId: parseInt(conversationId),
             content: caption || '',
-            id_meta: response.messages?.[0]?.id || null
+            id_meta: response.messages?.[0]?.id || null,
+            contextId: '',
+            status: 'SENT',
+            media_id: media_id
           });
       
         res.json({ success: true, message: savedMessage });

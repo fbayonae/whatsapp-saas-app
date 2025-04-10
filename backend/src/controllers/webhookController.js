@@ -21,6 +21,30 @@ const handleWebhookMessage = async (value) => {
       const name = contact_wa[0]?.profile?.name || 'desconocido';
       const timestamp = new Date(Number(msg.timestamp) * 1000);
 
+      // Si el mensaje viene con un archivo imagen, documento o audio
+      let mediaInfo = null;
+
+      if (msg.type === "image" && msg.image?.id) {
+        mediaInfo = {
+          mediaId: msg.image.id,
+          mimeType: msg.image.mime_type,
+          sha256: msg.image.sha256,
+        };
+      } else if (msg.type === "document" && msg.document?.id) {
+        mediaInfo = {
+          mediaId: msg.document.id,
+          mimeType: msg.document.mime_type,
+          sha256: msg.document.sha256,
+        };
+      } else if (msg.type === "audio" && msg.audio?.id) {
+        mediaInfo = {
+          mediaId: msg.audio.id,
+          mimeType: msg.audio.mime_type,
+          sha256: msg.audio.sha256,
+        };
+      }
+
+
       console.log(`💬 Recibido mensaje de ${from}: ${text}`);
 
       // 1. Buscar conversación activa por número de teléfono
@@ -77,7 +101,10 @@ const handleWebhookMessage = async (value) => {
           type: type,
           id_meta: meta_id,
           contextId: contextId,
-          status: 'RECEIVED'
+          status: 'RECEIVED',
+          media_id: mediaInfo?.mediaId,
+          media_mimeType: mediaInfo?.mimeType,
+          media_sha256: mediaInfo?.sha256
         }
       });
 

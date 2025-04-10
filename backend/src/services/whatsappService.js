@@ -96,11 +96,23 @@ const uploadMedia = async (filePath, mimetype) => {
   return response.data.id; // <- media_id
 };
 
+const getMediaUrl = async (media_id) => {
+  const response = await axios.get(
+    `${url_base}${version}/${media_id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
+  return response.data.url;
+};
 
 module.exports = { 
   getTemplatesFromMeta,
   sendTextMessage,
   sendMediaMessage,
-  uploadMedia 
+  uploadMedia,
+  getMediaUrl 
 };

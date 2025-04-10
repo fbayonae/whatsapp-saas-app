@@ -2,7 +2,7 @@ FROM node:18-alpine
 
 # Crear directorio de trabajo
 WORKDIR /app
-RUN mkdir -p src/uploads
+RUN mkdir -p uploads
 
 # Copiar package.json y package-lock.json
 COPY package*.json ./

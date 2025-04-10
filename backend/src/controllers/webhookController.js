@@ -52,7 +52,7 @@ const handleWebhookMessage = async (value) => {
       }
 
       // guardamos archivo
-      if (mediaInfo) {
+      if ( mediaInfo.mediaId) {
         try {
           const url = await getMediaUrlFromMeta(msg.image.id);
           const localFile = await downloadMediaFile(url, msg.image.id, msg.image.mime_type);

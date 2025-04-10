@@ -51,6 +51,7 @@ const sendTextMessage = async (phone, message) => {
 
 const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
   try {
+    console.log(media_type);
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",

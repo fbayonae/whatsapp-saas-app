@@ -99,7 +99,7 @@ const getMessagesFromDB = async (conversationId) => {
     });
 };
 
-const createMessageToDB = async ({ conversationId, content, id_meta }) => {
+const createMessageToDB = async ({ conversationId, content, id_meta, contextId, status }) => {
     try {
       const savedMessage = await prisma.message.create({
         data: {
@@ -108,7 +108,9 @@ const createMessageToDB = async ({ conversationId, content, id_meta }) => {
           content,
           type: "text",
           id_meta: id_meta || "manual",
-          timestamp: new Date()
+          timestamp: new Date(),
+          contextId,
+          status
         }
       });
       return savedMessage;

@@ -15,6 +15,7 @@ const handleWebhookMessage = async (value) => {
     try {
       const from = msg.from;
       const text = msg.text?.body || '';
+      const contextId = msg.context?.id || '';
       const type = msg.type;
       const meta_id = msg.id;
       const name = contact_wa[0]?.profile?.name || 'desconocido';
@@ -74,7 +75,9 @@ const handleWebhookMessage = async (value) => {
           content: text,
           timestamp: timestamp,
           type: type,
-          id_meta: meta_id
+          id_meta: meta_id,
+          contextId: contextId,
+          status: 'RECEIVED'
         }
       });
 

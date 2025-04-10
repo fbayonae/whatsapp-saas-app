@@ -125,6 +125,8 @@ model Message {
   id_meta        String
   content        String
   type           String
+  status         String    @default("sent")
+  contextId      String?
   direction      String    // 'inbound' o 'outbound'
   createdAt      DateTime  @default(now())
   timestamp      DateTime?

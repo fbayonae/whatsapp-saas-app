@@ -23,26 +23,31 @@ export default function MessageBubble({ message }) {
 
       {/* Audio */}
       {isAudio && mediaUrl && (
-        <audio controls className="w-full mt-2">
-          <source src={mediaUrl} type={message.media_mimeType} />
-          Tu navegador no soporta audio.
-        </audio>
-      )}
+        <div className="flex items-center gap-2 mt-2">
+            <Music className="w-5 h-5 text-white" />
+            <audio controls className="w-full">
+            <source src={mediaUrl} type={message.media_mimeType} />
+            Tu navegador no soporta audio.
+            </audio>
+        </div>
+    )}
+
 
       {/* Documento */}
       {isDocument && mediaUrl && (
         <div className="mt-2 bg-white text-black p-3 rounded flex items-center gap-2">
-          <FileText className="w-5 h-5 text-indigo-600" />
-          <a
+            <FileText className="w-5 h-5 text-indigo-600" />
+            <a
             href={mediaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="underline break-all text-sm"
-          >
+            >
             Ver documento
-          </a>
+            </a>
         </div>
-      )}
+        )}
+
 
       {/* Texto si existe */}
       {message.content && (

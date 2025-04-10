@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import ImagePreview from "../components/ImagePreview";
+import MessageInput from "../components/MessageInput";
 import axios from "axios";
 
 export default function Chats() {

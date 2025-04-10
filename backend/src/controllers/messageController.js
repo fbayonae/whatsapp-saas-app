@@ -69,18 +69,19 @@ const sendMessageMedia = async (req, res) => {
         }
 
         // 1. Subir el archivo a Meta
-        const media_response = await whatsappService.uploadMedia(file.path, file.mimetype); 
-        console.log(media_response);
+        const media_id = await whatsappService.uploadMedia(file.path, file.mimetype); 
+
         // 2. Enviar el mensaje con ese media_id
         const response = await whatsappService.sendMediaMessage({
           phone,
-          media_id: media_response.id,
+          media_id,
           media_type: detectedMediaType, // o "image", según lo que esperes
           caption
         });
 
         console.log(response);
 
+        const media_response = await whatsappService.getMediaData(media_id);
         // 3. Limpiar archivo temporal
         fs.unlinkSync(file.path);
 
@@ -90,7 +91,7 @@ const sendMessageMedia = async (req, res) => {
             id_meta: response.messages?.[0]?.id || null,
             contextId: '',
             status: 'SENT',
-            media_id: media_response.id,
+            media_id: media_id,
             media_mimeType: media_response.mime_type,
             media_sha256: media_response.sha256
           });

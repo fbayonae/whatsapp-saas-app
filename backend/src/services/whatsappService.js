@@ -94,7 +94,7 @@ const uploadMedia = async (filePath, mimetype) => {
     }
   );
 
-  return response.data; // <- media_id
+  return response.data.id; // <- media_id
 };
 
 const getMediaUrl = async (media_id) => {
@@ -108,6 +108,19 @@ const getMediaUrl = async (media_id) => {
   );
 
   return response.data.url;
+};
+
+const getMediaData = async (media_id) => {
+  const response = await axios.get(
+    `${url_base}${version}/${media_id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
 };
 
 const downloadMediaFile = async (url, media_id, mimetype) => {
@@ -138,5 +151,6 @@ module.exports = {
   sendMediaMessage,
   uploadMedia,
   getMediaUrl,
-  downloadMediaFile 
+  downloadMediaFile,
+  getMediaData 
 };

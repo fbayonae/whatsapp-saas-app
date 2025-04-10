@@ -30,6 +30,7 @@ const handleWebhookMessage = async (value) => {
           mediaId: msg.image.id,
           mimeType: msg.image.mime_type,
           sha256: msg.image.sha256,
+          caption: msg.image.caption,
         };
 
       } else if (msg.type === "document" && msg.document?.id) {
@@ -37,18 +38,21 @@ const handleWebhookMessage = async (value) => {
           mediaId: msg.document.id,
           mimeType: msg.document.mime_type,
           sha256: msg.document.sha256,
+          caption: msg.image.caption,
         };
       } else if (msg.type === "audio" && msg.audio?.id) {
         mediaInfo = {
           mediaId: msg.audio.id,
           mimeType: msg.audio.mime_type,
           sha256: msg.audio.sha256,
+          caption: msg.image.caption,
         };
       } else if (msg.type === "video" && msg.video?.id) {
         mediaInfo = {
           mediaId: msg.video.id,
           mimeType: msg.video.mime_type,
           sha256: msg.video.sha256,
+          caption: msg.image.caption,
         };
       }
 
@@ -115,7 +119,7 @@ const handleWebhookMessage = async (value) => {
           conversationId: conversation.id,
           //from: from,
           direction: 'INBOUND',
-          content: text,
+          content: text || medioInfo?.caption || '',
           timestamp: timestamp,
           type: type,
           id_meta: meta_id,

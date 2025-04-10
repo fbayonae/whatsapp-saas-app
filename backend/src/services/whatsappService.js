@@ -42,6 +42,7 @@ const sendTextMessage = async (phone, message) => {
         "Content-Type": "application/json"
       }
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('❌ Error enviando mensaje:', error.message);
@@ -67,6 +68,7 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
         "Content-Type": "application/json"
       }
     });
+    console.log(response.data);
     return response.data;
   }catch (error) {
     console.error('❌ Error enviando mensaje de media:', error.message);

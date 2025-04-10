@@ -11,6 +11,7 @@ const handleWebhookMessage = async (value) => {
   const contact_wa = value.contacts || [];
 
   for (const msg of messages) {
+    console.log(msg);
     try {
       const from = msg.from;
       const text = msg.text?.body || '';

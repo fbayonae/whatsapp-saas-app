@@ -74,7 +74,7 @@ const sendMessageMedia = async (req, res) => {
 
         // 2. Enviar el mensaje con ese media_id
         const response = await whatsappService.sendMediaMessage({
-          phoneNumber: phone,
+          phone,
           media_id,
           detectedMediaType, // o "image", según lo que esperes
           caption

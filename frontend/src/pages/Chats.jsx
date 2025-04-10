@@ -94,32 +94,35 @@ export default function Chats() {
           {selectedConv ? `Chat con ${selectedConv.contact?.name || selectedConv.contact?.phoneNumber}` : "Selecciona una conversación"}
         </h2>
         <div className="flex-1 overflow-y-auto space-y-4 pr-4">
-        {messages.map((msg) => (
-        <div
-            key={msg.id}
-            className={`max-w-[70%] px-4 py-2 rounded-lg shadow text-white ${
-            msg.direction === "INBOUND"
-                ? "bg-gray-500 self-start text-left"
-                : "bg-indigo-600 self-end text-right"
-            }`}
-        >
-            {/* Mostrar imagen si es de tipo imagen */}
-            {msg.media_mimeType?.startsWith("image/") ? (
-            <ImagePreview message={msg} />
-            ) : (
-            <div className="text-sm">{msg.content}</div>
-            )}
+        {messages.map((msg) => {
+            const isInbound = msg.direction === "INBOUND";
+            const alignment = isInbound ? "self-start text-left bg-gray-500" : "self-end text-right bg-indigo-600";
 
-            {/* Mostrar texto si es una imagen + contenido */}
-            {msg.media_mimeType?.startsWith("image/") && msg.content && (
-            <div className="text-sm mt-2">{msg.content}</div>
-            )}
+            return (
+                <div
+                key={msg.id}
+                className={`max-w-[70%] px-4 py-2 rounded-lg shadow text-white ${alignment}`}
+                >
+                {/* Mostrar imagen si es de tipo imagen */}
+                {msg.media_mimeType?.startsWith("image/") && (
+                    <ImagePreview message={msg} />
+                )}
 
-            <div className="text-xs text-white/70 mt-1">
-            {new Date(msg.timestamp).toLocaleTimeString()}
-            </div>
-        </div>
-        ))}
+                {/* Mostrar texto si existe */}
+                {msg.content && (
+                    <div className={`text-sm mt-2 ${isInbound ? "text-left" : "text-right"}`}>
+                    {msg.content}
+                    </div>
+                )}
+
+                {/* Hora */}
+                <div className="text-xs text-white/70 mt-1">
+                    {new Date(msg.timestamp).toLocaleTimeString()}
+                </div>
+                </div>
+            );
+            })}
+
             
             <div ref={bottomRef} />
         </div>

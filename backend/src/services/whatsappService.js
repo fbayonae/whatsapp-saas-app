@@ -99,5 +99,6 @@ const uploadMedia = async (filePath, mimetype) => {
 module.exports = { 
   getTemplatesFromMeta,
   sendTextMessage,
-  sendMediaMessage 
+  sendMediaMessage,
+  uploadMedia 
 };

@@ -102,7 +102,7 @@ export default function Chats() {
                     : "bg-indigo-600 self-end text-right"
                 }`}
             >
-                {msg.mimeType?.startsWith("image/") && <ImagePreview message={msg} />}
+                {msg.media_mimeType?.startsWith("image/") && <ImagePreview message={msg} />}
                 {msg.content && <div className="text-sm mt-2">{msg.content}</div>}
 
 

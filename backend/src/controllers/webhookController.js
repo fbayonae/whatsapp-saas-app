@@ -21,7 +21,7 @@ const handleWebhookMessage = async (value) => {
       const name = contact_wa[0]?.profile?.name || 'desconocido';
       const timestamp = new Date(Number(msg.timestamp) * 1000);
 
-      // Si el mensaje viene con un archivo imagen, documento o audio
+      // Si el mensaje viene con un archivo imagen, documento, video o audio
       let mediaInfo = null;
 
       if (msg.type === "image" && msg.image?.id) {
@@ -41,6 +41,12 @@ const handleWebhookMessage = async (value) => {
           mediaId: msg.audio.id,
           mimeType: msg.audio.mime_type,
           sha256: msg.audio.sha256,
+        };
+      } else if (msg.type === "video" && msg.video?.id) {
+        mediaInfo = {
+          mediaId: msg.video.id,
+          mimeType: msg.video.mime_type,
+          sha256: msg.video.sha256,
         };
       }
 

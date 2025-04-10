@@ -3,6 +3,7 @@ const path = require("path");
 const MAX_SIZES_MB = {
   image: 5,
   audio: 16,
+  video: 16,
   document: 100,
 };
 
@@ -10,6 +11,7 @@ const EXTENSIONS = {
   image: ["jpg", "jpeg", "png"],
   audio: ["aac", "amr", "mp3", "mp4", "ogg"],
   document: ["txt", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pdf"],
+  video: ["mp4", "3gp"],
 };
 
 // Detecta si el archivo es válido para Meta
@@ -40,9 +42,9 @@ const validateMediaFile = (file) => {
 const detectMediaType = (mimetype) => {
     if (mimetype.startsWith("image/")) return "image";
     if (mimetype.startsWith("audio/")) return "audio";
-    if (mimetype === "video/mp4") return "video"; // solo .mp4 soportado por Meta
+    if (mimetype.startsWith("audio/")) return "video";
     return "document"; // fallback general
-  };
+};
   
   module.exports = { 
     detectMediaType,

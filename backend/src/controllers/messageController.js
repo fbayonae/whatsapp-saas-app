@@ -81,11 +81,15 @@ const sendMessageMedia = async (req, res) => {
     
         // 3. Limpiar archivo temporal
         fs.unlinkSync(file.path);
-    
-        res.json({
-          success: true,
-          messageId: response?.data?.messages?.[0]?.id || null,
-        });
+
+        const savedMessage = await dbService.createMessageToDB({
+            conversationId,
+            content: caption || '',
+            id_meta: response.messages?.[0]?.id || null
+          });
+      
+        res.json({ success: true, message: savedMessage });
+       
       } catch (error) {
         console.error("❌ Error en sendMedia:", error.response?.data || error.message);
         res.status(500).json({ error: "Error al enviar archivo por WhatsApp" });

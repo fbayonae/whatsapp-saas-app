@@ -123,26 +123,13 @@ export default function Chats() {
             <div ref={bottomRef} />
         </div>
         <div>
-        {selectedConv && (
-            <form
-                onSubmit={handleSendMessage}
-                className="mt-4 flex items-center gap-2 border-t pt-4"
-            >
-                <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Escribe un mensaje..."
-                className="flex-1 px-4 py-2 border rounded focus:outline-none"
-                />
-                <button
-                type="submit"
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                >
-                Enviar
-                </button>
-            </form>
-            )}
+        <MessageInput
+            conversationId={selectedConversation?.id}
+            onMessageSent={(newMessage) => {
+                setMessages((prev) => [...prev, newMessage]);
+            }}
+        />
+
         </div>
       </div>
     </div>

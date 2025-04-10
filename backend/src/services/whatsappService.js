@@ -3,6 +3,7 @@ require('dotenv').config();
 const axios = require('axios');
 const fs = require("fs");
 const FormData = require("form-data");
+const path = require("path");
 
 const token = process.env.TOKEN_DEV;
 const phoneId = process.env.PHONE_NUMBER_ID;
@@ -107,6 +108,28 @@ const getMediaUrl = async (media_id) => {
   );
 
   return response.data.url;
+};
+
+const downloadMediaFile = async (url, media_id, mimetype) => {
+  const ext = mimetype.split("/")[1]; // ejemplo: image/jpeg → jpeg
+  const filename = `${media_id}.${ext}`;
+  const filepath = path.join(__dirname, "../downloads", filename);
+
+  const response = await axios.get(url, {
+    responseType: "stream",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const writer = fs.createWriteStream(filepath);
+
+  response.data.pipe(writer);
+
+  return new Promise((resolve, reject) => {
+    writer.on("finish", () => resolve(filepath));
+    writer.on("error", reject);
+  });
 };
 
 module.exports = { 

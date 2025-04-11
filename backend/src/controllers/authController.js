@@ -71,7 +71,7 @@ const refresh = async (req, res) => {
   
       res.json({
         accessToken,
-        expiresAt: new Date(Date.now() + Number(process.env.JWT_SECRET_EXPIRES_IN)*1000).toISOString()
+        expiresAt: new Date(Date.now() + Number(process.env.JWT_SECRET_EXPIRES_IN)*1000).toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })
       });
   
     } catch (err) {

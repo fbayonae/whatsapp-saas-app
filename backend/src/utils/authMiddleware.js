@@ -1,18 +1,20 @@
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Token requerido" });
-  console.log("Token: ", token);
-  console.log("Secret: ", process.env.JWT_SECRET_KEY);
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log("Decoded: ", decoded);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    res.status(403).json({ error: "Token inválido o expirado" });
-  }
+    const authHeader = req.headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Token requerido" });
+    }
+  
+    const token = authHeader.split(" ")[1];
+  
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      req.user = decoded; // se puede usar después en las rutas
+      next();
+    } catch (err) {
+      return res.status(403).json({ error: "Token inválido o expirado" });
+    }
 };
 
 const isAdmin = (req, res, next) => {

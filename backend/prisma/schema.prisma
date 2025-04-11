@@ -48,10 +48,25 @@ model Session {
 
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  revoked   Boolean  @default(false)
 
   @@map("sessions")
   @@schema("auth")
 }
+
+model RefreshToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  revoked    Boolean  @default(false)
+
+  @@map("refresh_tokens")
+  @@schema("auth")
+}
+
 
 model Template {
   id          Int         @id @default(autoincrement())

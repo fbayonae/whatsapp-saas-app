@@ -1,5 +1,9 @@
 // chatController.js
 const  dbService  = require('../services/dbService');
+const auth = require("../utils/authUtils");
+
+router.get("/", auth, templateController.getTemplates);
+router.post("/sync", auth, templateController.syncTemplates);
 
 const getConversations = async (req, res) => {
   try {

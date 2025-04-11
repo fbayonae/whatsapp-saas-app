@@ -4,7 +4,10 @@ const fs = require("fs");
 const dbService  = require('../services/dbService');
 const whatsappService  = require('../services/whatsappService');
 const mediaUtils  = require("../utils/mediaUtils");
+const auth = require("../utils/authUtils");
 
+router.get("/", auth, templateController.getTemplates);
+router.post("/sync", auth, templateController.syncTemplates);
 
 const sendMessage = async (req, res) => {
   const { conversationId, text } = req.body;

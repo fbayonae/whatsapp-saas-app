@@ -14,7 +14,7 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await axios.post("/api/auth/login", { email, password });
+      const res = await axios.post("/auth/login", { email, password });
       localStorage.setItem("accessToken", res.data.accessToken);
       navigate("/menu"); // ajusta esta ruta según tu layout principal
     } catch (err) {

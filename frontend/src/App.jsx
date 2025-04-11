@@ -6,12 +6,15 @@ import Contacts from "./pages/Contacts";
 import Chats from "./pages/Chats";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
+import Welcome from "./pages/Welcome";
 
 export default function App() {
   return (
     <Routes>
+      {/* Ruta pública para login */}
       <Route path="/login" element={<Login />} />
 
+      {/* Rutas protegidas */}
       <Route
         path="/"
         element={
@@ -20,6 +23,10 @@ export default function App() {
           </PrivateRoute>
         }
       >
+        {/* Ruta de bienvenida por defecto */}
+        <Route index element={<Welcome />} />
+
+        {/* Rutas funcionales */}
         <Route path="plantillas" element={<Templates />} />
         <Route path="contactos" element={<Contacts />} />
         <Route path="chats" element={<Chats />} />

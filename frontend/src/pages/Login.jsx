@@ -16,7 +16,7 @@ export default function Login() {
     try {
       const res = await axios.post("/auth/login", { email, password });
       localStorage.setItem("accessToken", res.data.accessToken);
-      navigate("/menu"); // ajusta esta ruta según tu layout principal
+      navigate("/"); // ajusta esta ruta según tu layout principal
     } catch (err) {
       console.error(err);
       setError("Credenciales incorrectas");

@@ -36,7 +36,7 @@ const login = async (req, res) => {
       .tz("Europe/Madrid")
       .add(Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN || 604800), "second")
       .toDate();
-  
+      console.log(refreshExpiresAt);
       await prisma.refreshToken.create({
         data: {
           token: refreshToken,

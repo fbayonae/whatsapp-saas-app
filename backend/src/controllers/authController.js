@@ -195,6 +195,7 @@ module.exports = {
   login,
   registerUser,
   refresh,
-  logout
+  logout,
+  refreshWithCookie
 };
 

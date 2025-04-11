@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+cors = require('cors');
 const whatsappRoutes = require('./routes/whatsapp');
 const authRoutes = require('./routes/authRoutes');
 const templatesRoutes = require('./routes/templatesRoutes');

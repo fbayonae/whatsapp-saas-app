@@ -3,9 +3,10 @@ const jwt = require("jsonwebtoken");
 const auth = (req, res, next) => {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Token requerido" });
-
+  console.log("Token: ", token);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    console.log("Decoded: ", decoded);
     req.user = decoded;
     next();
   } catch (err) {
@@ -18,10 +19,10 @@ const isAdmin = (req, res, next) => {
     else res.status(403).json({ error: "Acceso denegado" });
   };
   
-  const isClient = (req, res, next) => {
+const isClient = (req, res, next) => {
     if (req.user?.role === "client") next();
     else res.status(403).json({ error: "Acceso restringido a clientes" });
-  };
+};
 
 module.exports = {
     auth,

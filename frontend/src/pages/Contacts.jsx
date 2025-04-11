@@ -7,7 +7,7 @@ export default function Contacts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/api/contacts")
+    axios.get("/contacts")
       .then((res) => {
         setContacts(res.data || []);
       })

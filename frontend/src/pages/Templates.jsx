@@ -7,7 +7,7 @@ export default function Templates() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("/api/templates")
+    axios.get("/templates")
       .then(response => {
         setTemplates(response.data || []);
         setLoading(false);

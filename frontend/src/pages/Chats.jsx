@@ -12,7 +12,7 @@ export default function Chats() {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    axios.get("/api/chats")
+    axios.get("/chats")
       .then(res => setConversations(res.data))
       .catch(err => console.error("❌ Error cargando conversaciones", err));
   }, []);
@@ -27,13 +27,13 @@ export default function Chats() {
     if (!selectedConv) return;
   
     // Cargar mensajes iniciales
-    axios.get(`/api/chats/${selectedConv.id}/messages`)
+    axios.get(`/chats/${selectedConv.id}/messages`)
       .then(res => setMessages(res.data))
       .catch(err => console.error("❌ Error cargando mensajes", err));
   
     // ⏱️ Iniciar refresco periódico
     const interval = setInterval(() => {
-      axios.get(`/api/chats/${selectedConv.id}/messages`)
+      axios.get(`/chats/${selectedConv.id}/messages`)
         .then(res => setMessages(res.data))
         .catch(err => console.error("❌ Error refrescando mensajes", err));
     }, 5000); // cada 5 segundos
@@ -44,7 +44,7 @@ export default function Chats() {
 
   const handleSelect = (conv) => {
     setSelectedConv(conv);
-    axios.get(`/api/chats/${conv.id}/messages`)
+    axios.get(`/chats/${conv.id}/messages`)
       .then(res => setMessages(res.data))
       .catch(err => console.error("❌ Error cargando mensajes", err));
   };

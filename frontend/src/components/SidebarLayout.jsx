@@ -1,8 +1,22 @@
 import React from "react";
 import { LayoutDashboard, MessageCircle, Users, LogOut, Settings } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 export default function SidebarLayout() {
+    
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+    // Eliminar tokens
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken"); // si lo guardas
+
+    // Redirigir a login
+    navigate("/login");
+    };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -36,7 +50,9 @@ export default function SidebarLayout() {
             <Settings size={20} />
             <span className="ml-3">Configuración</span>
           </button>
-          <button className="w-full mt-2 flex items-center px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
+          <button 
+            onClick={handleLogout}
+            className="w-full mt-2 flex items-center px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
             <LogOut size={20} />
             <span className="ml-3">Cerrar sesión</span>
           </button>

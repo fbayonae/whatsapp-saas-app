@@ -14,25 +14,35 @@ const login = async (req, res) => {
   
       const isValid = await bcrypt.compare(password, user.passwordHash);
       if (!isValid) return res.status(401).json({ error: "Contraseña incorrecta" });
-  
+        
+      // Access token
       const accessToken = jwt.sign(
         { userId: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET_KEY,
         { expiresIn: Number ( process.env.JWT_SECRET_EXPIRES_IN )  }
       );
   
+      // Refresh token
       const refreshToken = jwt.sign(
         { userId: user.id },
         process.env.JWT_REFRESH_SECRET_KEY,
         { expiresIn: Number ( process.env.JWT_REFRESH_SECRET_EXPIRES_IN )  }
       );
-  
+      
+      // Guardar refresh token en la base de datos
       await prisma.refreshToken.create({
         data: {
           token: refreshToken,
           userId: user.id,
           expiresAt: new Date(Date.now() + (Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN) * 1000))
         }
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+        maxAge: Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN) * 1000
       });
   
       res.json({
@@ -89,6 +99,12 @@ const logout = async (req, res) => {
         where: { token: refreshToken },
         data: { revoked: true }
       });
+
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+      });   
   
       res.json({ message: "Sesión cerrada correctamente" });
     } catch (err) {

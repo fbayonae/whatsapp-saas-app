@@ -12,6 +12,11 @@ const mediaRoutes = require("./routes/mediaRoutes");
 dotenv.config();
 const app = express();
 
+app.use(cors({
+  origin: "https://whatsapp.technologygroup.es", // o el dominio que uses
+  credentials: true
+}));
+
 // necesario para leer POST de Meta
 app.use(express.json({ limit: '5mb' })); 
 

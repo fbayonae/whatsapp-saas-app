@@ -20,6 +20,7 @@ model User {
 
   loginAttempts LoginAttempt[]
   sessions      Session[]
+  refreshTokens RefreshToken[]
   
   @@map("users")
   @@schema("auth")

@@ -76,6 +76,47 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
   }
 };
 
+const sendCTAMessage = async ({ phone, header_type, header, body, footer, action }) => {
+  try {
+    const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: phone,
+      type: "interactive",
+      interactive: {
+          type: "cta_url",
+          header:{
+              type: header_type || "",
+              text: header || '',
+          },
+          body: {
+              text: body,
+          },
+          footer: {
+              text: footer || ''
+          },
+          action: {
+              name: "cta_url",
+              parameters: {
+                  display_text: action.display_text || "Ver",
+                  url: action.url,
+              }
+          },
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error enviando mensaje CTA:', error.message);
+    throw error;
+  }
+};
+
 
 const uploadMedia = async (filePath, mimetype) => {
   const form = new FormData();

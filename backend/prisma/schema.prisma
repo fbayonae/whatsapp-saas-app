@@ -148,6 +148,10 @@ model Message {
   media_id       String?
   media_mimeType String?
   media_sha256   String?
+  header_type    String?
+  header         String?
+  footer         String?
+  action         Json?
   createdAt      DateTime  @default(now())
   timestamp      DateTime?
   conversationId Int

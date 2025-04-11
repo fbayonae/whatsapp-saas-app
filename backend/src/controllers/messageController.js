@@ -119,6 +119,54 @@ const sendMessageMedia = async (req, res) => {
       } 
 }; 
 
+const sendMessageCTA = async (req, res) => {
+
+    const { conversationId, header, header_type, body, footer, action } = req.body;
+    if (!conversationId || !body || !action) {
+        return res.status(400).json({ error: "conversationId, actionId y body son requeridos" });
+    }
+
+    try{
+
+         // 1. Obtener conversación y número
+         const conversation = await dbService.getConversationFromDB(conversationId);
+
+         if (!conversation) {
+         return res.status(404).json({ error: "Conversación no encontrada" });
+         }
+ 
+         const phone = conversation.contact.phoneNumber;
+ 
+         if (!phone) {
+           return res.status(400).json({ error: "Faltan el número de teléfono" });
+         }
+
+        const response = await whatsappService.sendMessageCTA(phone, header_type, header, body, footer, action);
+        console.log(response);
+         
+        const savedMessage = await dbService.createMessageToDB({
+             conversationId: parseInt(conversationId),
+             content: text,
+             id_meta: response.messages?.[0]?.id || null,
+             contextId: '', 
+             status: 'SENT', 
+             media_id: null, 
+             media_mimeType: null, 
+             media_sha256:null, 
+             header_type: header_type, 
+             header: header, 
+             footer: footer, 
+             action: action
+        });
+       
+        res.json({ success: true, message: savedMessage });
+
+    } catch (error) {
+    console.error("❌ Error en sendCTA:", error.response?.data || error.message);
+    res.status(500).json({ error: "Error al enviar mensaje CTA por WhatsApp" });
+    } 
+  };
+
 module.exports = {
   sendMessage,
   sendMessageMedia

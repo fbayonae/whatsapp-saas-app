@@ -30,14 +30,14 @@ const login = async (req, res) => {
         data: {
           token: refreshToken,
           userId: user.id,
-          expiresAt: new Date(Date.now() + process.env.JWT_REFRESH_SECRET_EXPIRES_IN)
+          expiresAt: new Date(Date.now() + (Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN) * 1000))
         }
       });
   
       res.json({
         accessToken,
         refreshToken,
-        expiresAt: new Date(Date.now() + process.env.JWT_SECRET_EXPIRES_IN).toISOString()
+        expiresAt: new Date(Date.now() + (Number(process.env.JWT_SECRET_EXPIRES_IN )* 1000)).toISOString()
       });
   
     } catch (err) {
@@ -70,7 +70,7 @@ const refresh = async (req, res) => {
   
       res.json({
         accessToken,
-        expiresAt: new Date(Date.now() + process.env.JWT_SECRET_EXPIRES_IN).toISOString()
+        expiresAt: new Date(Date.now() + Number(process.env.JWT_SECRET_EXPIRES_IN)*1000).toISOString()
       });
   
     } catch (err) {

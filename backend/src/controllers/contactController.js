@@ -1,8 +1,4 @@
 const  dbService  = require('../services/dbService');
-const auth = require("../utils/authUtils");
-
-router.get("/", auth, templateController.getTemplates);
-router.post("/sync", auth, templateController.syncTemplates);
 
 const getAllContacts = async (req, res) => {
     try {

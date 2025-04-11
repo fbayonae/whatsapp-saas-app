@@ -1,8 +1,4 @@
 const whatsappService = require('../services/whatsappService');
-const auth = require("../utils/authUtils");
-
-router.get("/", auth, templateController.getTemplates);
-router.post("/sync", auth, templateController.syncTemplates);
 
 exports.sendMessage = async (req, res) => {
   try {

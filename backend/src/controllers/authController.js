@@ -20,7 +20,7 @@ const login = async (req, res) => {
   
       const token = jwt.sign(
         { userId: user.id, email: user.email, role: user.role },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET_KEY,
         { expiresIn: "12h" }
       );
   
@@ -31,35 +31,45 @@ const login = async (req, res) => {
     }
   };
 
-const registerUser = async (req, res) => {
-  const { email, password, name, role } = req.body;
-
-  try {
-    // Comprobar si el usuario ya existe
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ error: 'El usuario ya existe' });
+  const registerUser = async (req, res) => {
+    const { name, email, password, role } = req.body;
+  
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
-
-    // Hashear contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Crear usuario
-    const user = await prisma.user.create({
-      data: {
-        email,
-        passwordHash: hashedPassword,
-        name,
-        role: role || 'user',
-      },
-    });
-
-    return res.status(201).json({ message: 'Usuario creado', user: { id: user.id, email: user.email } });
-  } catch (error) {
-    console.error('Error al registrar usuario:', error);
-    return res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
+  
+    try {
+      // ¿Ya existe el usuario?
+      const existing = await prisma.user.findUnique({ where: { email } });
+      if (existing) {
+        return res.status(409).json({ error: "El usuario ya existe" });
+      }
+  
+      const passwordHash = await bcrypt.hash(password, 10);
+  
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          passwordHash,
+          role: role || "user",
+        },
+      });
+  
+      res.status(201).json({
+        message: "Usuario creado correctamente",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    } catch (error) {
+      console.error("❌ Error creando usuario:", error);
+      res.status(500).json({ error: "Error interno al crear el usuario" });
+    }
+  };
 
 module.exports = {
   login,

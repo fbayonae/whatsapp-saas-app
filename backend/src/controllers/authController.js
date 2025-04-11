@@ -89,6 +89,44 @@ const refresh = async (req, res) => {
     }
 };
 
+const refreshWithCookie = async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+  
+    if (!refreshToken) {
+      return res.status(401).json({ error: "Refresh token no encontrado" });
+    }
+  
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY);
+  
+      // Verifica que no esté revocado en BBDD
+      const tokenRecord = await prisma.refreshToken.findFirst({
+        where: {
+          token: refreshToken,
+          revoked: false
+        }
+      });
+  
+      if (!tokenRecord) {
+        return res.status(401).json({ error: "Refresh token inválido" });
+      }
+  
+      const accessToken = jwt.sign(
+        { userId: decoded.userId },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: Number ( process.env.JWT_SECRET_EXPIRES_IN ) }
+      );
+  
+      return res.json({
+        accessToken,
+        expiresAt: new Date(Date.now() + (Number(process.env.JWT_SECRET_EXPIRES_IN )* 1000)).toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })
+      });
+    } catch (err) {
+      console.error("❌ Error refrescando token:", err);
+      return res.status(401).json({ error: "Token inválido o expirado" });
+    }
+  };
+
 const logout = async (req, res) => {
     const { refreshToken } = req.body;
   

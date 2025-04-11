@@ -2,12 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const prisma = new PrismaClient();
-const dayjs = require("dayjs");
-const utc = require("dayjs/plugin/utc");
-const timezone = require("dayjs/plugin/timezone");
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const login = async (req, res) => {
     const { email, password, userAgent } = req.body;
@@ -31,30 +26,19 @@ const login = async (req, res) => {
         process.env.JWT_REFRESH_SECRET_KEY,
         { expiresIn: process.env.JWT_REFRESH_SECRET_EXPIRES_IN }
       );
-
-      const refreshExpiresAt = dayjs()
-      .tz("Europe/Madrid")
-      .add(Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN || 604800), "second")
-      .toDate();
-      console.log(refreshExpiresAt);
+  
       await prisma.refreshToken.create({
         data: {
           token: refreshToken,
           userId: user.id,
-          expiresAt: refreshExpiresAt
-          //expiresAt: new Date(Date.now() + (Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN) * 1000))
+          expiresAt: new Date(Date.now() + (Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN) * 1000))
         }
       });
-
-      const accessExpiresAt = dayjs()
-      .tz("Europe/Madrid")
-      .add(Number(process.env.JWT_SECRET_EXPIRES_IN), "second")
-      .toISOString();
   
       res.json({
         accessToken,
         refreshToken,
-        expiresAt: accessExpiresAt
+        expiresAt: new Date(Date.now() + (Number(process.env.JWT_SECRET_EXPIRES_IN )* 1000)).toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })
       });
   
     } catch (err) {
@@ -84,15 +68,10 @@ const refresh = async (req, res) => {
         process.env.JWT_SECRET_KEY,
         { expiresIn: process.env.JWT_SECRET_EXPIRES_IN }
       );
-
-      const accessExpiresAt = dayjs()
-      .tz("Europe/Madrid")
-      .add(Number(process.env.JWT_SECRET_EXPIRES_IN), "second")
-      .toISOString();
-
+  
       res.json({
         accessToken,
-        expiresAt: accessExpiresAt
+        expiresAt: new Date(Date.now() + Number(process.env.JWT_SECRET_EXPIRES_IN)*1000).toISOString()
       });
   
     } catch (err) {

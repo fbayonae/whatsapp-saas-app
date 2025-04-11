@@ -18,13 +18,13 @@ const login = async (req, res) => {
       const accessToken = jwt.sign(
         { userId: user.id, email: user.email, role: user.role },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: process.env.JWT_SECRET_EXPIRES_IN }
+        { expiresIn: Number ( process.env.JWT_SECRET_EXPIRES_IN )  }
       );
   
       const refreshToken = jwt.sign(
         { userId: user.id },
         process.env.JWT_REFRESH_SECRET_KEY,
-        { expiresIn: process.env.JWT_REFRESH_SECRET_EXPIRES_IN }
+        { expiresIn: Number ( process.env.JWT_REFRESH_SECRET_EXPIRES_IN )  }
       );
   
       await prisma.refreshToken.create({
@@ -66,7 +66,7 @@ const refresh = async (req, res) => {
       const accessToken = jwt.sign(
         { userId: decoded.userId },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: process.env.JWT_SECRET_EXPIRES_IN }
+        { expiresIn: Number ( process.env.JWT_SECRET_EXPIRES_IN ) }
       );
   
       res.json({

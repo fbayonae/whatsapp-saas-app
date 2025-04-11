@@ -4,11 +4,22 @@ import SidebarLayout from "./components/SidebarLayout";
 import Templates from "./pages/Templates";
 import Contacts from "./pages/Contacts";
 import Chats from "./pages/Chats";
+import Login from "./pages/Login";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<SidebarLayout />}>
+      <Route path="/login" element={<Login />} />
+
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <SidebarLayout />
+          </PrivateRoute>
+        }
+      >
         <Route path="plantillas" element={<Templates />} />
         <Route path="contactos" element={<Contacts />} />
         <Route path="chats" element={<Chats />} />

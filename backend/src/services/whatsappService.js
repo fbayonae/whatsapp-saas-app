@@ -190,6 +190,7 @@ module.exports = {
   getTemplatesFromMeta,
   sendTextMessage,
   sendMediaMessage,
+  sendCTAMessage,
   uploadMedia,
   getMediaUrl,
   downloadMediaFile,

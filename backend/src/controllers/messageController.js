@@ -169,5 +169,6 @@ const sendMessageCTA = async (req, res) => {
 
 module.exports = {
   sendMessage,
-  sendMessageMedia
+  sendMessageMedia,
+  sendMessageCTA
 };

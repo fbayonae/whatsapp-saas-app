@@ -12,7 +12,7 @@ export default function MessageBubble({ message }) {
   const isAudio = message.media_mimeType?.startsWith("audio/");
   const isDocument = message.media_mimeType && !isImage && !isAudio;
 
-  const mediaUrl = message.mediaId ? `/api/media/${message.mediaId}` : null;
+  const mediaUrl = message.media_id ? `/api/media/${message.media_id}` : null;
 
   return (
     <div

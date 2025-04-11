@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 
 export default function Templates() {
   const [templates, setTemplates] = useState([]);

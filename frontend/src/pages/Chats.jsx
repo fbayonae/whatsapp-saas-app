@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import ImagePreview from "../components/ImagePreview";
 import MessageInput from "../components/MessageInput";
 import MessageBubble from "../components/MessageBubble";
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 
 export default function Chats() {
   const [conversations, setConversations] = useState([]);

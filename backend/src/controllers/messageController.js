@@ -132,17 +132,17 @@ const sendMessageCTA = async (req, res) => {
          // 1. Obtener conversación y número
          const conversation = await dbService.getConversationFromDB(conversationId);
 
-         if (!conversation) {
-         return res.status(404).json({ error: "Conversación no encontrada" });
-         }
+        if (!conversation) {
+          return res.status(404).json({ error: "Conversación no encontrada" });
+        }
  
-         const phone = conversation.contact.phoneNumber;
+        const phone = conversation.contact.phoneNumber;
  
-         if (!phone) {
-           return res.status(400).json({ error: "Faltan el número de teléfono" });
-         }
-         console.log(action);
-        const response = await whatsappService.sendCTAMessage(phone, header_type, header, body, footer, action);
+        if (!phone) {
+          return res.status(400).json({ error: "Faltan el número de teléfono" });
+        }
+        
+        const response = await whatsappService.sendCTAMessage({phone, header_type, header, body, footer, action});
         console.log(response);
          
         const savedMessage = await dbService.createMessageToDB({

@@ -124,7 +124,7 @@ const sendMessageCTA = async (req, res) => {
     const { conversationId, header, header_type, body, footer, action } = req.body;
     console.log(req.body);
     if (!conversationId || !body || !action) {
-        return res.status(400).json({ error: "conversationId, actionId y body son requeridos" });
+        return res.status(400).json({ error: "conversationId, action y body son requeridos" });
     }
 
     try{
@@ -141,7 +141,7 @@ const sendMessageCTA = async (req, res) => {
          if (!phone) {
            return res.status(400).json({ error: "Faltan el número de teléfono" });
          }
-
+         console.log(action);
         const response = await whatsappService.sendCTAMessage(phone, header_type, header, body, footer, action);
         console.log(response);
          

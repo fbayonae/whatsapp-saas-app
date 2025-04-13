@@ -147,7 +147,7 @@ const sendMessageCTA = async (req, res) => {
          
         const savedMessage = await dbService.createMessageToDB({
              conversationId: parseInt(conversationId),
-             content: text,
+             content: body,
              id_meta: response.messages?.[0]?.id || null,
              contextId: '', 
              status: 'SENT', 

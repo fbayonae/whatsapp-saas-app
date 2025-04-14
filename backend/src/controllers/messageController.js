@@ -228,6 +228,7 @@ const sendMessageReply = async (req, res) => {
     console.log(response);
 
     const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
+    const parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
     
     const savedMessage = await dbService.createMessageToDB({
       conversationId: parseInt(conversationId),
@@ -243,7 +244,7 @@ const sendMessageReply = async (req, res) => {
       header: header,
       footer: footer,
       action: parsedButtons,
-      metadata: metadata
+      metadata: parsedMetadata
     });
 
     if (media_response) {

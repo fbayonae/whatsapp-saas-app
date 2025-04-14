@@ -241,7 +241,7 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                                 ))}
                             </div>
                         )}
-                        <div className="absolute bottom-2 right-3 text-xs py-8 text-gray-400">12:00</div>
+                        <div className="absolute bottom-2 right-3 text-xs text-gray-400">12:00</div>
                     </div>
                 </div>
 

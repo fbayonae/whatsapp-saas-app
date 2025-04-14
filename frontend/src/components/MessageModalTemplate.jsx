@@ -144,49 +144,49 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                 </div>
 
                 {/* Derecha: Previsualización */}
-                <div className="flex justify-center items-center bg-[#111] bg-opacity-60 fixed top-0 left-0 w-full h-full z-50">
-                    <div className="bg-[#e5ddd5] rounded-lg p-6 w-[360px]">
-                        <div className="bg-white rounded-xl p-4 shadow-md relative">
-                            {/* Header */}
-                            {header && (
-                                <div className="font-bold text-lg text-black mb-2">{header}</div>
-                            )}
 
-                            {/* Body */}
-                            <div className="text-base text-black leading-snug">
-                                {body}
-                            </div>
+                <div className="bg-[#e5ddd5] rounded-lg p-6 w-[360px]">
+                    <div className="bg-white rounded-xl p-4 shadow-md relative">
+                        {/* Header */}
+                        {header && (
+                            <div className="font-bold text-lg text-black mb-2">{header}</div>
+                        )}
 
-                            {/* Footer */}
-                            {footer && (
-                                <div className="text-sm text-gray-500 mt-3">{footer}</div>
-                            )}
-                            <hr></hr>
-                            {tipo === "CTA" && (
-                                <div className="pt-2">
-                                    <button className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
-                                        <SquareArrowUpRight className="w-5 h-5" />
-                                        {ctaTexto || "Visitar"}
-                                    </button>
-                                </div>
-                            )}
-
-                            {tipo === "REPLY" && (
-                                <div className="mt-4 space-y-1">
-                                    {replies.map((btn, i) => (
-                                        <button
-                                            key={i}
-                                            className="w-full bg-gray-200 px-3 py-2 rounded text-left hover:bg-gray-300"
-                                        >
-                                            {btn.title || "Respuesta sin texto"}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
+                        {/* Body */}
+                        <div className="text-base text-black leading-snug">
+                            {body}
                         </div>
+
+                        {/* Footer */}
+                        {footer && (
+                            <div className="text-sm text-gray-500 mt-3">{footer}</div>
+                        )}
+                        <hr></hr>
+                        {tipo === "CTA" && (
+                            <div className="pt-2">
+                                <button className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
+                                    <SquareArrowUpRight className="w-5 h-5" />
+                                    {ctaTexto || "Visitar"}
+                                </button>
+                            </div>
+                        )}
+
+                        {tipo === "REPLY" && (
+                            <div className="mt-4 space-y-1">
+                                {replies.map((btn, i) => (
+                                    <button
+                                        key={i}
+                                        className="w-full bg-gray-200 px-3 py-2 rounded text-left hover:bg-gray-300"
+                                    >
+                                        {btn.title || "Respuesta sin texto"}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
+
             </div>
         </div>
-                );
+    );
 }

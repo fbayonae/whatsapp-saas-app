@@ -117,7 +117,7 @@ const sendCTAMessage = async ({ phone, header_type, header, body, footer, action
   }
 };
 
-const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, buttons }) => {
+const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, parsedButtons }) => {
   try {
     const interactive = {
       type: "button",
@@ -125,7 +125,7 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
         text: body 
       },
       action: {
-        buttons: buttons.map(btn => ({
+        buttons: parsedButtons.map(btn => ({
           type: "reply",
           reply: {
             id: btn.id,

@@ -177,7 +177,7 @@ const sendMessageReply = async (req, res) => {
   const file = req.file;
   const header_media_id = '';
   const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
-
+  console.log("parsedButtons", parsedButtons);
   console.log(req.body);
 
   if (!conversationId || !body || !buttons) {

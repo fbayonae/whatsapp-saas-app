@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Paperclip, X } from "lucide-react";
+import { Paperclip, X, LayoutTemplate } from "lucide-react";
+import MessageModalTemplate from "../components/MessageModalTemplate";
 
 export default function MessageInput({ conversationId, onMessageSent }) {
   const [text, setText] = useState("");
   const [file, setFile] = useState(null);
+  const [showPlantillaModal, setShowPlantillaModal] = useState(false);
 
   const handleSend = async () => {
     if (!text && !file) return;
@@ -50,6 +52,16 @@ export default function MessageInput({ conversationId, onMessageSent }) {
 
       {/* Zona de entrada de mensaje */}
       <div className="flex items-center gap-2">
+
+        {/* Botón plantilla */}
+        <button
+          onClick={() => setShowPlantillaModal(true)}
+          className="text-gray-600 hover:text-indigo-600"
+          title="Enviar mensaje estilo plantilla"
+        >
+          <LayoutTemplate className="w-5 h-5" />
+        </button>
+
         {/* Botón subir archivo */}
         <label className="cursor-pointer text-gray-600 hover:text-indigo-600">
           <Paperclip className="w-5 h-5" />
@@ -78,6 +90,14 @@ export default function MessageInput({ conversationId, onMessageSent }) {
           Enviar
         </button>
       </div>
+
+      {/* Modal de plantilla */}
+      {showPlantillaModal && (
+        <MessageModalTemplate
+          conversationId={conversationId}
+          onClose={() => setShowPlantillaModal(false)}
+        />
+      )}
     </div>
   );
 }

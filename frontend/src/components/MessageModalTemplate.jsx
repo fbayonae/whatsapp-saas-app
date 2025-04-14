@@ -189,7 +189,7 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                         )}
 
                         {tipo === "REPLY" && (
-                            <div className="pt-2">
+                            <div>
                                 {replies.map((btn, i) => (
                                     <div className="pt-2">
                                         <button

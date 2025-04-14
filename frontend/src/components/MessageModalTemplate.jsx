@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { SquareArrowUpRight, Undo, Plus, Trash2 } from "lucide-react";
+import { SquareArrowUpRight, Undo, Plus, Trash2, FileImage } from "lucide-react";
 
 export default function MensajePlantillaModal({ onClose, onSend }) {
     const [tipo, setTipo] = useState("CTA");
     const [header, setHeader] = useState("");
+    const [headerType, setHeaderType] = useState("text");
+    const [headerFile, setHeaderFile] = useState(null);
     const [body, setBody] = useState("");
     const [footer, setFooter] = useState("");
 
@@ -64,13 +66,38 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                     </div>
 
                     <div>
-                        <label className="block font-semibold">Cabecera</label>
-                        <input
-                            type="text"
-                            className="w-full border rounded px-2 py-1"
-                            value={header}
-                            onChange={(e) => setHeader(e.target.value)}
-                        />
+                        <label className="block font-semibold mb-1">Cabecera</label>
+                        <div className="flex gap-2 items-center">
+                            <select
+                                className="border rounded px-2 py-1"
+                                value={headerType}
+                                onChange={(e) => {
+                                    setHeaderType(e.target.value);
+                                    setHeader("");
+                                    setHeaderFile(null);
+                                }}
+                            >
+                                <option value="text">Texto</option>
+                                <option value="image">Imagen</option>
+                                <option value="document">Documento</option>
+                                <option value="video">Video</option>
+                            </select>
+                            {headerType === "text" ? (
+                                <input
+                                    type="text"
+                                    className="flex-1 border rounded px-2 py-1"
+                                    value={header}
+                                    onChange={(e) => setHeader(e.target.value)}
+                                />
+                            ) : (
+                                <input
+                                    type="file"
+                                    className="flex-1 border rounded px-2 py-1"
+                                    accept={headerType === "image" ? "image/*" : headerType === "video" ? "video/*" : "application/*"}
+                                    onChange={(e) => setHeaderFile(e.target.files[0])}
+                                />
+                            )}
+                        </div>
                     </div>
 
                     <div>
@@ -165,8 +192,18 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                 <div className="bg-[#e5ddd5] rounded-lg p-6 w-[360px]">
                     <div className="bg-white rounded-xl p-4 shadow-md relative">
                         {/* Header */}
-                        {header && (
+                        {headerType === "text" && header && (
                             <div className="font-bold text-lg text-black mb-2">{header}</div>
+                        )}
+
+                        {headerType !== "text" && headerFile && (
+                            <div className="mb-2">
+                                <img
+                                    src={URL.createObjectURL(headerFile)}
+                                    alt="preview"
+                                    className="max-w-full max-h-40 rounded shadow"
+                                />
+                            </div>
                         )}
 
                         {/* Body */}

@@ -176,7 +176,7 @@ const sendMessageReply = async (req, res) => {
   const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
   const file = req.file;
   console.log(req.body);
-
+  console.log(file);
   if (!conversationId || !body || !buttons) {
     return res.status(400).json({ error: "conversationId, action y body son requeridos" });
   }

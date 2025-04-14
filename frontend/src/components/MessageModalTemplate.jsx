@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SquareArrowUpRight, Undo } from "lucide-react";
+import { SquareArrowUpRight, Undo, Plus, Trash2 } from "lucide-react";
 
 export default function MensajePlantillaModal({ onClose, onSend }) {
     const [tipo, setTipo] = useState("CTA");
@@ -35,21 +35,32 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
         onSend(payload);
     };
 
+    const removeReply = (index) => {
+        const updated = replies.filter((_, i) => i !== index);
+        setReplies(updated);
+    };
+
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
             <div className="bg-white w-[90%] max-w-5xl rounded-lg shadow-lg flex p-6 gap-6">
                 {/* Izquierda */}
                 <div className="flex-1 space-y-4">
-                    <div>
-                        <label className="font-semibold">Tipo de mensaje:</label>
-                        <select
-                            className="ml-2 border rounded px-2 py-1"
-                            value={tipo}
-                            onChange={(e) => setTipo(e.target.value)}
-                        >
-                            <option value="CTA">CTA</option>
-                            <option value="REPLY">Reply</option>
-                        </select>
+                    <div className="flex items-center gap-4">
+                        <span className="font-semibold">Tipo de mensaje:</span>
+                        <div className="flex items-center border rounded overflow-hidden">
+                            <button
+                                className={`px-4 py-1 ${tipo === "CTA" ? "bg-indigo-600 text-white" : "bg-white text-gray-600"}`}
+                                onClick={() => setTipo("CTA")}
+                            >
+                                CTA
+                            </button>
+                            <button
+                                className={`px-4 py-1 ${tipo === "REPLY" ? "bg-indigo-600 text-white" : "bg-white text-gray-600"}`}
+                                onClick={() => setTipo("REPLY")}
+                            >
+                                Reply
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -102,7 +113,12 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
 
                     {tipo === "REPLY" && (
                         <div className="space-y-2">
-                            <label className="block font-semibold">Botones de respuesta</label>
+                            <div className="flex items-center justify-between">
+                                <label className="font-semibold">Botones de respuesta</label>
+                                <button onClick={addReply} className="text-indigo-600 flex items-center gap-1 text-sm">
+                                    <Plus className="w-4 h-4" /> Añadir
+                                </button>
+                            </div>
                             {replies.map((btn, idx) => (
                                 <div key={idx} className="flex gap-2 items-center">
                                     <input
@@ -119,11 +135,12 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                                         value={btn.title}
                                         onChange={(e) => handleReplyChange(idx, "title", e.target.value)}
                                     />
+                                    <button onClick={() => removeReply(idx)} className="text-red-500 hover:text-red-700">
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
                                 </div>
                             ))}
-                            <button onClick={addReply} className="text-blue-600 text-sm underline">
-                                + Añadir opción
-                            </button>
+                            
                         </div>
                     )}
 

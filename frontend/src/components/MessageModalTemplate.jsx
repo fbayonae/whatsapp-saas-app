@@ -160,7 +160,7 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                     )}
 
                     {/* Botón CTA */}
-                    {ctaType === "cta" && (
+                    {type === "cta" && (
                         <div className="pt-2">
                             <button className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

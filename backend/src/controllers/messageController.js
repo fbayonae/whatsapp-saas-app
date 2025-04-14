@@ -173,8 +173,9 @@ const sendMessageCTA = async (req, res) => {
 
 const sendMessageReply = async (req, res) => {
 
-  const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
+  const { conversationId, header, body, footer, buttons, metadata } = req.body;
   const file = req.file;
+  let header_type = req.body.header_type || '';
   let header_media_id = '';
   let media_response = '';
 

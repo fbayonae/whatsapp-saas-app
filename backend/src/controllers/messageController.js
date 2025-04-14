@@ -176,7 +176,8 @@ const sendMessageReply = async (req, res) => {
   const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
   const file = req.file;
   const header_media_id = '';
-
+  const media_response = '';
+  
   console.log(req.body);
 
   if (!conversationId || !body || !buttons) {
@@ -202,7 +203,7 @@ const sendMessageReply = async (req, res) => {
       header_media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
 
       // Obtener información del archivo subido 
-      const media_response = await whatsappService.getMediaData(header_media_id);
+      media_response = await whatsappService.getMediaData(header_media_id);
 
       // Limpiar archivo temporal
       fs.unlinkSync(file.path);

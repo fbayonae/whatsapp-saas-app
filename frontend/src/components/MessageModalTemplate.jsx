@@ -187,6 +187,6 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                     </div>
                 </div>
             </div>
-        
+        </div>
                 );
 }

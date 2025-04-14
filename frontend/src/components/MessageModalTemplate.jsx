@@ -159,19 +159,30 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                         <div className="text-gray-400 text-xs">{footer}</div>
                     )}
 
-                    {/* Botón CTA */}
-                    {type === "cta" && (
+                    {tipo === "CTA" && (
                         <div className="pt-2">
                             <button className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
-                                {ctaText || "Visitar"}
+                                {ctaTexto || "Visitar"}
                             </button>
                         </div>
                     )}
-                </div>
 
+                    {tipo === "REPLY" && (
+                        <div className="mt-4 space-y-1">
+                            {replies.map((btn, i) => (
+                                <button
+                                    key={i}
+                                    className="w-full bg-gray-200 px-3 py-2 rounded text-left hover:bg-gray-300"
+                                >
+                                    {btn.title || "Respuesta sin texto"}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

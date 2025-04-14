@@ -173,10 +173,11 @@ const sendMessageCTA = async (req, res) => {
 
 const sendMessageReply = async (req, res) => {
 
-  const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
+  const { conversationId, header, header_type, body, footer, metadata } = req.body;
   const file = req.file;
   const header_media_id = '';
   const media_response = '';
+  let buttons = JSON.parse(req.body.buttons);
 
   console.log(req.body);
   console.log(file);

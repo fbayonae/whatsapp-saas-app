@@ -177,8 +177,9 @@ const sendMessageReply = async (req, res) => {
   const file = req.file;
   const header_media_id = '';
   const media_response = '';
-  
+
   console.log(req.body);
+  console.log(file);
 
   if (!conversationId || !body || !buttons) {
     return res.status(400).json({ error: "conversationId, action y body son requeridos" });

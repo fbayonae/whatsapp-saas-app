@@ -117,6 +117,63 @@ const sendCTAMessage = async ({ phone, header_type, header, body, footer, action
   }
 };
 
+const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, buttons }) => {
+  try {
+    const interactive = {
+      type: "button",
+      body: { 
+        text: body 
+      },
+      action: {
+        buttons: buttons.map(btn => ({
+          type: "reply",
+          reply: {
+            id: btn.id,
+            title: btn.title
+          }
+        }))
+      }
+    };
+
+    // Agregar header si se proporciona
+    if (header_type) {
+      if (header_type === "text") {
+        interactive.header = {
+          type: "text",
+          text: header_text || ""
+        };
+      } else if (["image", "video", "document"].includes(header_type)) {
+        if (!header_media_id) {
+          throw new Error(`Se requiere media_id para header de tipo ${header_type}`);
+        }
+        interactive.header = {
+          type: header_type,
+          [header_type]: {
+            id: header_media_id
+          }
+        };
+      }
+    }
+
+    const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: phone,
+      type: "interactive",
+      interactive
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+  });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error enviando mensaje Reply:', error.message);
+    throw error;
+  }
+};
 
 const uploadMedia = async (filePath, mimetype) => {
   const form = new FormData();

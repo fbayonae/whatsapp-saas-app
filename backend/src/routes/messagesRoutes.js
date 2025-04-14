@@ -8,6 +8,6 @@ const auth = require("../utils/authMiddleware").auth;
 router.post("/send", auth,  messageController.sendMessage);
 router.post("/send-media", auth, upload.single("file"), messageController.sendMessageMedia);
 router.post("/send-cta", auth, messageController.sendMessageCTA);
-router.post("/send-buttons", auth, messageController.sendMessageButtons);
+router.post("/send-reply", auth, upload.single("file"), messageController.sendMessageReply);
 
 module.exports = router;

@@ -175,8 +175,8 @@ const sendMessageReply = async (req, res) => {
 
   const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
   const file = req.file;
-  const header_media_id = '';
-  const media_response = '';
+  let header_media_id = '';
+  let media_response = '';
 
   console.log(req.body);
   console.log(file);

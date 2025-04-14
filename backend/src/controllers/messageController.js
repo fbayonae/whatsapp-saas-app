@@ -175,8 +175,9 @@ const sendMessageReply = async (req, res) => {
 
   const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
   const file = req.file;
+  const header_media_id = '';
   console.log(req.body);
-  console.log(file);
+
   if (!conversationId || !body || !buttons) {
     return res.status(400).json({ error: "conversationId, action y body son requeridos" });
   }
@@ -197,7 +198,7 @@ const sendMessageReply = async (req, res) => {
       }
 
       // Subir el archivo a Meta
-      const header_media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
+      header_media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
 
       // Obtener información del archivo subido 
       const media_response = await whatsappService.getMediaData(header_media_id);

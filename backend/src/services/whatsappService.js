@@ -155,7 +155,7 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
         };
       }
     }
-
+    console.log(interactive);
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",

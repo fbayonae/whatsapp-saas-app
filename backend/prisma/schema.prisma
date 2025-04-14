@@ -152,6 +152,7 @@ model Message {
   header         String?
   footer         String?
   action         Json?
+  metadata       Json?
   createdAt      DateTime  @default(now())
   timestamp      DateTime?
   conversationId Int

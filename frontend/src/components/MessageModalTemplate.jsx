@@ -165,7 +165,7 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                             {tipo === "CTA" && (
                                 <div className="pt-2">
                                     <button className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
-                                        <Paperclip className="w-5 h-5" />
+                                        <SquareArrowUpRight className="w-5 h-5" />
                                         {ctaTexto || "Visitar"}
                                     </button>
                                 </div>

@@ -62,7 +62,7 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
         id: media_id,
         ...(caption ? { caption } : {})
       }
-    },{
+    }, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -70,7 +70,7 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
     });
     console.log(response.data);
     return response.data;
-  }catch (error) {
+  } catch (error) {
     console.error('❌ Error enviando mensaje de media:', error.message);
     throw error;
   }
@@ -84,24 +84,24 @@ const sendCTAMessage = async ({ phone, header_type, header, body, footer, action
       to: phone,
       type: "interactive",
       interactive: {
-          type: "cta_url",
-          header:{
-              type: header_type || "",
-              text: header || '',
-          },
-          body: {
-              text: body,
-          },
-          footer: {
-              text: footer || ''
-          },
-          action: {
-              name: "cta_url",
-              parameters: {
-                  display_text: action.display_text || "Ver",
-                  url: action.url,
-              }
-          },
+        type: "cta_url",
+        header: {
+          type: header_type || "",
+          text: header || '',
+        },
+        body: {
+          text: body,
+        },
+        footer: {
+          text: footer || ''
+        },
+        action: {
+          name: "cta_url",
+          parameters: {
+            display_text: action.display_text || "Ver",
+            url: action.url,
+          }
+        },
       }
     }, {
       headers: {
@@ -117,12 +117,13 @@ const sendCTAMessage = async ({ phone, header_type, header, body, footer, action
   }
 };
 
-const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, parsedButtons }) => {
+const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, buttons }) => {
   try {
+    const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
     const interactive = {
       type: "button",
-      body: { 
-        text: body 
+      body: {
+        text: body
       },
       action: {
         buttons: parsedButtons.map(btn => ({
@@ -161,12 +162,12 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
       to: phone,
       type: "interactive",
       interactive
-  }, {
+    }, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
       }
-  });
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -243,7 +244,7 @@ const downloadMediaFile = async (url, media_id, mimetype) => {
   });
 };
 
-module.exports = { 
+module.exports = {
   getTemplatesFromMeta,
   sendTextMessage,
   sendMediaMessage,
@@ -252,5 +253,5 @@ module.exports = {
   uploadMedia,
   getMediaUrl,
   downloadMediaFile,
-  getMediaData 
+  getMediaData
 };

@@ -20,7 +20,7 @@ const saveTemplateToDB = async (template) => {
         id_meta: template.id
       }
     });
-    return saved; 
+    return saved;
   } catch (error) {
     console.error('❌ Error guardando plantilla:', template.name, error);
     return null;
@@ -28,112 +28,112 @@ const saveTemplateToDB = async (template) => {
 };
 
 const saveComponentToDB = async (component, templateId) => {
-    console.log("saveComponentToDB");
-    const savedComponent = await prisma.component.create({
-      data: {
-        type: component.type,
-        format: component.format || '',
-        text: component.text || '',
-        template: { connect: { id: templateId } }
-      }
-    });
-  
-    if (component.type === 'BUTTON' && component.buttons?.length) {
-      for (const btn of component.buttons) {
-        await prisma.button.create({
-          data: {
-            type: btn.type,
-            text: btn.text,
-            url: btn.url || null,
-            component: { connect: { id: savedComponent.id } }
-          }
-        });
-      }
+  console.log("saveComponentToDB");
+  const savedComponent = await prisma.component.create({
+    data: {
+      type: component.type,
+      format: component.format || '',
+      text: component.text || '',
+      template: { connect: { id: templateId } }
     }
-  
-    return savedComponent;
-  };
-  
+  });
+
+  if (component.type === 'BUTTON' && component.buttons?.length) {
+    for (const btn of component.buttons) {
+      await prisma.button.create({
+        data: {
+          type: btn.type,
+          text: btn.text,
+          url: btn.url || null,
+          component: { connect: { id: savedComponent.id } }
+        }
+      });
+    }
+  }
+
+  return savedComponent;
+};
+
 
 const getTemplatesFromDB = async () => {
-    return await prisma.template.findMany({
-      include: {
-        components: {
-          include: {
-            buttons: true
-          }
+  return await prisma.template.findMany({
+    include: {
+      components: {
+        include: {
+          buttons: true
         }
       }
-    });
+    }
+  });
 };
 
 const getContactsFromDB = async () => {
-    return await prisma.contact.findMany({
-        orderBy: { createdAt: 'desc' }
-    });
-   
+  return await prisma.contact.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+
 };
 
 const getConversationsFromDB = async () => {
-    return await prisma.conversation.findMany({
-        orderBy: { lastMessageAt: 'desc' },
-        include: {
-          contact: true
-        }
-    });
+  return await prisma.conversation.findMany({
+    orderBy: { lastMessageAt: 'desc' },
+    include: {
+      contact: true
+    }
+  });
 };
 
 const getConversationFromDB = async (conversationId) => {
-    return await prisma.conversation.findUnique({
-        where: { id: parseInt(conversationId) },
-        include: { 
-            contact: true 
-        }
-    });
+  return await prisma.conversation.findUnique({
+    where: { id: parseInt(conversationId) },
+    include: {
+      contact: true
+    }
+  });
 };
 
 const getMessagesFromDB = async (conversationId) => {
-    return await prisma.message.findMany({
-        where: { conversationId: parseInt(conversationId) },
-        orderBy: { timestamp: 'asc' }
-    });
+  return await prisma.message.findMany({
+    where: { conversationId: parseInt(conversationId) },
+    orderBy: { timestamp: 'asc' }
+  });
 };
 
 const createMessageToDB = async ({ conversationId, type, content, id_meta, contextId, status, media_id, media_mimeType, media_sha256, header_type, header, footer, action, metadata }) => {
-    try {
-      const savedMessage = await prisma.message.create({
-        data: {
-          conversationId,
-          direction: "OUTBOUND",
-          content,
-          type: type || "text",
-          id_meta: id_meta || "manual",
-          timestamp: new Date(),
-          contextId,
-          status,
-          media_id,
-          media_mimeType,
-          media_sha256,
-          header_type,
-          header,
-          footer,
-          action,
-          metadata
-        }
-      });
-      return savedMessage;
-    } catch (error) {
-      console.error("❌ Error guardando mensaje outbound:", error);
-      throw error;
-    }
-  };
+  try {
+    const savedMessage = await prisma.message.create({
+      data: {
+        conversationId,
+        direction: "OUTBOUND",
+        content,
+        type: type || "text",
+        id_meta: id_meta || "manual",
+        timestamp: new Date(),
+        contextId,
+        status,
+        media_id,
+        media_mimeType,
+        media_sha256,
+        header_type,
+        header,
+        footer,
+        action,
+        metadata
+      }
+    });
+    return savedMessage;
+  } catch (error) {
+    console.error("❌ Error guardando mensaje outbound:", error);
+    throw error;
+  }
+};
 
 module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
   saveComponentToDB,
   getContactsFromDB,
-  getConversationsFromDB, 
+  getConversationsFromDB,
   getMessagesFromDB,
   getConversationFromDB,
   createMessageToDB

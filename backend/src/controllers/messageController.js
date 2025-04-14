@@ -176,8 +176,7 @@ const sendMessageReply = async (req, res) => {
   const { conversationId, header, header_type, body, footer, buttons, metadata } = req.body;
   const file = req.file;
   const header_media_id = '';
-  const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
-  console.log("parsedButtons", parsedButtons);
+
   console.log(req.body);
 
   if (!conversationId || !body || !buttons) {
@@ -222,7 +221,7 @@ const sendMessageReply = async (req, res) => {
       return res.status(400).json({ error: "Faltan el número de teléfono" });
     }
 
-    const response = await whatsappService.sendReplyMessage({ phone, header_type, header, header_media_id, body, footer, parsedButtons });
+    const response = await whatsappService.sendReplyMessage({ phone, header_type, header, header_media_id, body, footer, buttons });
     console.log(response);
 
     const savedMessage = await dbService.createMessageToDB({

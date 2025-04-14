@@ -183,7 +183,7 @@ const sendMessageReply = async (req, res) => {
 
   try {
 
-    if (file) {
+    if (file && file.path && file.originalname) {
       // Detectar tipo de media (image, audio, document...)
       const detectedMediaType = mediaUtils.detectMediaType(file.mimetype);
 

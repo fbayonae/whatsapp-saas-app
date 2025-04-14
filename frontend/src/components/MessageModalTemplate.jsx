@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SquareArrowUpRight } from "lucide-react";
+import { SquareArrowUpRight, Undo } from "lucide-react";
 
 export default function MensajePlantillaModal({ onClose, onSend }) {
     const [tipo, setTipo] = useState("CTA");
@@ -176,8 +176,9 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                                 {replies.map((btn, i) => (
                                     <button
                                         key={i}
-                                        className="w-full bg-gray-200 px-3 py-2 rounded text-left hover:bg-gray-300"
+                                        className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50"
                                     >
+                                        <Undo className="w-5 h-5" />
                                         {btn.title || "Respuesta sin texto"}
                                     </button>
                                 ))}

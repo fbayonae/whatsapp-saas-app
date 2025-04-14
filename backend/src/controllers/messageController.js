@@ -182,7 +182,7 @@ const sendMessageReply = async (req, res) => {
   console.log(file);
 
   if (!conversationId || !body || !buttons) {
-    return res.status(400).json({ error: "conversationId, action y body son requeridos" });
+    return res.status(400).json({ error: "conversationId, buttons y body son requeridos" });
   }
 
   try {

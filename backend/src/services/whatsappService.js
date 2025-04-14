@@ -119,7 +119,7 @@ const sendCTAMessage = async ({ phone, header_type, header, body, footer, action
 
 const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, buttons }) => {
   try {
-    let parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
+    const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
     const interactive = {
       type: "button",
       body: {

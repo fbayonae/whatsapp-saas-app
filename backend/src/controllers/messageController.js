@@ -227,6 +227,8 @@ const sendMessageReply = async (req, res) => {
     const response = await whatsappService.sendReplyMessage({ phone, header_type, header, header_media_id, body, footer, buttons });
     console.log(response);
 
+    const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
+    
     const savedMessage = await dbService.createMessageToDB({
       conversationId: parseInt(conversationId),
       type: "reply",
@@ -241,7 +243,7 @@ const sendMessageReply = async (req, res) => {
       header: header,
       footer: footer,
       action: buttons,
-      metadata: metadata
+      metadata: parsedButtons
     });
 
     if (media_response) {

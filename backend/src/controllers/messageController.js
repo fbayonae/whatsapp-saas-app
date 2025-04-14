@@ -246,8 +246,8 @@ const sendMessageReply = async (req, res) => {
 
     if (media_response) {
       try {
-        const url = await whatsappService.getMediaUrl(media_id);
-        const localFile = await whatsappService.downloadMediaFile(url, media_id, media_response.mime_type);
+        const url = await whatsappService.getMediaUrl(header_media_id);
+        const localFile = await whatsappService.downloadMediaFile(url, header_media_id, media_response.mime_type);
 
         console.log("📥 Archivo guardada en:", localFile);
       } catch (error) {

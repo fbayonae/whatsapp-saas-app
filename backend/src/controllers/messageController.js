@@ -242,8 +242,8 @@ const sendMessageReply = async (req, res) => {
       header_type: header_type,
       header: header,
       footer: footer,
-      action: buttons,
-      metadata: parsedButtons
+      action: parsedButtons,
+      metadata: metadata
     });
 
     if (media_response) {

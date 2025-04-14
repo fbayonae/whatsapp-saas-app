@@ -189,9 +189,9 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                         )}
 
                         {tipo === "REPLY" && (
-                            <div className="mt-4 space-y-1">
+                            <div className="pt-2">
                                 {replies.map((btn, i) => (
-                                    <div>
+                                    <div className="pt-2">
                                         <button
                                             key={i}
                                             className="w-full flex items-center justify-center gap-2 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50"

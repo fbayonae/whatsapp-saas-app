@@ -181,7 +181,7 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                         <hr></hr>
                         {tipo === "CTA" && (
                             <div className="pt-2">
-                                <button className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
+                                <button className="w-full flex items-center justify-center gap-2 border border-white-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50">
                                     <SquareArrowUpRight className="w-5 h-5" />
                                     {ctaTexto || "Visitar"}
                                 </button>
@@ -194,7 +194,7 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
                                     <div>
                                         <button
                                             key={i}
-                                            className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50"
+                                            className="w-full flex items-center justify-center gap-2 border border-white-500 text-green-600 text-sm py-2 px-4 rounded-lg hover:bg-green-50"
                                         >
                                             <Undo className="w-5 h-5" />
                                             {btn.title || "Respuesta sin texto"}

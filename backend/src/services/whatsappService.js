@@ -120,7 +120,6 @@ const sendCTAMessage = async ({ phone, header_type, header, body, footer, action
 const sendReplyMessage = async ({ phone, header_type, header, header_media_id, body, footer, buttons }) => {
   try {
     const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
-    console.log(parsedButtons);
     const interactive = {
       type: "button",
       body: {
@@ -130,8 +129,8 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
         buttons: parsedButtons.map(btn => ({
           type: "reply",
           reply: {
-            id: btn.id,
-            title: btn.title
+            id: btn.reply.id,
+            title: btn.reply.title
           }
         }))
       }

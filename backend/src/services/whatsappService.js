@@ -140,7 +140,7 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
       if (header_type === "text") {
         interactive.header = {
           type: "text",
-          text: header_text || ""
+          text: header || ""
         };
       } else if (["image", "video", "document"].includes(header_type)) {
         if (!header_media_id) {

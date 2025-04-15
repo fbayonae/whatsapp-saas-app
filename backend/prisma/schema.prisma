@@ -153,6 +153,7 @@ model Message {
   footer         String?
   action         Json?
   metadata       Json?
+  interactive    Json?
   createdAt      DateTime  @default(now())
   timestamp      DateTime?
   conversationId Int

@@ -118,7 +118,7 @@ const handleWebhookMessage = async (value) => {
           conversationId: conversation.id,
           //from: from,
           direction: 'INBOUND',
-          content: text || mediaInfo?.caption || '',
+          content: text || mediaInfo?.caption || msg.button_reply?.title || '',
           timestamp: timestamp,
           type: type,
           id_meta: meta_id,
@@ -126,7 +126,8 @@ const handleWebhookMessage = async (value) => {
           status: 'RECEIVED',
           media_id: mediaInfo?.mediaId,
           media_mimeType: mediaInfo?.mimeType,
-          media_sha256: mediaInfo?.sha256
+          media_sha256: mediaInfo?.sha256,
+          interactive: msg.interactive || null,
         }
       });
       

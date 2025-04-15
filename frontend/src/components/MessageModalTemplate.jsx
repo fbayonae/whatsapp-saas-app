@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { SquareArrowUpRight, Undo, Plus, Trash2, FileImage } from "lucide-react";
 
-export default function MensajePlantillaModal({ onClose, onSend }) {
+export default function MensajePlantillaModal({ onClose, conversationId, onSend }) {
     const [tipo, setTipo] = useState("CTA");
     const [header, setHeader] = useState("");
     const [headerType, setHeaderType] = useState("text");

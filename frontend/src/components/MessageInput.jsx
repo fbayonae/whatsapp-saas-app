@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 import { Paperclip, X, LayoutTemplate } from "lucide-react";
 import MessageModalTemplate from "../components/MessageModalTemplate";
 

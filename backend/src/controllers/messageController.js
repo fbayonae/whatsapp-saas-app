@@ -123,43 +123,14 @@ const sendMessageMedia = async (req, res) => {
 
 const sendMessageCTA = async (req, res) => {
 
-  const { conversationId, header, body, footer, action } = req.body;
-  const file = req.file;
-  let header_type = req.body.header_type || '';
-  let header_media_id = '';
-  let media_response = '';
-
+  const { conversationId, header, header_type, body, footer, action } = req.body;
   console.log(req.body);
-  console.log(file);
+
   if (!conversationId || !body || !action) {
     return res.status(400).json({ error: "conversationId, action y body son requeridos" });
   }
 
   try {
-
-    if (file && file.path && file.originalname) {
-      // Detectar tipo de media (image, audio, document...)
-      const detectedMediaType = mediaUtils.detectMediaType(file.mimetype);
-
-      // ✅ Validar archivo
-      const { valid, reason, type: media_type } = mediaUtils.validateMediaFile(file);
-
-      header_type = media_type;
-
-      if (!valid) {
-        return res.status(400).json({ error: `Archivo no soportado: ${reason}` });
-      }
-
-      // Subir el archivo a Meta
-      header_media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
-      console.log("header_media_id", header_media_id);
-
-      // Obtener información del archivo subido 
-      media_response = await whatsappService.getMediaData(header_media_id);
-      console.log("media_response", media_response);
-      // Limpiar archivo temporal
-      fs.unlinkSync(file.path);
-    }
 
     // 1. Obtener conversación y número
     const conversation = await dbService.getConversationFromDB(conversationId);
@@ -174,7 +145,7 @@ const sendMessageCTA = async (req, res) => {
       return res.status(400).json({ error: "Faltan el número de teléfono" });
     }
 
-    const response = await whatsappService.sendCTAMessage({ phone, header_type, header, header_media_id, body, footer, action });
+    const response = await whatsappService.sendCTAMessage({ phone, header_type, header, body, footer, action });
     console.log(response);
 
     const savedMessage = await dbService.createMessageToDB({
@@ -184,25 +155,14 @@ const sendMessageCTA = async (req, res) => {
       id_meta: response.messages?.[0]?.id || null,
       contextId: '',
       status: 'SENT',
-      media_id: header_media_id || null,
-      media_mimeType: media_response.mime_type,
-      media_sha256: media_response.sha256,
+      media_id: null,
+      media_mimeType: null,
+      media_sha256: null,
       header_type: header_type,
       header: header,
       footer: footer,
       action: action
     });
-
-    if (media_response) {
-      try {
-        const url = await whatsappService.getMediaUrl(header_media_id);
-        const localFile = await whatsappService.downloadMediaFile(url, header_media_id, media_response.mime_type);
-
-        console.log("📥 Archivo guardada en:", localFile);
-      } catch (error) {
-        console.error("❌ Error al descargar archivo multimedia:", error.message);
-      }
-    }
 
     res.json({ success: true, message: savedMessage });
 

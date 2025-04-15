@@ -21,7 +21,7 @@ export default function MessageInput({ conversationId, onMessageSent }) {
         formData.append("file", file);
 
         response = await axios.post("/api/messages/send-media", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+          //headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
         response = await axios.post("/api/messages/send", {

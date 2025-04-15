@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { SquareArrowUpRight, Undo, Plus, Trash2, FileImage } from "lucide-react";
 
 export default function MensajePlantillaModal({ onClose, onSend }) {
@@ -24,23 +25,45 @@ export default function MensajePlantillaModal({ onClose, onSend }) {
         setReplies([...replies, { id: "", title: "" }]);
     };
 
-    const handleSend = () => {
-        const payload = {
-            tipo,
-            header,
-            body,
-            footer,
-            ...(tipo === "CTA"
-                ? { cta: { url: ctaUrl, display_text: ctaTexto } }
-                : { replies })
-        };
-        onSend(payload);
-    };
-
     const removeReply = (index) => {
         const updated = replies.filter((_, i) => i !== index);
         setReplies(updated);
     };
+
+    const handleSend = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("conversationId", conversationId);
+            formData.append("header_type", headerType);
+            formData.append("body", body);
+            formData.append("footer", footer);
+
+            if (headerType === "text") {
+                formData.append("header", header);
+            } else if (headerFile) {
+                formData.append("file", headerFile);
+            }
+
+            if (tipo === "CTA") {
+                const action = {
+                    url: ctaUrl,
+                    display_text: ctaTexto
+                };
+                formData.append("action", JSON.stringify(action));
+                await axios.post("/api/messages/send-cta", formData);
+            } else {
+                formData.append("buttons", JSON.stringify(replies));
+                console.log(formData);
+                await axios.post("/api/messages/send-reply", formData);
+            }
+
+            onClose();
+        } catch (error) {
+            console.error("❌ Error al enviar plantilla:", error.response?.data || error.message);
+        }
+    };
+
+    
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">

@@ -43,7 +43,7 @@ export default function MensajePlantillaModal({ onClose, conversationId, onSend 
             } else if (headerFile) {
                 formData.append("file", headerFile);
             }
-
+            console.log(formData);
             if (tipo === "CTA") {
                 const action = {
                     url: ctaUrl,

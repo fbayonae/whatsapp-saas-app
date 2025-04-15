@@ -76,7 +76,7 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
   }
 };
 
-const sendCTAMessage = async ({ phone, header_type, header, body, footer, action }) => {
+const sendCTAMessage = async ({ phone, header_type, header, header_media_id, body, footer, action }) => {
   try {
     const parsedAction = typeof action === 'string' ? JSON.parse(action) : action;
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {

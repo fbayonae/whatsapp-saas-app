@@ -5,8 +5,8 @@ import { FileText, Music, File, SquareArrowUpRight, Undo } from "lucide-react";
 export default function MessageBubble({ message }) {
   const isInbound = message.direction === "INBOUND";
   const alignment = isInbound
-    ? "self-start text-left bg-gray-500"
-    : "self-end text-right bg-indigo-600";
+    ? "self-start text-left bg-green-500"
+    : "self-end text-right bg-white-600";
 
   const mediaUrl = message.media_id ? `/api/media/${message.media_id}` : null;
   const isImage = message.type === "image";

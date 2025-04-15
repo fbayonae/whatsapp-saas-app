@@ -5,7 +5,7 @@ import { FileText, Music, File, SquareArrowUpRight, Undo } from "lucide-react";
 export default function MessageBubble({ message, allMessages = [] }) {
   const isInbound = message.direction === "INBOUND";
   const alignment = isInbound ? "justify-start" : "justify-end";
-  const margin = isInbound ? "ml-4" : "mr-2"; // Separación para los mensajes entrantes
+  const margin = isInbound ? "ml-4" : ""; // Separación para los mensajes entrantes
   const bubbleColor = isInbound ? "bg-white text-black" : "bg-[#dcf8c6] text-black";
 
   const mediaUrl = message.media_id ? `/api/media/${message.media_id}` : null;
@@ -17,9 +17,13 @@ export default function MessageBubble({ message, allMessages = [] }) {
   const isReply = message.type === "reply";
   const isInteractive = message.type === "interactive";
 
-  const contextMessage = message.contextId && allMessages.length
+  /*const contextMessage = message.contextId && allMessages.length
     ? allMessages.find((m) => m.id_meta?.toString() === message.contextId?.toString())
-    : null;
+    : null;*/
+  const contextMessage =
+    message.contextId && allMessages.length
+      ? allMessages.find((m) => String(m.id_meta) === String(message.contextId))
+      : null;
 
   return (
     <div className={`w-full flex ${alignment} mb-2 ${margin}`}>

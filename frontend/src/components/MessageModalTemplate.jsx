@@ -51,6 +51,7 @@ export default function MensajePlantillaModal({ onClose, conversationId, onSend 
                 };
                 formData.append("action", JSON.stringify(action));
                 await axios.post("/messages/send-cta", formData);
+                console.log(formData);
             } else {
                 formData.append("buttons", JSON.stringify(replies));
                 console.log(formData);

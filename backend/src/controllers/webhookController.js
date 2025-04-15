@@ -111,7 +111,7 @@ const handleWebhookMessage = async (value) => {
           }
         });
       }
-
+      console.log(msg.interactive?.button_reply?.title);
       // 5. Guardar mensaje recibido
       await prisma.message.create({
         data: {

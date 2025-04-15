@@ -42,25 +42,27 @@ export default function MensajePlantillaModal({ onClose, conversationId, onMessa
             formData.append("header_type", headerType);
             formData.append("body", body);
             formData.append("footer", footer);
-
+            console.log("formData", formData);
             if (headerType === "text") {
                 formData.append("header", header);
             } else if (headerFile) {
                 formData.append("file", headerFile);
             }
-
+            console.log ("formdata2", formData);
             if (tipo === "CTA") {
                 const action = {
                     url: ctaUrl,
                     display_text: ctaTexto
                 };
                 formData.append("action", JSON.stringify(action));
+                console.log("formData CTA", formData);
                 const response = await axios.post("/messages/send-cta", formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
                 if (onMessageSent) onMessageSent(response.data.message);
             } else {
                 formData.append("buttons", JSON.stringify(replies));
+                console.log("formData buttons", formData);
                 const response = await axios.post("/messages/send-reply", formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });

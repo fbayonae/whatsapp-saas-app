@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
       next();
     } catch (err) {
       console.error("❌ Token inválido:", err.message);
-      return res.status(403).json({ error: "Token inválido o expirado" });
+      return res.status(401).json({ error: "Token inválido o expirado" });
     }
 };
 
@@ -25,7 +25,7 @@ const isAdmin = (req, res, next) => {
   
 const isClient = (req, res, next) => {
     if (req.user?.role === "client") next();
-    else res.status(401).json({ error: "Acceso restringido a clientes" });
+    else res.status(403).json({ error: "Acceso restringido a clientes" });
 };
 
 module.exports = {

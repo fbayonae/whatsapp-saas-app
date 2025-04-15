@@ -38,7 +38,7 @@ export default function MensajePlantillaModal({ onClose, conversationId, onMessa
             }
 
             const formData = new FormData();
-            formData.append("conversationId", conversationId);
+            formData.append("conversationId", String(conversationId));
             formData.append("header_type", headerType);
             formData.append("body", body);
             formData.append("footer", footer);

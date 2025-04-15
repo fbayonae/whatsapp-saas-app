@@ -5,6 +5,7 @@ import { FileText, Music, File, SquareArrowUpRight, Undo } from "lucide-react";
 export default function MessageBubble({ message, allMessages = [] }) {
   const isInbound = message.direction === "INBOUND";
   const alignment = isInbound ? "justify-start" : "justify-end";
+  const margin = isInbound ? "ml-4" : "mr-2"; // Separación para los mensajes entrantes
   const bubbleColor = isInbound ? "bg-white text-black" : "bg-[#dcf8c6] text-black";
 
   const mediaUrl = message.media_id ? `/api/media/${message.media_id}` : null;
@@ -14,14 +15,13 @@ export default function MessageBubble({ message, allMessages = [] }) {
   const isDocument = message.type === "document";
   const isCTA = message.type === "cta";
   const isReply = message.type === "reply";
-  const isInteractive = message.type === "interactive";
 
-  const contextMessage = message.contextId
-    ? allMessages.find((m) => m.id_meta === message.contextId)
+  const contextMessage = message.contextId && allMessages.length
+    ? allMessages.find((m) => m.id_meta?.toString() === message.contextId?.toString())
     : null;
 
   return (
-    <div className={`w-full flex ${alignment} mb-2`}>
+    <div className={`w-full flex ${alignment} mb-2 ${margin}`}>
       <div className={`w-[300px] p-3 rounded-xl shadow ${bubbleColor}`}>
 
         {/* Contexto del mensaje */}
@@ -128,16 +128,12 @@ export default function MessageBubble({ message, allMessages = [] }) {
                   key={idx}
                   className="w-full flex items-center justify-center gap-2 text-green-600 text-sm py-1 px-3 rounded-lg hover:bg-green-50 border"
                 >
-                  <Undo className="w-4 h-4" />
+                  <Undo className="w-5 h-5" />
                   {btn.reply?.title || "Respuesta"}
                 </button>
               ))}
             </div>
           </div>
-        )}
-
-        {isInteractive && (
-          <div className={`text-sm mt-2`}>{message.content}</div>
         )}
 
         {/* Texto común */}

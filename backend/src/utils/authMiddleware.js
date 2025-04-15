@@ -25,7 +25,7 @@ const isAdmin = (req, res, next) => {
   
 const isClient = (req, res, next) => {
     if (req.user?.role === "client") next();
-    else res.status(403).json({ error: "Acceso restringido a clientes" });
+    else res.status(401).json({ error: "Acceso restringido a clientes" });
 };
 
 module.exports = {

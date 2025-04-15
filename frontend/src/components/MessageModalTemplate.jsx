@@ -55,11 +55,15 @@ export default function MensajePlantillaModal({ onClose, conversationId, onMessa
                     display_text: ctaTexto
                 };
                 formData.append("action", JSON.stringify(action));
-                const response = await axios.post("/messages/send-cta", formData);
+                const response = await axios.post("/messages/send-cta", formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
                 if (onMessageSent) onMessageSent(response.data.message);
             } else {
                 formData.append("buttons", JSON.stringify(replies));
-                const response = await axios.post("/messages/send-reply", formData);
+                const response = await axios.post("/messages/send-reply", formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
                 if (onMessageSent) onMessageSent(response.data.message);
             }
 

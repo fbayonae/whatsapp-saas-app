@@ -79,31 +79,44 @@ const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
 const sendCTAMessage = async ({ phone, header_type, header, header_media_id, body, footer, action }) => {
   try {
     const parsedAction = typeof action === 'string' ? JSON.parse(action) : action;
+    const interactive = {
+      type: "cta_url",
+      body: {
+        text: body
+      },
+      action: {
+        name: "cta_url",
+        parameters: {
+          display_text: parsedAction.display_text || "Ver",
+          url: parsedAction.url,
+        }
+      },
+    };
+    // Agregar header si se proporciona
+    if (header_type) {
+      if (header_type === "text") {
+        interactive.header = {
+          type: "text",
+          text: header || ""
+        };
+      } else if (["image", "video", "document"].includes(header_type)) {
+        if (!header_media_id) {
+          throw new Error(`Se requiere media_id para header de tipo ${header_type}`);
+        }
+        interactive.header = {
+          type: header_type,
+          [header_type]: {
+            id: header_media_id
+          }
+        };
+      }
+    }
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",
       to: phone,
       type: "interactive",
-      interactive: {
-        type: "cta_url",
-        header: {
-          type: header_type || "",
-          text: header || '',
-        },
-        body: {
-          text: body,
-        },
-        footer: {
-          text: footer || ''
-        },
-        action: {
-          name: "cta_url",
-          parameters: {
-            display_text: parsedAction.display_text || "Ver",
-            url: parsedAction.url,
-          }
-        },
-      }
+      interactive
     }, {
       headers: {
         Authorization: `Bearer ${token}`,

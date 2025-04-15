@@ -6,7 +6,7 @@ export default function MessageBubble({ message }) {
   const isInbound = message.direction === "INBOUND";
   const alignment = isInbound
     ? "self-start text-left bg-white"
-    : "self-end text-right bg-green-500";
+    : "self-end text-right bg-green-200";
 
   const mediaUrl = message.media_id ? `/api/media/${message.media_id}` : null;
   const isImage = message.type === "image";

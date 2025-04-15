@@ -124,6 +124,8 @@ const sendMessageMedia = async (req, res) => {
 const sendMessageCTA = async (req, res) => {
 
   const { conversationId, header, header_type, body, footer, action } = req.body;
+  const file = req.file;
+  
   console.log(req.body);
   if (!conversationId || !body || !action) {
     return res.status(400).json({ error: "conversationId, action y body son requeridos" });

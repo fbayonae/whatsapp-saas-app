@@ -94,7 +94,7 @@ export default function Chats() {
         <h2 className="text-xl font-bold mb-4">
           {selectedConv ? `Chat con ${selectedConv.contact?.name || selectedConv.contact?.phoneNumber}` : "Selecciona una conversación"}
         </h2>
-        <div className="flex-1 overflow-y-auto space-y-4 pr-4">
+        <div className="flex-1 overflow-y-auto space-y-4 pr-4 bg-[#e5ddd5]">
         {messages.map((msg) => (
             <MessageBubble key={msg.id} message={msg} />
         ))}

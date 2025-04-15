@@ -37,36 +37,41 @@ export default function MensajePlantillaModal({ onClose, conversationId, onMessa
                 return;
             }
 
-            const formData = new FormData();
-            formData.append("conversationId", String(conversationId));
-            formData.append("header_type", headerType);
-            formData.append("body", body);
-            formData.append("footer", footer);
-            console.log("formData", formData);
-            if (headerType === "text") {
-                formData.append("header", header);
-            } else if (headerFile) {
-                formData.append("file", headerFile);
-            }
-            console.log ("formdata2", formData);
             if (tipo === "CTA") {
-                const action = {
-                    url: ctaUrl,
-                    display_text: ctaTexto
+
+                const payload = {
+                    conversationId: String(conversationId),
+                    header_type: headerType,
+                    header,
+                    body,
+                    footer,
+                    action: {
+                        url: ctaUrl,
+                        display_text: ctaTexto
+                    }
                 };
-                formData.append("action", JSON.stringify(action));
-                console.log("formData CTA", formData);
-                const response = await axios.post("/messages/send-cta", formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
-                });
+                const response = await axios.post("/messages/send-cta", payload);
                 if (onMessageSent) onMessageSent(response.data.message);
+
             } else {
+
+                const formData = new FormData();
+                formData.append("conversationId", String(conversationId));
+                formData.append("header_type", headerType);
+                formData.append("body", body);
+                formData.append("footer", footer);
+                if (headerType === "text") {
+                    formData.append("header", header);
+                } else if (headerFile) {
+                    formData.append("file", headerFile);
+                }
                 formData.append("buttons", JSON.stringify(replies));
                 console.log("formData buttons", formData);
                 const response = await axios.post("/messages/send-reply", formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
                 if (onMessageSent) onMessageSent(response.data.message);
+
             }
 
             onClose();
@@ -111,6 +116,7 @@ export default function MensajePlantillaModal({ onClose, conversationId, onMessa
                                     setHeader("");
                                     setHeaderFile(null);
                                 }}
+                                disabled={tipo === "CTA"} // solo disponible para Reply
                             >
                                 <option value="text">Texto</option>
                                 <option value="image">Imagen</option>

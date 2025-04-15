@@ -130,8 +130,8 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
         buttons: parsedButtons.map(btn => ({
           type: "reply",
           reply: {
-            id: btn.reply.id,
-            title: btn.reply.title
+            id: btn.id,
+            title: btn.title
           }
         }))
       }

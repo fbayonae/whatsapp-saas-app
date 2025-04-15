@@ -15,6 +15,7 @@ export default function MessageBubble({ message, allMessages = [] }) {
   const isDocument = message.type === "document";
   const isCTA = message.type === "cta";
   const isReply = message.type === "reply";
+  const isInteractive = message.type === "interactive";
 
   const contextMessage = message.contextId && allMessages.length
     ? allMessages.find((m) => m.id_meta?.toString() === message.contextId?.toString())
@@ -134,6 +135,10 @@ export default function MessageBubble({ message, allMessages = [] }) {
               ))}
             </div>
           </div>
+        )}
+
+        {isInteractive && (
+          <div className={`text-sm mt-2`}>{message.content}</div>
         )}
 
         {/* Texto común */}

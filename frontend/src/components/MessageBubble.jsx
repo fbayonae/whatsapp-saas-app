@@ -4,7 +4,7 @@ import { FileText, Music, File, SquareArrowUpRight, Undo } from "lucide-react";
 
 export default function MessageBubble({ message }) {
   const isInbound = message.direction === "INBOUND";
-  const alignment = isInbound ? "items-start" : "items-end";
+  const alignment = isInbound ? "justify-start" : "justify-end";
   const bubbleColor = isInbound ? "bg-white text-black" : "bg-[#dcf8c6] text-black";
 
   const mediaUrl = message.media_id ? `/api/media/${message.media_id}` : null;
@@ -17,7 +17,7 @@ export default function MessageBubble({ message }) {
 
   return (
     <div className={`w-full flex ${alignment} mb-2`}>
-      <div className={`max-w-[75%] p-3 rounded-xl shadow ${bubbleColor}`}>
+      <div className={`w-[300px] p-3 rounded-xl shadow ${bubbleColor}`}>
         {/* Imagen */}
         {isImage && mediaUrl && (
           <div className="mb-2">

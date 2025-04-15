@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "../utils/axiosInstance";
 import { SquareArrowUpRight, Undo, Plus, Trash2, FileImage } from "lucide-react";
 
-export default function MensajePlantillaModal({ onClose, conversationId, onSend }) {
+export default function MensajePlantillaModal({ onClose, conversationId, onMessageSent }) {
     const [tipo, setTipo] = useState("CTA");
     const [header, setHeader] = useState("");
     const [headerType, setHeaderType] = useState("text");
@@ -32,6 +32,11 @@ export default function MensajePlantillaModal({ onClose, conversationId, onSend 
 
     const handleSend = async () => {
         try {
+            if (!conversationId) {
+                console.error("conversationId está vacío o no definido");
+                return;
+            }
+
             const formData = new FormData();
             formData.append("conversationId", conversationId);
             formData.append("header_type", headerType);
@@ -43,19 +48,19 @@ export default function MensajePlantillaModal({ onClose, conversationId, onSend 
             } else if (headerFile) {
                 formData.append("file", headerFile);
             }
-            console.log(formData);
+
             if (tipo === "CTA") {
                 const action = {
                     url: ctaUrl,
                     display_text: ctaTexto
                 };
                 formData.append("action", JSON.stringify(action));
-                await axios.post("/messages/send-cta", formData);
-                console.log(formData);
+                const response = await axios.post("/messages/send-cta", formData);
+                if (onMessageSent) onMessageSent(response.data.message);
             } else {
                 formData.append("buttons", JSON.stringify(replies));
-                console.log(formData);
-                await axios.post("/messages/send-reply", formData);
+                const response = await axios.post("/messages/send-reply", formData);
+                if (onMessageSent) onMessageSent(response.data.message);
             }
 
             onClose();
@@ -64,7 +69,7 @@ export default function MensajePlantillaModal({ onClose, conversationId, onSend 
         }
     };
 
-    
+
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -191,7 +196,7 @@ export default function MensajePlantillaModal({ onClose, conversationId, onSend 
                                     </button>
                                 </div>
                             ))}
-                            
+
                         </div>
                     )}
 

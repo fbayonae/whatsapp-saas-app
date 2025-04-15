@@ -2,7 +2,7 @@ import React from "react";
 import ImagePreview from "./ImagePreview";
 import { FileText, Music, File, SquareArrowUpRight, Undo } from "lucide-react";
 
-export default function MessageBubble({ message }) {
+export default function MessageBubble({ message, allMessages = [] }) {
   const isInbound = message.direction === "INBOUND";
   const alignment = isInbound ? "justify-start" : "justify-end";
   const bubbleColor = isInbound ? "bg-white text-black" : "bg-[#dcf8c6] text-black";
@@ -15,9 +15,32 @@ export default function MessageBubble({ message }) {
   const isCTA = message.type === "cta";
   const isReply = message.type === "reply";
 
+  const contextMessage = message.contextId
+    ? allMessages.find((m) => m.id_meta === message.contextId)
+    : null;
+
   return (
     <div className={`w-full flex ${alignment} mb-2`}>
       <div className={`w-[300px] p-3 rounded-xl shadow ${bubbleColor}`}>
+
+        {/* Contexto del mensaje */}
+        {contextMessage && (
+          <div className="border-l-4 border-green-600 pl-2 mb-2 text-sm text-gray-700 bg-gray-100 rounded">
+            {contextMessage.type === "image" && contextMessage.media_id && (
+              <div className="mb-1">
+                <img
+                  src={`/api/media/${contextMessage.media_id}`}
+                  alt="context"
+                  className="max-w-full max-h-20 rounded"
+                />
+              </div>
+            )}
+            <div>
+              {contextMessage.content || "(mensaje sin texto)"}
+            </div>
+          </div>
+        )}
+
         {/* Imagen */}
         {isImage && mediaUrl && (
           <div className="mb-2">

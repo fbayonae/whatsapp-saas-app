@@ -152,10 +152,11 @@ const sendMessageCTA = async (req, res) => {
 
       // Subir el archivo a Meta
       header_media_id = await whatsappService.uploadMedia(file.path, file.mimetype);
+      console.log("header_media_id", header_media_id);
 
       // Obtener información del archivo subido 
       media_response = await whatsappService.getMediaData(header_media_id);
-
+      console.log("media_response", media_response);
       // Limpiar archivo temporal
       fs.unlinkSync(file.path);
     }

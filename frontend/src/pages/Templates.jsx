@@ -1,77 +1,71 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
+import { Pencil } from "lucide-react";
+import TemplateEditorModal from "./TemplateEditorModal";
 
 export default function Templates() {
   const [templates, setTemplates] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   useEffect(() => {
-    axios.get("/templates")
-      .then(response => {
-        setTemplates(response.data || []);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error al cargar plantillas:", error);
-        setLoading(false);
-      });
+    fetchTemplates();
   }, []);
 
-  const filteredTemplates = templates.filter(t =>
-    t.name.toLowerCase().includes(search.toLowerCase())
+  const fetchTemplates = async () => {
+    try {
+      const response = await axios.get("/api/templates");
+      setTemplates(response.data);
+    } catch (error) {
+      console.error("❌ Error cargando plantillas:", error);
+    }
+  };
+
+  const filteredTemplates = templates.filter((template) =>
+    template.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Plantillas de WhatsApp</h1>
-
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Buscar por nombre..."
+          placeholder="Buscar plantilla..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full border px-3 py-2 rounded"
         />
       </div>
 
-      {loading ? (
-        <p>Cargando plantillas...</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse bg-white shadow rounded-lg">
-            <thead className="bg-indigo-600 text-white">
-              <tr>
-                <th className="px-4 py-2 text-left">Nombre</th>
-                <th className="px-4 py-2 text-left">Idioma</th>
-                <th className="px-4 py-2 text-left">Estado</th>
-                <th className="px-4 py-2 text-left">Creado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTemplates.map((template) => (
-                <tr key={template.name} className="border-b hover:bg-gray-50">
-                  <td className="px-4 py-2">{template.name}</td>
-                  <td className="px-4 py-2">{template.language || "-"}</td>
-                  <td className="px-4 py-2">{template.status || "-"}</td>
-                  <td className="px-4 py-2">
-                    {template.createdAt
-                      ? new Date(template.createdAt).toLocaleString()
-                      : "-"}
-                  </td>
-                </tr>
-              ))}
-              {filteredTemplates.length === 0 && (
-                <tr>
-                  <td colSpan="4" className="px-4 py-4 text-center text-gray-500">
-                    No se encontraron plantillas.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div className="space-y-4">
+        {filteredTemplates.map((template) => (
+          <div
+            key={template.id}
+            className="border rounded p-4 flex justify-between items-center"
+          >
+            <div>
+              <h2 className="text-lg font-semibold">{template.name}</h2>
+              <p className="text-sm text-gray-600">{template.language} - {template.category}</p>
+            </div>
+            <button
+              onClick={() => setSelectedTemplate(template)}
+              className="text-indigo-600 hover:text-indigo-800"
+            >
+              <Pencil className="w-5 h-5" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {selectedTemplate && (
+        <TemplateEditorModal
+          template={selectedTemplate}
+          onClose={() => setSelectedTemplate(null)}
+          onSave={() => {
+            setSelectedTemplate(null);
+            fetchTemplates();
+          }}
+        />
       )}
     </div>
   );

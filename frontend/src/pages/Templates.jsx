@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
 import { Pencil } from "lucide-react";
-import TemplateEditorModal from "./TemplateEditorModal";
+import TemplateModalEditor from "./TemplateModalEditor";
 
 export default function Templates() {
   const [templates, setTemplates] = useState([]);
@@ -58,7 +58,7 @@ export default function Templates() {
       </div>
 
       {selectedTemplate && (
-        <TemplateEditorModal
+        <TemplateModalEditor
           template={selectedTemplate}
           onClose={() => setSelectedTemplate(null)}
           onSave={() => {

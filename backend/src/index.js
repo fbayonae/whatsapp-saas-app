@@ -51,8 +51,9 @@ app.use(
   })
 );
 
+// 6. Cross-Origin Resource Sharing (CORS)
 app.use(cors({
-  origin: "https://whatsapp.technologygroup.es", // o el dominio que uses
+  origin: "https://whatsapp.technologygroup.es",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]

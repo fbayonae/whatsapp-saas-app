@@ -84,6 +84,7 @@ const createTemplate = async (req, res) => {
       }
     }
 
+    res.json({ succes: true, message: "Plantilla creada correctamente", template: saveTemplate });
   } catch (error) {
     console.error('❌ Error creando plantilla:', error);
     res.status(500).json({ error: 'Error al crear la plantilla' });

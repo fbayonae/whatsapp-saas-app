@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require("helmet");
 const dotenv = require('dotenv');
 cors = require('cors');
 const whatsappRoutes = require('./routes/whatsapp');
@@ -12,14 +13,18 @@ const mediaRoutes = require("./routes/mediaRoutes");
 
 dotenv.config();
 const app = express();
+app.use(helmet());
 
 app.use(cors({
   origin: "https://whatsapp.technologygroup.es", // o el dominio que uses
-  credentials: true
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // necesario para leer POST de Meta
 app.use(express.json({ limit: '5mb' })); 
+app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
 app.use('/api/templates', templatesRoutes);
 app.use('/auth', authRoutes);

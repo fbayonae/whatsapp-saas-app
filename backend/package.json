@@ -23,7 +23,8 @@
         "@prisma/client": "^6.4.1",
         "bcrypt": "^5.1.1",
         "jsonwebtoken": "^9.0.0",
-        "dayjs": "1.11.13"
+        "dayjs": "1.11.13",
+        "helmet": "8.1.0"
     }
   }
   

@@ -119,5 +119,5 @@ module.exports = {
   getTemplates,
   createTemplate,
   deleteTemplate,
-  updateTemplate
+  //updateTemplate
 };

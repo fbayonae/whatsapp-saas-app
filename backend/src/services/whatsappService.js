@@ -43,7 +43,7 @@ const createTemplate = async (name, language, category, components) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('❌ Error obteniendo plantillas de Meta:', error.message);
+    console.error('❌ Error creando plantilla en Meta:', error.message);
     throw error;
   }
 };

@@ -1,4 +1,5 @@
 const express = require('express');
+const { body } = require("express-validator");
 const authController = require('../controllers/authController');
 const rateLimiter = require('../utils/rateLimiter');
 const validate = require('../utils/validators');
@@ -9,9 +10,9 @@ const router = express.Router();
 // Se utiliza el middleware de validación para verificar los datos de entrada
 router.post('/register',
     [
-        validate.body('email').isEmail().withMessage("Email inválido"),
-        validate.body('password').isLength({ min: 6 }).withMessage("Contraseña muy corta"),
-        validate.body('role').optional().isIn(['admin', 'client']).withMessage("Rol no válido")
+        body('email').isEmail().withMessage("Email inválido"),
+        body('password').isLength({ min: 6 }).withMessage("Contraseña muy corta"),
+        body('role').optional().isIn(['admin', 'client']).withMessage("Rol no válido")
     ],
     validate,
     authController.registerUser

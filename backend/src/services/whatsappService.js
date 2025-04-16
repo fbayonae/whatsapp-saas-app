@@ -28,7 +28,7 @@ const getTemplatesFromMeta = async () => {
   }
 };
 
-const createTemplate = async (name, language, category, components) => {
+const createTemplate = async ({name, language, category, components}) => {
   //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
   try {
     const response = await axios.post(`${url_base}${version}/${businessId}/message_templates`, {

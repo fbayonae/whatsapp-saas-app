@@ -41,6 +41,7 @@ const getTemplates = async (req, res) => {
 
 const createTemplate = async (req, res) => {
 
+  console.log(req.body);
   const { name, language, category, components } = req.body;
 
   if (!name || !language || !category || !components || !Array.isArray(components)) {

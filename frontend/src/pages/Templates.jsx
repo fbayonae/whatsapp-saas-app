@@ -14,7 +14,7 @@ export default function Templates() {
 
   const fetchTemplates = async () => {
     try {
-      const response = await axios.get("/api/templates");
+      const response = await axios.get("/templates");
       setTemplates(response.data);
     } catch (error) {
       console.error("❌ Error cargando plantillas:", error);

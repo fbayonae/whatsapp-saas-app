@@ -49,8 +49,11 @@ export default function MessageBubble({ message, allMessages = [] }) {
 
         {/* Imagen */}
         {isImage && mediaUrl && (
-          <div className="mb-2">
-            <ImagePreview message={message} />
+          <div>
+            <div className="mb-2">
+              <ImagePreview message={message} />
+            </div>
+            <div className="text-sm">{message.content}</div>
           </div>
         )}
 

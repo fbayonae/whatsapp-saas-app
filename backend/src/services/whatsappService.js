@@ -48,8 +48,39 @@ const createTemplate = async ({name, language, category, components}) => {
   }
 };
 
-/********************************** FIN PLANTILLAS ******************************/
+const deleteTemplate = async ({templateId, name}) => {
+  try {
+    const response = await axios.delete(`${url_base}${version}/${bussinessId}/message_templates/hsm_id=${templateId}&name=${name}`,{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  }catch (error) {
+    console.error('❌ Error eliminando plantilla en Meta:', error.message);
+    throw error;
+  }
+};
 
+const updateTemplate = async ({templateId, name, language, category, components}) => {
+  try {
+    const response = await axios.post(`${url_base}${version}/${templateId}`, {
+      name,
+      language,
+      category,
+      components
+    },{
+      headers: {
+        Authorization: `Bearer ${token}`  
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error actualizando plantilla en Meta:', error.message);
+    throw error;
+  }
+};
+/********************************** FIN PLANTILLAS ***********************************/
 
 /********************************** ENVIAR MENSAJES ******************************/
 const sendTextMessage = async (phone, message) => {

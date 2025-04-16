@@ -39,6 +39,28 @@ const getTemplates = async (req, res) => {
   }
 };
 
+const deleteTemplate = async (req, res) => {
+  const template_id_meta = req.params.id_meta;
+  try {
+
+    const template = await dbService.getTemplateByIdFromDB(template_id_meta);
+
+    if (!template) {
+      return res.status(404).json({ error: 'Plantilla no encontrada' });
+    }
+
+    const response = await whatsappService.deleteTemplate({
+      templateId: template_id_meta,
+      name: template.name
+    });
+  
+    res.json(response);
+  } catch (error) {
+    console.error('❌ Error obteniendo plantillas:', error);
+    res.status(500).json({ error: 'Error al obtener las plantillas' });
+  }
+};
+
 const createTemplate = async (req, res) => {
 
   console.log(req.body);
@@ -69,10 +91,10 @@ const createTemplate = async (req, res) => {
 
     console.log(response);
 
-    const template = {
+    let template = {
       name,
       language,
-      category,
+      category: response.category,
       status: response.status,
       id_meta: response.id,
       components: validatedComponents
@@ -95,5 +117,7 @@ const createTemplate = async (req, res) => {
 module.exports = {
   syncTemplates,
   getTemplates,
-  createTemplate
+  createTemplate,
+  deleteTemplate,
+  updateTemplate
 };

@@ -67,6 +67,60 @@ const getTemplatesFromDB = async () => {
   });
 };
 
+const getTemplateByIdFromDB = async (id) => {
+  return await prisma.template.findUnique({
+    where: { id_meta: id },
+    include: {
+      components: {
+        include: {
+          buttons: true
+        }
+      }
+    }
+  });
+};
+
+const deleteTemplateFromDB = async (id) => {
+  try {
+    const template = await prisma.template.findUnique({
+      where: { id_meta: id },
+      include: {
+        components: {
+          include: {
+            buttons: true
+          }
+        }
+      }
+    });
+
+    if (!template) {
+      throw new Error("Plantilla no encontrada en la base de datos");
+    }
+
+    // 2. Eliminar botones de cada componente
+    for (const component of template.components) {
+      await prisma.button.deleteMany({
+        where: { componentId: component.id }
+      });
+    }
+
+    // 3. Eliminar componentes
+    await prisma.templateComponent.deleteMany({
+      where: { templateId: template.id }
+    });
+
+    // 4. Eliminar plantilla
+    const deletedTemplate = await prisma.template.delete({
+      where: { id: template.id }
+    });
+
+    return deletedTemplate;
+  } catch (error) {
+    console.error('❌ Error eliminando plantilla:', error);
+    throw error;
+  }
+}
+
 const getContactsFromDB = async () => {
   return await prisma.contact.findMany({
     orderBy: { createdAt: 'desc' }
@@ -136,5 +190,6 @@ module.exports = {
   getConversationsFromDB,
   getMessagesFromDB,
   getConversationFromDB,
-  createMessageToDB
+  createMessageToDB,
+  getTemplateByIdFromDB
 };

@@ -14,7 +14,7 @@ const rateLimiter = require("./utils/rateLimiter");
 
 dotenv.config();
 const app = express();
-app.set('trust proxy', true);
+app.set('trust proxy', "loopback");
 
 app.use(helmet());
 

@@ -32,16 +32,16 @@ const createTemplate = async (name, language, category, components) => {
   //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
   try {
     const response = await axios.post(`${url_base}${version}/${businessId}/message_templates`, {
-      name: name,
-      language: language,
-      category: category,
-      components: components
+      name,
+      language,
+      category,
+      components
     },{
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error('❌ Error creando plantilla en Meta:', error.message);
     throw error;

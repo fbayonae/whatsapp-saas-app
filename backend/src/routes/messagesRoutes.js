@@ -1,4 +1,5 @@
 const express = require("express");
+const { body } = require("express-validator");
 const multer = require("multer");
 const upload = require("../utils/multerUtils");
 const router = express.Router();

@@ -68,7 +68,21 @@ const createTemplate = async (req, res) => {
 
     console.log(response);
 
-    
+    const template = {
+      name,
+      language,
+      category,
+      status: response.status,
+      id_meta: response.id,
+      components: validatedComponents
+    };
+
+    const saveTemplate = await dbService.saveTemplateToDB(template);
+    if (template.components?.length) {
+      for (const comp of template.components) {
+        await dbService.saveComponentToDB(comp, response.id);
+      }
+    }
 
   } catch (error) {
     console.error('❌ Error creando plantilla:', error);

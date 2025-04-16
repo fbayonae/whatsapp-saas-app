@@ -10,7 +10,6 @@ router.post('/sync', auth, templateController.syncTemplates);
 router.get('/', auth, templateController.getTemplates);
 router.post("/create", 
     auth, 
-    isAdmin, 
     templateController.createTemplate
 );
 

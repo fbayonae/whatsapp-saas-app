@@ -10,6 +10,7 @@ const contactRoutes = require("./routes/contactRoutes");
 const chatRoutes = require("./routes/chatsRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
 const mediaRoutes = require("./routes/mediaRoutes");
+const rateLimiter = require("./utils/rateLimiter");
 
 dotenv.config();
 const app = express();
@@ -63,13 +64,13 @@ app.use(cors({
 app.use(express.json({ limit: '5mb' })); 
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-app.use('/api/templates', templatesRoutes);
 app.use('/auth', authRoutes);
 app.use('/webhook', webhookRoutes);
-app.use("/api/contacts", contactRoutes);
-app.use("/api/chats", chatRoutes);
-app.use("/api/messages", messageRoutes);
-app.use("/api/media", mediaRoutes);
+app.use('/api/templates', rateLimiter.apiLimiter, templatesRoutes);
+app.use("/api/contacts", rateLimiter.apiLimiter, contactRoutes);
+app.use("/api/chats", rateLimiter.apiLimiter, chatRoutes);
+app.use("/api/messages", rateLimiter.apiLimiter, messageRoutes);
+app.use("/api/media",rateLimiter.apiLimiter,  mediaRoutes);
 
 
 const PORT = process.env.PORT || 3001;

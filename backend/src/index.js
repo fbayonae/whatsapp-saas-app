@@ -13,7 +13,43 @@ const mediaRoutes = require("./routes/mediaRoutes");
 
 dotenv.config();
 const app = express();
+
 app.use(helmet());
+
+// 1. HSTS – fuerza HTTPS
+app.use(
+  helmet.hsts({
+    maxAge: 31536000, // 1 año
+    includeSubDomains: true,
+    preload: true
+  })
+);
+
+// 2. X-Frame-Options
+app.use(helmet.frameguard({ action: "sameorigin" }));
+
+// 3. X-Content-Type-Options
+app.use(helmet.noSniff());
+
+// 4. Referrer-Policy
+app.use(helmet.referrerPolicy({ policy: "strict-origin-when-cross-origin" }));
+
+// 5. CSP – versión básica que permite funcionamiento normal
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+      styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'", "https://graph.facebook.com"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    }
+  })
+);
 
 app.use(cors({
   origin: "https://whatsapp.technologygroup.es", // o el dominio que uses

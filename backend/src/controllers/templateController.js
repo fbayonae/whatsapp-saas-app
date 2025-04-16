@@ -1,5 +1,5 @@
-const whatsappService  = require('../services/whatsappService');
-const dbService  = require('../services/dbService');
+const whatsappService = require('../services/whatsappService');
+const dbService = require('../services/dbService');
 
 const syncTemplates = async (req, res) => {
   try {
@@ -8,21 +8,21 @@ const syncTemplates = async (req, res) => {
 
     const templates = await whatsappService.getTemplatesFromMeta();
     const results = [];
-    
+
     for (const tpl of templates) {
-        const savedTpl = await dbService.saveTemplateToDB(tpl);
-        if (tpl.components?.length) {
-            for (const comp of tpl.components) {
-                await dbService.saveComponentToDB(comp, savedTpl.id);
-            }
+      const savedTpl = await dbService.saveTemplateToDB(tpl);
+      if (tpl.components?.length) {
+        for (const comp of tpl.components) {
+          await dbService.saveComponentToDB(comp, savedTpl.id);
         }
-        results.push(savedTpl.name);
+      }
+      results.push(savedTpl.name);
     }
-    
+
     res.json({
-        message: '✅ Plantillas y componentes sincronizados',
-        total: results.length,
-        nombres: results
+      message: '✅ Plantillas y componentes sincronizados',
+      total: results.length,
+      nombres: results
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al sincronizar plantillas' });
@@ -30,16 +30,54 @@ const syncTemplates = async (req, res) => {
 };
 
 const getTemplates = async (req, res) => {
-    try {
-      const templates = await dbService.getTemplatesFromDB();
-      res.json(templates);
-    } catch (error) {
-      console.error('❌ Error obteniendo plantillas:', error);
-      res.status(500).json({ error: 'Error al obtener las plantillas' });
-    }
-  };
+  try {
+    const templates = await dbService.getTemplatesFromDB();
+    res.json(templates);
+  } catch (error) {
+    console.error('❌ Error obteniendo plantillas:', error);
+    res.status(500).json({ error: 'Error al obtener las plantillas' });
+  }
+};
 
-module.exports = { 
-    syncTemplates,
-    getTemplates 
+const createTemplate = async (req, res) => {
+
+  const { name, language, category, components } = req.body;
+
+  if (!name || !language || !category || !components || !Array.isArray(components)) {
+    return res.status(400).json({ error: "Faltan campos obligatorios o formato inválido" });
+  }
+
+  try {
+
+    // Validar tipos permitidos
+    const allowedComponentTypes = ["HEADER", "BODY", "FOOTER", "BUTTONS"];
+    const validatedComponents = components.map(component => {
+      if (!allowedComponentTypes.includes(component.type)) {
+        throw new Error(`Tipo de componente no permitido: ${component.type}`);
+      }
+      return component;
+    });
+
+    // Enviar plantilla a WhatsApp
+    const response = await whatsappService.createTemplate({
+      name,
+      language,
+      category,
+      components: validatedComponents
+    });
+
+    console.log(response);
+
+    
+
+  } catch (error) {
+    console.error('❌ Error creando plantilla:', error);
+    res.status(500).json({ error: 'Error al crear la plantilla' });
+  }
+};
+
+module.exports = {
+  syncTemplates,
+  getTemplates,
+  createTemplate
 };

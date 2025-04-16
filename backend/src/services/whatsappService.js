@@ -11,9 +11,10 @@ const businessId = process.env.BUSINESS_ID;
 const url_base = "https://graph.facebook.com/";
 const version = process.env.VERSION_GRAPH;
 
+/************************************* PLANTILLAS ***********************************/
+
 const getTemplatesFromMeta = async () => {
   //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
-  console.log("whatsappService");
   try {
     const response = await axios.get(`${url_base}${version}/${businessId}/message_templates`, {
       headers: {
@@ -27,6 +28,30 @@ const getTemplatesFromMeta = async () => {
   }
 };
 
+const createTemplate = async (name, language, category, components) => {
+  //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
+  try {
+    const response = await axios.post(`${url_base}${version}/${businessId}/message_templates`, {
+      name: name,
+      language: language,
+      category: category,
+      components: components
+    },{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('❌ Error obteniendo plantillas de Meta:', error.message);
+    throw error;
+  }
+};
+
+/********************************** FIN PLANTILLAS ******************************/
+
+
+/********************************** ENVIAR MENSAJES ******************************/
 const sendTextMessage = async (phone, message) => {
   try {
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
@@ -177,7 +202,11 @@ const sendReplyMessage = async ({ phone, header_type, header, header_media_id, b
     throw error;
   }
 };
+/********************************** FIN ENVIAR MENSAJES ******************************/
 
+
+
+/********************************** ARCHIVOS *****************************************/
 const uploadMedia = async (filePath, mimetype) => {
   const form = new FormData();
   form.append("file", fs.createReadStream(filePath));
@@ -245,6 +274,8 @@ const downloadMediaFile = async (url, media_id, mimetype) => {
     writer.on("error", reject);
   });
 };
+
+/********************************** FIN ARCHIVOS ****************************************/
 
 module.exports = {
   getTemplatesFromMeta,

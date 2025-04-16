@@ -91,7 +91,7 @@ const sendMessageMedia = async (req, res) => {
     // 5. Guardar mensaje en la base de datos
     const savedMessage = await dbService.createMessageToDB({
       conversationId: parseInt(conversationId),
-      type: "media",
+      type: detectedMediaType,
       content: caption || '',
       id_meta: response.messages?.[0]?.id || null,
       contextId: '',

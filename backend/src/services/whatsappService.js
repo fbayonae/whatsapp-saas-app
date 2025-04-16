@@ -279,6 +279,7 @@ const downloadMediaFile = async (url, media_id, mimetype) => {
 
 module.exports = {
   getTemplatesFromMeta,
+  createTemplate,
   sendTextMessage,
   sendMediaMessage,
   sendCTAMessage,
@@ -286,5 +287,6 @@ module.exports = {
   uploadMedia,
   getMediaUrl,
   downloadMediaFile,
-  getMediaData
+  getMediaData,
+
 };

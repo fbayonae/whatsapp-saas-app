@@ -20,6 +20,20 @@ export default function Templates() {
       console.error("❌ Error cargando plantillas:", error);
     }
   };
+  
+  const handleCreateTemplate = async () => {
+    try {
+      const response = await axios.post("/templates/create", {
+        name: "nueva_plantilla",
+        language: "es",
+        category: "UTILITY",
+        components: []
+      });
+      setSelectedTemplate(response.data);
+    } catch (error) {
+      console.error("❌ Error creando plantilla:", error);
+    }
+  };
 
   const filteredTemplates = templates.filter((template) =>
     template.name.toLowerCase().includes(search.toLowerCase())
@@ -36,7 +50,7 @@ export default function Templates() {
           className="w-full md:w-1/3 border px-3 py-2 rounded"
         />
         <button
-          onClick={() => setSelectedTemplate({})}
+          onClick={handleCreateTemplate}
           className="ml-4 bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> Nueva plantilla

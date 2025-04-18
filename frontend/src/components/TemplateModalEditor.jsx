@@ -3,18 +3,27 @@ import { SquareArrowUpRight, Plus, Trash2, Undo } from "lucide-react";
 
 export default function TemplateEditorModal({ template, onClose, onSave }) {
   const [header, setHeader] = useState("");
+  const [headerType, setHeaderType] = useState("text");
+  const [headerFile, setHeaderFile] = useState(null);
   const [body, setBody] = useState("");
   const [footer, setFooter] = useState("");
+  const [category, setCategory] = useState("UTILITY");
   const [replies, setReplies] = useState([]);
 
   useEffect(() => {
     if (template) {
       const bodyComponent = template.components.find(c => c.type === "BODY")?.text || "";
-      const headerComponent = template.components.find(c => c.type === "HEADER")?.text || "";
+      const headerComponent = template.components.find(c => c.type === "HEADER") || null;
       const footerComponent = template.components.find(c => c.type === "FOOTER")?.text || "";
       const replyButtons = template.components.find(c => c.type === "BUTTONS")?.buttons || [];
 
-      setHeader(headerComponent);
+      if (headerComponent) {
+        setHeaderType(headerComponent.format || "text");
+        if (headerComponent.format === "TEXT") {
+          setHeader(headerComponent.text || "");
+        }
+      }
+
       setBody(bodyComponent);
       setFooter(footerComponent);
       setReplies(replyButtons.map(btn => ({ text: btn.text })));
@@ -37,8 +46,15 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
   const handleSave = () => {
     const updatedTemplate = {
       ...template,
+      category,
       components: [
-        header && { type: "HEADER", format: "TEXT", text: header },
+        headerType !== "none" && {
+          type: "HEADER",
+          format: headerType.toUpperCase(),
+          ...(headerType === "text"
+            ? { text: header }
+            : { file: headerFile })
+        },
         { type: "BODY", text: body },
         footer && { type: "FOOTER", text: footer },
         replies.length > 0 && {
@@ -55,14 +71,55 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
       <div className="bg-white w-[90%] max-w-5xl rounded-lg shadow-lg flex p-6 gap-6">
         {/* Izquierda */}
         <div className="flex-1 space-y-4">
+          <div className="flex items-center gap-4">
+            <span className="font-semibold">Categoría:</span>
+            <div className="flex gap-2">
+              {[
+                { label: "Utilidad", value: "UTILITY" },
+                { label: "Autenticación", value: "AUTHENTICATION" },
+                { label: "Marketing", value: "MARKETING" },
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => setCategory(opt.value)}
+                  className={`px-3 py-1 rounded-full border ${category === opt.value ? "bg-indigo-600 text-white" : "bg-white text-gray-600"}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
-            <label className="block font-semibold mb-1">Cabecera</label>
-            <input
-              type="text"
-              className="w-full border rounded px-2 py-1"
-              value={header}
-              onChange={(e) => setHeader(e.target.value)}
-            />
+            <label className="block font-semibold mb-1">Tipo de Cabecera</label>
+            <select
+              className="w-full border rounded px-2 py-1 mb-2"
+              value={headerType}
+              onChange={(e) => {
+                setHeaderType(e.target.value);
+                setHeader("");
+                setHeaderFile(null);
+              }}
+            >
+              <option value="text">Texto</option>
+              <option value="image">Imagen</option>
+              <option value="document">Documento</option>
+            </select>
+            {headerType === "text" ? (
+              <input
+                type="text"
+                className="w-full border rounded px-2 py-1"
+                value={header}
+                onChange={(e) => setHeader(e.target.value)}
+              />
+            ) : (
+              <input
+                type="file"
+                className="w-full border rounded px-2 py-1"
+                accept={headerType === "image" ? "image/*" : "application/*"}
+                onChange={(e) => setHeaderFile(e.target.files[0])}
+              />
+            )}
           </div>
 
           <div>
@@ -109,6 +166,9 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
 
           <div className="flex gap-4 mt-4">
             <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onClick={handleSave}>Guardar</button>
+            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2">
+              <SquareArrowUpRight className="w-5 h-5" /> Validar
+            </button>
             <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onClick={onClose}>Cancelar</button>
           </div>
         </div>
@@ -116,8 +176,13 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
         {/* Derecha: Previsualización */}
         <div className="bg-[#e5ddd5] rounded-lg p-6 w-[360px]">
           <div className="bg-white rounded-xl p-4 shadow-md relative">
-            {header && (
+            {headerType === "text" && header && (
               <div className="font-bold text-lg text-black mb-2">{header}</div>
+            )}
+            {headerType !== "text" && headerFile && (
+              <div className="mb-2">
+                <div className="text-sm text-gray-500">Adjunto: {headerFile.name}</div>
+              </div>
             )}
 
             <div className="text-base text-black leading-snug">

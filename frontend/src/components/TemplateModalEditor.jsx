@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { SquareArrowUpRight, Plus, Trash2, Undo } from "lucide-react";
+import axios from "../utils/axiosInstance";
+import { SquareArrowUpRight, Plus, Trash2 } from "lucide-react";
 
-export default function TemplateEditorModal({ template, onClose, onSave }) {
+export default function TemplateEditorModal({ template, onClose }) {
   const [header, setHeader] = useState("");
   const [headerType, setHeaderType] = useState("text");
   const [headerFile, setHeaderFile] = useState(null);
@@ -9,6 +10,7 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
   const [footer, setFooter] = useState("");
   const [category, setCategory] = useState("UTILITY");
   const [replies, setReplies] = useState([]);
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     if (template) {
@@ -27,43 +29,62 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
       setBody(bodyComponent);
       setFooter(footerComponent);
       setReplies(replyButtons.map(btn => ({ text: btn.text })));
+      setCategory(template.category || "UTILITY");
     }
   }, [template]);
+
+  const markModified = () => setIsModified(true);
 
   const handleReplyChange = (index, field, value) => {
     const updated = [...replies];
     updated[index][field] = value;
     setReplies(updated);
+    markModified();
   };
 
-  const addReply = () => setReplies([...replies, { text: "" }]);
+  const addReply = () => {
+    setReplies([...replies, { text: "" }]);
+    markModified();
+  };
 
   const removeReply = (index) => {
     const updated = replies.filter((_, i) => i !== index);
     setReplies(updated);
+    markModified();
   };
 
-  const handleSave = () => {
-    const updatedTemplate = {
-      ...template,
+  const handleValidate = async () => {
+    const components = [
+      headerType !== "none" && {
+        type: "HEADER",
+        format: headerType.toUpperCase(),
+        ...(headerType === "text" ? { text: header } : {})
+      },
+      { type: "BODY", text: body },
+      footer && { type: "FOOTER", text: footer },
+      replies.length > 0 && {
+        type: "BUTTONS",
+        buttons: replies.map(r => ({ type: "QUICK_REPLY", text: r.text }))
+      }
+    ].filter(Boolean);
+
+    const payload = {
+      name: template?.name || undefined,
+      language: template?.language || "es",
       category,
-      components: [
-        headerType !== "none" && {
-          type: "HEADER",
-          format: headerType.toUpperCase(),
-          ...(headerType === "text"
-            ? { text: header }
-            : { file: headerFile })
-        },
-        { type: "BODY", text: body },
-        footer && { type: "FOOTER", text: footer },
-        replies.length > 0 && {
-          type: "BUTTONS",
-          buttons: replies.map(r => ({ type: "QUICK_REPLY", text: r.text }))
-        }
-      ].filter(Boolean)
+      components
     };
-    onSave(updatedTemplate);
+
+    try {
+      if (template) {
+        await axios.put(`/templates/update/${template.id_meta}`, payload);
+      } else {
+        await axios.post("/templates/create", payload);
+      }
+      setIsModified(false);
+    } catch (error) {
+      console.error("❌ Error al validar plantilla:", error);
+    }
   };
 
   return (
@@ -74,17 +95,16 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
           <div className="flex items-center gap-4">
             <span className="font-semibold">Categoría:</span>
             <div className="flex gap-2">
-              {[
-                { label: "Utilidad", value: "UTILITY" },
-                { label: "Autenticación", value: "AUTHENTICATION" },
-                { label: "Marketing", value: "MARKETING" },
-              ].map(opt => (
+              {["UTILITY", "AUTHENTICATION", "MARKETING"].map(cat => (
                 <button
-                  key={opt.value}
-                  onClick={() => setCategory(opt.value)}
-                  className={`px-3 py-1 rounded-full border ${category === opt.value ? "bg-indigo-600 text-white" : "bg-white text-gray-600"}`}
+                  key={cat}
+                  onClick={() => {
+                    setCategory(cat);
+                    markModified();
+                  }}
+                  className={`px-3 py-1 rounded-full border ${category === cat ? "bg-indigo-600 text-white" : "bg-white text-gray-600"}`}
                 >
-                  {opt.label}
+                  {cat.charAt(0) + cat.slice(1).toLowerCase()}
                 </button>
               ))}
             </div>
@@ -99,6 +119,7 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
                 setHeaderType(e.target.value);
                 setHeader("");
                 setHeaderFile(null);
+                markModified();
               }}
             >
               <option value="text">Texto</option>
@@ -110,14 +131,14 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
                 type="text"
                 className="w-full border rounded px-2 py-1"
                 value={header}
-                onChange={(e) => setHeader(e.target.value)}
+                onChange={(e) => { setHeader(e.target.value); markModified(); }}
               />
             ) : (
               <input
                 type="file"
                 className="w-full border rounded px-2 py-1"
                 accept={headerType === "image" ? "image/*" : "application/*"}
-                onChange={(e) => setHeaderFile(e.target.files[0])}
+                onChange={(e) => { setHeaderFile(e.target.files[0]); markModified(); }}
               />
             )}
           </div>
@@ -127,7 +148,7 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
             <textarea
               className="w-full border rounded px-2 py-1"
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={(e) => { setBody(e.target.value); markModified(); }}
             />
           </div>
 
@@ -137,7 +158,7 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
               type="text"
               className="w-full border rounded px-2 py-1"
               value={footer}
-              onChange={(e) => setFooter(e.target.value)}
+              onChange={(e) => { setFooter(e.target.value); markModified(); }}
             />
           </div>
 
@@ -165,10 +186,14 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
           </div>
 
           <div className="flex gap-4 mt-4">
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onClick={handleSave}>Guardar</button>
-            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2">
-              <SquareArrowUpRight className="w-5 h-5" /> Validar
-            </button>
+            {isModified && (
+              <button
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2"
+                onClick={handleValidate}
+              >
+                <SquareArrowUpRight className="w-5 h-5" /> Validar
+              </button>
+            )}
             <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onClick={onClose}>Cancelar</button>
           </div>
         </div>
@@ -179,7 +204,16 @@ export default function TemplateEditorModal({ template, onClose, onSave }) {
             {headerType === "text" && header && (
               <div className="font-bold text-lg text-black mb-2">{header}</div>
             )}
-            {headerType !== "text" && headerFile && (
+            {headerType === "image" && headerFile && (
+              <div className="mb-2">
+                <img
+                  src={URL.createObjectURL(headerFile)}
+                  alt="preview"
+                  className="max-w-full max-h-40 rounded shadow"
+                />
+              </div>
+            )}
+            {headerType !== "text" && headerFile && headerType !== "image" && (
               <div className="mb-2">
                 <div className="text-sm text-gray-500">Adjunto: {headerFile.name}</div>
               </div>

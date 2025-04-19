@@ -7,6 +7,7 @@ export default function Templates() {
   const [templates, setTemplates] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [showModal, setShowModal] = useState(false); // <- bandera de visibilidad
 
   useEffect(() => {
     fetchTemplates();
@@ -22,7 +23,19 @@ export default function Templates() {
   };
 
   const handleNewTemplate = () => {
-    setSelectedTemplate(null); // No se crea en BBDD aún
+    setSelectedTemplate(null);
+    setShowModal(true); // mostrar modal para nueva
+  };
+
+  const handleEditTemplate = (template) => {
+    setSelectedTemplate(template);
+    setShowModal(true); // mostrar modal para editar
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTemplate(null);
+    setShowModal(false);
+    fetchTemplates(); // recargar
   };
 
   const filteredTemplates = templates.filter((template) =>
@@ -55,10 +68,12 @@ export default function Templates() {
           >
             <div>
               <h2 className="text-lg font-semibold">{template.name}</h2>
-              <p className="text-sm text-gray-600">{template.language} - {template.category}</p>
+              <p className="text-sm text-gray-600">
+                {template.language} - {template.category}
+              </p>
             </div>
             <button
-              onClick={() => setSelectedTemplate(template)}
+              onClick={() => handleEditTemplate(template)}
               className="text-indigo-600 hover:text-indigo-800"
             >
               <Pencil className="w-5 h-5" />
@@ -67,10 +82,10 @@ export default function Templates() {
         ))}
       </div>
 
-      {(selectedTemplate || selectedTemplate === null) && (
+      {showModal && (
         <TemplateModalEditor
           template={selectedTemplate}
-          onClose={() => setSelectedTemplate(null)}
+          onClose={handleCloseModal}
         />
       )}
     </div>

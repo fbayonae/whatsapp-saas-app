@@ -351,6 +351,7 @@ module.exports = {
   sendMediaMessage,
   sendCTAMessage,
   sendReplyMessage,
+  sendTemplateMessage,
   uploadMedia,
   getMediaUrl,
   downloadMediaFile,

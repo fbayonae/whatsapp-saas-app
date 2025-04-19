@@ -57,7 +57,6 @@ const sendMessageTemplate = async (req, res) => {
     }
 
     const phoneNumber = conversation.contact.phoneNumber;
-    console.log(phoneNumber);
 
     const response = await whatsappService.sendTemplateMessage({phoneNumber, template, language, parameters});
     console.log(response);

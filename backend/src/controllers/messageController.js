@@ -42,7 +42,7 @@ const sendMessage = async (req, res) => {
 };
 
 const sendMessageTemplate = async (req, res) => {
-  const { conversationId, template, language } = req.body;
+  const { conversationId, template, language, parameters } = req.body;
 
   if (!conversationId || !template || !language) {
     return res.status(400).json({ error: "conversationId, template y language son requeridos" });

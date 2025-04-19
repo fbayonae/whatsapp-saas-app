@@ -107,6 +107,42 @@ const sendTextMessage = async (phone, message) => {
   }
 };
 
+const sendTemplateMessage = async ({phone, template, language, parameters}) => {
+  try {
+    const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: phone,
+      type: "template",
+      template: {
+        name: template,
+        language: {
+          code: language
+        },
+        components: [
+          {
+            type: "body",
+            parameters: parameters.map(param => ({
+              type: "text",
+              text: param
+            }))
+          }
+        ]
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error enviando mensaje:', error.message);
+    throw error;
+  }
+};
+
 const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
   try {
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {

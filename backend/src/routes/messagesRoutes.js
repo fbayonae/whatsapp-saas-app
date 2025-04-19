@@ -91,4 +91,24 @@ router.post("/send-reply",
     messageController.sendMessageReply
 );
 
+router.post("/send-template",
+    auth,
+    [
+        body("conversationId")
+            .isInt({ gt: 0 })
+            .withMessage("conversationId inválido"),
+        body("template")
+            .notEmpty()
+            .withMessage("El template es obligatorio"),
+        body("language")
+            .notEmpty()
+            .withMessage("El idioma es obligatorio"),
+        body("parameters")
+            .notEmpty()
+            .withMessage("Los parametros son obligatorios"),
+    ],
+    validate,
+    messageController.sendMessageTemplate
+);
+
 module.exports = router;

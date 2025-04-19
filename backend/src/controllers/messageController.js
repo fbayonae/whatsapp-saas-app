@@ -41,6 +41,41 @@ const sendMessage = async (req, res) => {
   }
 };
 
+const sendMessageTemplate = async (req, res) => {
+  const { conversationId, template, language } = req.body;
+
+  if (!conversationId || !template || !language) {
+    return res.status(400).json({ error: "conversationId, template y language son requeridos" });
+  }
+
+  try {
+    // 1. Obtener conversación y número
+    const conversation = await dbService.getConversationFromDB(conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({ error: "Conversación no encontrada" });
+    }
+
+    const phoneNumber = conversation.contact.phoneNumber;
+
+    const response = await whatsappService.sendTemplateMessage(phoneNumber, template, language, parameters);
+    console.log(response);
+
+    const savedMessage = await dbService.createMessageToDB({
+      conversationId,
+      type: "text",
+      content: text,
+      id_meta: response.messages?.[0]?.id || null
+    });
+
+    res.json({ success: true, message: savedMessage });
+
+  } catch (error) {
+    console.error("❌ Error enviando mensaje:", error?.response?.data || error.message);
+    res.status(500).json({ error: "Error al enviar el mensaje" });
+  }
+};
+
 const sendMessageMedia = async (req, res) => {
   try {
     const { conversationId, caption } = req.body;
@@ -272,5 +307,6 @@ module.exports = {
   sendMessage,
   sendMessageMedia,
   sendMessageCTA,
-  sendMessageReply
+  sendMessageReply,
+  sendMessageTemplate
 };

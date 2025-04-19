@@ -23,7 +23,7 @@ instance.interceptors.response.use(
   
       // Si el token expiró y no hemos intentado ya renovar
       if (
-        error.response?.status === 401 &&
+        error.response?.status === 403 &&
         !originalRequest._retry &&
         typeof window !== "undefined" // solo navegador
       ) {

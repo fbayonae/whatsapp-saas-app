@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
-import { Pencil, Plus, CheckCircle, Circlex, Clock  } from "lucide-react";
+import { Pencil, Plus, CheckCircle, CircleX, Clock  } from "lucide-react";
 import TemplateModalEditor from "../components/TemplateModalEditor";
 
 export default function Templates() {
@@ -82,7 +82,7 @@ export default function Templates() {
               )}
               {template.status === "REJECTED" && (
                 <div className="flex items-center gap-1 text-red-500">
-                  <Circlex className="w-5 h-5" />
+                  <CircleX className="w-5 h-5" />
                   <span className="text-sm font-medium">Rechazada</span>
                 </div>
               )}

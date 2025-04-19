@@ -72,12 +72,33 @@ export default function Templates() {
                 {template.language} - {template.category}
               </p>
             </div>
-            <button
-              onClick={() => handleEditTemplate(template)}
-              className="text-indigo-600 hover:text-indigo-800"
-            >
-              <Pencil className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-4">
+              {/* Estado visual */}
+              {template.status === "APPROVED" && (
+                <div className="flex items-center gap-1 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-medium">Aprobada</span>
+                </div>
+              )}
+              {template.status === "REJECTED" && (
+                <div className="flex items-center gap-1 text-red-500">
+                  <XCircle className="w-5 h-5" />
+                  <span className="text-sm font-medium">Rechazada</span>
+                </div>
+              )}
+              {template.status === "PENDING" && (
+                <div className="flex items-center gap-1 text-orange-500">
+                  <Clock className="w-5 h-5" />
+                  <span className="text-sm font-medium">Pendiente</span>
+                </div>
+              )}
+              <button
+                onClick={() => handleEditTemplate(template)}
+                className="text-indigo-600 hover:text-indigo-800"
+              >
+                <Pencil className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         ))}
       </div>

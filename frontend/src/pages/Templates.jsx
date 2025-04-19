@@ -82,7 +82,7 @@ export default function Templates() {
               )}
               {template.status === "REJECTED" && (
                 <div className="flex items-center gap-1 text-red-500">
-                  <XCircle className="w-5 h-5" />
+                  <Circlex className="w-5 h-5" />
                   <span className="text-sm font-medium">Rechazada</span>
                 </div>
               )}

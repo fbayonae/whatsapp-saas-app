@@ -14,13 +14,13 @@ export default function TemplateEditorModal({ template, onClose }) {
 
   useEffect(() => {
     if (template) {
-      const bodyComponent = template.components.find(c => c.type === "BODY")?.text || "";
-      const headerComponent = template.components.find(c => c.type === "HEADER") || null;
-      const footerComponent = template.components.find(c => c.type === "FOOTER")?.text || "";
-      const replyButtons = template.components.find(c => c.type === "BUTTONS")?.buttons || [];
+      const bodyComponent = template.components?.find(c => c.type === "BODY")?.text || "";
+      const headerComponent = template.components?.find(c => c.type === "HEADER") || null;
+      const footerComponent = template.components?.find(c => c.type === "FOOTER")?.text || "";
+      const replyButtons = template.components?.find(c => c.type === "BUTTONS")?.buttons || [];
 
       if (headerComponent) {
-        setHeaderType(headerComponent.format || "text");
+        setHeaderType(headerComponent.format?.toLowerCase() || "text");
         if (headerComponent.format === "TEXT") {
           setHeader(headerComponent.text || "");
         }
@@ -76,7 +76,7 @@ export default function TemplateEditorModal({ template, onClose }) {
     };
 
     try {
-      if (template) {
+      if (template?.id_meta) {
         await axios.put(`/templates/update/${template.id_meta}`, payload);
       } else {
         await axios.post("/templates/create", payload);

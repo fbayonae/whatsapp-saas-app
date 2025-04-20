@@ -46,36 +46,40 @@ const generateTemplatePayload = async (req, res) => {
       parameters: []
     };
 
-    // BODY parameters
+    // BODY parameters si contiene {{...}}
     const bodyComponent = template.components.find(c => c.type === "BODY");
     if (bodyComponent?.text && bodyComponent.text.includes("{{")) {
       const bodyMatches = bodyComponent.text.match(/{{\d+}}/g) || [];
-      payload.parameters.push({
-        type: "body",
-        parameters: bodyMatches.map((_, i) => ({
-          type: "text",
-          text: `valor_body_${i + 1}`
-        }))
-      });
+      if (bodyMatches.length > 0) {
+        payload.parameters.push({
+          type: "body",
+          parameters: bodyMatches.map((_, i) => ({
+            type: "text",
+            text: `valor_body_${i + 1}`
+          }))
+        });
+      }
     }
 
-    // BUTTONS with index and parameters
+    // BUTTONS con parámetros {{...}}
     const buttonComponent = template.components.find(c => c.type === "BUTTONS");
     if (buttonComponent && buttonComponent.buttons?.length) {
       buttonComponent.buttons.forEach((btn, i) => {
         if (btn.type === "URL" && btn.url?.includes("{{")) {
-          const matches = btn.url.match(/{{\d+}}/g) || [];
-          const buttonParams = matches.map((_, j) => ({
-            type: "text",
-            text: `valor_btn${i + 1}_${j + 1}`
-          }));
+          const urlMatches = btn.url.match(/{{\d+}}/g) || [];
+          if (urlMatches.length > 0) {
+            const buttonParams = urlMatches.map((_, j) => ({
+              type: "text",
+              text: `valor_btn${i + 1}_${j + 1}`
+            }));
 
-          payload.parameters.push({
-            type: "button",
-            sub_type: "url",
-            index: i,
-            parameters: buttonParams
-          });
+            payload.parameters.push({
+              type: "button",
+              sub_type: "url",
+              index: i,
+              parameters: buttonParams
+            });
+          }
         } else if (btn.type === "PHONE_NUMBER") {
           payload.parameters.push({
             type: "button",
@@ -93,6 +97,7 @@ const generateTemplatePayload = async (req, res) => {
     return res.status(500).json({ error: "Error interno generando el payload" });
   }
 };
+
 
 const getTemplatesWhatsapp = async (req, res) => {
   try {

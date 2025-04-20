@@ -58,12 +58,13 @@ const sendMessageTemplate = async (req, res) => {
 
     const phone = conversation.contact.phoneNumber;
 
-    const template_name = await dbService.getTemplateByIdFromDB(template);
-    console.log(template_name);
-    
+    const response_template = await dbService.getTemplateByIdFromDB(template);
+
     if (!template_name) {
       return res.status(404).json({ error: "Plantilla no encontrada" });
     }
+    
+    const template_name = response_template.name;
 
     const response = await whatsappService.sendTemplateMessage({phone, template_name, language, parameters});
     console.log(response);

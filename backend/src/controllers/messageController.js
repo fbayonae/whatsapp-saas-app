@@ -58,8 +58,9 @@ const sendMessageTemplate = async (req, res) => {
 
     const phone = conversation.contact.phoneNumber;
 
-    const template_name = await dbService.getTemplateByIdFromDB(template).name;
-
+    const template_name = await dbService.getTemplateByIdFromDB(template);
+    console.log(template_name);
+    
     if (!template_name) {
       return res.status(404).json({ error: "Plantilla no encontrada" });
     }

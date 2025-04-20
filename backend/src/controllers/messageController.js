@@ -92,13 +92,13 @@ const sendMessageTemplate = async (req, res) => {
         return {
           type: "button",
           sub_type: "url",
-          index,
+          index: btnObj.index || index,
           parameters: params.map(p => ({ type: "text", text: p }))
         };
       });
       components.push(...buttons);
     }
-
+    res.json({ components });
     // ✅ Construir payload de envío según si hay parámetros o no
     const payload = {
       phone,

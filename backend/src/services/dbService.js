@@ -105,7 +105,7 @@ const deleteTemplateFromDB = async (id) => {
     }
 
     // 3. Eliminar componentes
-    await prisma.templateComponent.deleteMany({
+    await prisma.component.deleteMany({
       where: { templateId: template.id }
     });
 

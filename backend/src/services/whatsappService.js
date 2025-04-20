@@ -172,7 +172,6 @@ const buildTemplateComponents = (components, parameters = []) => {
 
 const sendTemplateMessage = async ({ phone, template, template_name, language, parameters }) => {
   const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
-  console.log("📦 Enviando plantilla con params:", parsedParameters);
 
   try {
     const components = [];
@@ -185,6 +184,8 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
         parameters: bodyParams.map(p => ({ type: "text", text: p }))
       });
     }
+
+    console.log("bodyParams", bodyParams);
 
     // BUTTONS (button1, button2, etc.)
     const buttonComponents = parsedParameters.filter(p => {
@@ -206,7 +207,9 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
 
       components.push(...buttons);
     }
-    
+
+    console.log("buttonComponents", buttonComponents);
+
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",

@@ -107,9 +107,9 @@ const sendTextMessage = async (phone, message) => {
   }
 };
 
-const sendTemplateMessage = async ({phone, template, language, parameters}) => {
+const sendTemplateMessage = async ({phone, template_name, language, parameters}) => {
   const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
-  console.log(phone, template, language, parsedParameters);
+  console.log(phone, template_name, language, parsedParameters);
   try {
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
@@ -117,7 +117,7 @@ const sendTemplateMessage = async ({phone, template, language, parameters}) => {
       to: phone,
       type: "template",
       template: {
-        name: template,
+        name: template_name,
         language: {
           code: language
         },

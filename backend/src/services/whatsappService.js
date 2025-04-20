@@ -175,10 +175,10 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
   console.log(phone, template_name, language, parsedParameters);
 
   try {
-    const template = await dbService.getTemplateByIdFromDB(template);
-    if (!template) throw new Error("Plantilla no encontrada");
+    const response_template = await dbService.getTemplateByIdFromDB(template);
+    if (!response_template) throw new Error("Plantilla no encontrada");
 
-    const components = buildTemplateComponents(template.components, parsedParameters);
+    const components = buildTemplateComponents(response_template.components, parsedParameters);
 
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",

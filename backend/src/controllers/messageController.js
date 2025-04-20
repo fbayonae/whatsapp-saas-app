@@ -64,15 +64,58 @@ const sendMessageTemplate = async (req, res) => {
       return res.status(404).json({ error: "Plantilla no encontrada" });
     }
 
+    const parsedParams = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
     const template_name = response_template.name;
 
-    const response = await whatsappService.sendTemplateMessage({phone, template_name, language, parameters});
+    // Sustituciones para guardar en BBDD
+    const substitutions = (text = "") => {
+      return text.replace(/{{(\d+)}}/g, (_, n) => parsedParams[n - 1] || "");
+    };
+
+    const body = substitutions(response_template.components.find(c => c.type === "BODY")?.text || "");
+    const header = substitutions(response_template.components.find(c => c.type === "HEADER")?.text || "");
+    const footer = substitutions(response_template.components.find(c => c.type === "FOOTER")?.text || "");
+
+    const actions = [];
+    const buttonsComponent = response_template.components.find(c => c.type === "BUTTONS");
+
+    if (buttonsComponent && buttonsComponent.buttons?.length) {
+      for (const btn of buttonsComponent.buttons) {
+        if (btn.type === "URL") {
+          actions.push({
+            type: "url",
+            text: btn.text,
+            url: substitutions(btn.url)
+          });
+        } else if (btn.type === "PHONE_NUMBER") {
+          actions.push({
+            type: "phone_number",
+            text: btn.text,
+            phone_number: btn.phone_number
+          });
+        } else {
+          actions.push({ type: btn.type.toLowerCase(), text: btn.text });
+        }
+      }
+    }
+
+    // Enviar mensaje a WhatsApp
+    const response = await whatsappService.sendTemplateMessage({
+      phone,
+      template_name,
+      language,
+      parameters: parsedParams
+    });
     console.log(response);
 
+    // Guardar mensaje con sustituciones
     const savedMessage = await dbService.createMessageToDB({
       conversationId,
-      type: "text",
-      content: text,
+      type: "template",
+      header,
+      content: body,
+      footer,
+      actions,
       id_meta: response.messages?.[0]?.id || null
     });
 

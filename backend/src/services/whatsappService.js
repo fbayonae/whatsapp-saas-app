@@ -174,40 +174,7 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
   const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
   console.log("parsedParameters", parsedParameters);
   try {
-    const components = [];
-
-    // BODY
-    const bodyParams = parsedParameters.find(p => p.body)?.body;
-    if (bodyParams && bodyParams.length) {
-      components.push({
-        type: "body",
-        parameters: bodyParams.map(p => ({ type: "text", text: p }))
-      });
-    }
-
-    // BUTTONS (button1, button2, etc.)
-    const buttonComponents = parsedParameters.filter(p => {
-      const key = Object.keys(p)[0];
-      return key.startsWith("button");
-    });
-
-    if (buttonComponents.length) {
-      const buttons = buttonComponents.map((btnObj, index) => {
-        const key = Object.keys(btnObj)[0];
-        const params = btnObj[key];
-        return {
-          type: "button",
-          sub_type: "url",
-          index,
-          parameters: params.map(p => ({ type: "text", text: p }))
-        };
-      });
-
-      components.push(...buttons);
-    }
-
-    console.log("components", components);
-
+    
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",
@@ -216,7 +183,7 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
       template: {
         name: template_name,
         language: { code: language },
-        components: components.length > 0 ? components : undefined
+        components: parsedParameters.length > 0 ? parsedParameters : undefined
       }
     }, {
       headers: {

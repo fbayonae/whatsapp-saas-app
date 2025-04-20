@@ -49,82 +49,63 @@ const sendMessageTemplate = async (req, res) => {
   }
 
   try {
-    // 1. Obtener conversación y número
     const conversation = await dbService.getConversationFromDB(conversationId);
-
-    if (!conversation) {
-      return res.status(404).json({ error: "Conversación no encontrada" });
-    }
+    if (!conversation) return res.status(404).json({ error: "Conversación no encontrada" });
 
     const phone = conversation.contact.phoneNumber;
-
     const response_template = await dbService.getTemplateByIdFromDB(template);
-
-    if (!response_template) {
-      return res.status(404).json({ error: "Plantilla no encontrada" });
-    }
+    if (!response_template) return res.status(404).json({ error: "Plantilla no encontrada" });
 
     const template_name = response_template.name;
 
-     // Función para verificar si hay {{n}} en algún componente
-     const hasParams = response_template.components.some(comp =>
+    // Verifica si existen parámetros en algún componente
+    const hasParams = response_template.components.some(comp =>
       /{{\d+}}/.test(comp.text || "") ||
       comp.buttons?.some(btn => /{{\d+}}/.test(btn.url || ""))
     );
 
-    // Preparar componentes según parámetros recibidos
-    const bodyParams = parameters.find(p => p.body)?.body || [];
-    const buttonParams = parameters.filter(p => Object.keys(p)[0].startsWith("button"));
+    // Preparar componentes
+    const bodyParams = parameters.find(p => p.type === "body")?.parameters || [];
 
     const components = [];
 
     if (bodyParams.length) {
       components.push({
         type: "body",
-        parameters: bodyParams.map(p => ({ type: "text", text: p }))
+        parameters: bodyParams
       });
     }
 
+    const buttonParams = parameters.filter(p => p.type === "button");
     if (buttonParams.length) {
-      const buttons = buttonParams.map((btnObj, index) => {
-        const key = Object.keys(btnObj)[0];
-        const params = btnObj[key];
-        return {
-          type: "button",
-          sub_type: "url",
-          index: btnObj.index || index,
-          parameters: params.map(p => ({ type: "text", text: p }))
-        };
-      });
-      components.push(...buttons);
+      // Agregamos directamente los objetos tal como vienen
+      components.push(...buttonParams);
     }
-    res.json({ components });
-    // ✅ Construir payload de envío según si hay parámetros o no
+
+    // Armar payload
     const payload = {
       phone,
       template,
       template_name,
-      language,
+      language
     };
 
-    if (hasParams) {
+    if (hasParams && components.length > 0) {
       payload.parameters = components;
     }
 
-    // Composición del mensaje guardado
+    // Sustituir texto final
     const bodyComponent = response_template.components.find(c => c.type === "BODY");
     const footerComponent = response_template.components.find(c => c.type === "FOOTER");
     const headerComponent = response_template.components.find(c => c.type === "HEADER");
 
     let finalText = bodyComponent?.text || "";
     if (bodyParams.length) {
-      finalText = finalText.replace(/{{(\d+)}}/g, (_, index) => bodyParams[parseInt(index) - 1] || "");
+      finalText = finalText.replace(/{{(\d+)}}/g, (_, index) => bodyParams[parseInt(index) - 1]?.text || "");
     }
 
     const response = await whatsappService.sendTemplateMessage(payload);
-    console.log(response);
 
-    // Guardar mensaje con sustituciones
     const savedMessage = await dbService.createMessageToDB({
       conversationId,
       type: "template",

@@ -185,8 +185,6 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
       });
     }
 
-    console.log("bodyParams", bodyParams);
-
     // BUTTONS (button1, button2, etc.)
     const buttonComponents = parsedParameters.filter(p => {
       const key = Object.keys(p)[0];
@@ -208,7 +206,7 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
       components.push(...buttons);
     }
 
-    console.log("buttonComponents", buttonComponents);
+    console.log("components", components);
 
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",

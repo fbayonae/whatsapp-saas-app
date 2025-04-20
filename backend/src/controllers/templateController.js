@@ -29,6 +29,51 @@ const syncTemplates = async (req, res) => {
   }
 };
 
+const generateTemplatePayload = async (req, res) => {
+  const templateId = req.params.id;
+  const conversationId = req.query.conversationId || 1; // valor de ejemplo si no se proporciona
+
+  try {
+    const template = await dbService.getTemplateByIdFromDB(templateId);
+    if (!template) {
+      return res.status(404).json({ error: "Plantilla no encontrada" });
+    }
+
+    const payload = {
+      conversationId,
+      template: template.id_meta,
+      language: template.language,
+      parameters: []
+    };
+
+    const bodyComponent = template.components.find(c => c.type === "BODY");
+    if (bodyComponent?.text && bodyComponent.text.includes("{{")) {
+      const bodyMatches = bodyComponent.text.match(/{{\d+}}/g) || [];
+      payload.parameters.push({
+        body: bodyMatches.map((_, i) => `valor_body_${i + 1}`)
+      });
+    }
+
+    const buttonComponent = template.components.find(c => c.type === "BUTTONS");
+    if (buttonComponent && buttonComponent.buttons?.length) {
+      buttonComponent.buttons.forEach((btn, i) => {
+        if (btn.url?.includes("{{")) {
+          const urlMatches = btn.url.match(/{{\d+}}/g) || [];
+          payload.parameters.push({
+            [`button${i + 1}`]: urlMatches.map((_, j) => `valor_btn${i + 1}_${j + 1}`)
+          });
+        }
+      });
+    }
+
+    return res.json(payload);
+  } catch (error) {
+    console.error("❌ Error generando payload de plantilla:", error);
+    return res.status(500).json({ error: "Error interno generando el payload" });
+  }
+};
+
+
 const getTemplatesWhatsapp = async (req, res) => {
   try {
     const templates = await whatsappService.getTemplatesFromMeta();
@@ -136,6 +181,7 @@ module.exports = {
   getTemplates,
   createTemplate,
   deleteTemplate,
-  getTemplatesWhatsapp
+  getTemplatesWhatsapp,
+  generateTemplatePayload
   //updateTemplate
 };

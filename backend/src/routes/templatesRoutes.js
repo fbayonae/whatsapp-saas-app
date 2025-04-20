@@ -9,8 +9,8 @@ const router = express.Router();
 router.get('/whatsapp', auth, templateController.getTemplatesWhatsapp);
 router.post('/sync', auth, templateController.syncTemplates);
 router.get('/', auth, templateController.getTemplates);
-router.post("/create", 
-    auth, 
+router.post("/create",
+    auth,
     templateController.createTemplate
 );
 router.delete("/delete/:id_meta",
@@ -26,6 +26,14 @@ router.delete("/delete/:id_meta",
     ],
     templateController.deleteTemplate
 );
-
+router.get("/:id/payload",
+    auth,
+    [
+        param("id")
+            .notEmpty()
+            .withMessage("El id es requerido")
+    ], 
+    templateController.generateTemplatePayload
+);
 
 module.exports = router;

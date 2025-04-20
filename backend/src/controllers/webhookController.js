@@ -60,7 +60,7 @@ const handleWebhookMessage = async (value) => {
         try {
           const url = await whatsappService.getMediaUrl(msg.image.id);
           const localFile = await whatsappService.downloadMediaFile(url, msg.image.id, msg.image.mime_type);
-      
+
           console.log("📥 Archivo guardada en:", localFile);
         } catch (error) {
           console.error("❌ Error al descargar archivo multimedia:", error.message);
@@ -87,9 +87,10 @@ const handleWebhookMessage = async (value) => {
         contact = await prisma.contact.upsert({
           where: { phoneNumber: from },
           update: {},
-          create: { 
+          create: {
             phoneNumber: from,
-            name: name}
+            name: name
+          }
         });
 
         // 3. Crear nueva conversación
@@ -130,7 +131,7 @@ const handleWebhookMessage = async (value) => {
           interactive: msg.interactive || null,
         }
       });
-      
+
       console.log(`✅ Mensaje guardado en conversación ${conversation.id}`);
     } catch (error) {
       console.error(`❌ Error procesando mensaje: ${error.message}`, error);
@@ -140,9 +141,34 @@ const handleWebhookMessage = async (value) => {
 
 // ✅ Procesa actualizaciones de estado de plantillas
 const handleTemplateStatusUpdate = async (value) => {
-  console.log("🔄 Estado de plantilla actualizado:", JSON.stringify(value, null, 2));
-  // Aquí podrías guardar el estado o marcar como rechazada, etc.
+  const {
+    event,
+    message_template_id,
+    message_template_name,
+    message_template_language,
+    reason
+  } = value;
+
+  try {
+    const updated = await prisma.template.updateMany({
+      where: {
+        id_meta: message_template_id.toString(),
+        name: message_template_name,
+        language: message_template_language
+      },
+      data: {
+        status: event,
+        rejectionReason: reason || null
+      }
+    });
+
+    console.log(`✅ Estado actualizado para la plantilla "${message_template_name}" (${message_template_id}) => ${event}`);
+    return updated;
+  } catch (error) {
+    console.error("❌ Error actualizando estado de plantilla:", error);
+  }
 };
+
 
 module.exports = {
   handleWebhookMessage,

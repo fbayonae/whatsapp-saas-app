@@ -76,6 +76,7 @@ model Template {
   category    String
   language    String
   status      String
+  rejectionReason      String?
   id_meta     String      @unique
   createdAt   DateTime    @default(now())
 

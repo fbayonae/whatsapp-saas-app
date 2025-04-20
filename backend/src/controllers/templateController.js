@@ -31,7 +31,7 @@ const syncTemplates = async (req, res) => {
 
 const generateTemplatePayload = async (req, res) => {
   const templateId = req.params.id;
-  const conversationId = req.query.conversationId || 1; // valor de ejemplo si no se proporciona
+  const conversationId = req.query.conversationId || 1;
 
   try {
     const template = await dbService.getTemplateByIdFromDB(templateId);
@@ -46,21 +46,42 @@ const generateTemplatePayload = async (req, res) => {
       parameters: []
     };
 
+    // BODY parameters
     const bodyComponent = template.components.find(c => c.type === "BODY");
     if (bodyComponent?.text && bodyComponent.text.includes("{{")) {
       const bodyMatches = bodyComponent.text.match(/{{\d+}}/g) || [];
       payload.parameters.push({
-        body: bodyMatches.map((_, i) => `valor_body_${i + 1}`)
+        type: "body",
+        parameters: bodyMatches.map((_, i) => ({
+          type: "text",
+          text: `valor_body_${i + 1}`
+        }))
       });
     }
 
+    // BUTTONS with index and parameters
     const buttonComponent = template.components.find(c => c.type === "BUTTONS");
     if (buttonComponent && buttonComponent.buttons?.length) {
       buttonComponent.buttons.forEach((btn, i) => {
-        if (btn.url?.includes("{{")) {
-          const urlMatches = btn.url.match(/{{\d+}}/g) || [];
+        if (btn.type === "URL" && btn.url?.includes("{{")) {
+          const matches = btn.url.match(/{{\d+}}/g) || [];
+          const buttonParams = matches.map((_, j) => ({
+            type: "text",
+            text: `valor_btn${i + 1}_${j + 1}`
+          }));
+
           payload.parameters.push({
-            [`button${i + 1}`]: urlMatches.map((_, j) => `valor_btn${i + 1}_${j + 1}`)
+            type: "button",
+            sub_type: "url",
+            index: i,
+            parameters: buttonParams
+          });
+        } else if (btn.type === "PHONE_NUMBER") {
+          payload.parameters.push({
+            type: "button",
+            sub_type: "phone_number",
+            index: i,
+            parameters: []
           });
         }
       });
@@ -72,7 +93,6 @@ const generateTemplatePayload = async (req, res) => {
     return res.status(500).json({ error: "Error interno generando el payload" });
   }
 };
-
 
 const getTemplatesWhatsapp = async (req, res) => {
   try {

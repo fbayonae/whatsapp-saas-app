@@ -172,7 +172,7 @@ const buildTemplateComponents = (components, parameters = []) => {
 
 const sendTemplateMessage = async ({ phone, template, template_name, language, parameters }) => {
   const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
-  console.log("parsedParameters", parsedParameters);
+
   try {
     
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {

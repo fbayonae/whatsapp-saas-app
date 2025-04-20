@@ -65,21 +65,24 @@ const sendMessageTemplate = async (req, res) => {
     );
 
     // Preparar componentes
-    const bodyParams = parameters.find(p => p.type === "body")?.parameters || [];
 
-    const components = [];
+    if (hasParams && !parameters) {
+      const bodyParams = parameters.find(p => p.type === "body")?.parameters || [];
 
-    if (bodyParams.length) {
-      components.push({
-        type: "body",
-        parameters: bodyParams
-      });
-    }
+      const components = [];
 
-    const buttonParams = parameters.filter(p => p.type === "button");
-    if (buttonParams.length) {
-      // Agregamos directamente los objetos tal como vienen
-      components.push(...buttonParams);
+      if (bodyParams.length) {
+        components.push({
+          type: "body",
+          parameters: bodyParams
+        });
+      }
+
+      const buttonParams = parameters.filter(p => p.type === "button");
+      if (buttonParams.length) {
+        // Agregamos directamente los objetos tal como vienen
+        components.push(...buttonParams);
+      }
     }
 
     // Armar payload

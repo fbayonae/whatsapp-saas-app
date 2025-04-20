@@ -185,6 +185,7 @@ const createMessageToDB = async ({ conversationId, type, content, id_meta, conte
 module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
+  deleteTemplateFromDB,
   saveComponentToDB,
   getContactsFromDB,
   getConversationsFromDB,

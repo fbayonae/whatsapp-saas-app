@@ -60,12 +60,12 @@ const deleteTemplate = async (req, res) => {
       return res.status(404).json({ error: 'Plantilla no encontrada' });
     }
 
-    const response = await whatsappService.deleteTemplate({
+    /*const response = await whatsappService.deleteTemplate({
       templateId: template_id_meta,
       name: template.name
     });
   
-    res.json(response);
+    res.json(response);*/
   } catch (error) {
     console.error('❌ Error obteniendo plantillas:', error);
     res.status(500).json({ error: 'Error al obtener las plantillas' });

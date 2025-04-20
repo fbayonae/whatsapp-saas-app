@@ -6,6 +6,7 @@ const isAdmin = require("../utils/authMiddleware").isAdmin;
 
 const router = express.Router();
 
+router.get('/whatsapp', auth, templateController.getTemplatesWhatsapp);
 router.post('/sync', auth, templateController.syncTemplates);
 router.get('/', auth, templateController.getTemplates);
 router.post("/create", 

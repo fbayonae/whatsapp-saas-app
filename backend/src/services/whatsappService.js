@@ -14,7 +14,7 @@ const version = process.env.VERSION_GRAPH;
 /************************************* PLANTILLAS ***********************************/
 
 const getTemplatesFromMeta = async () => {
-  //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
+
   try {
     const response = await axios.get(`${url_base}${version}/${businessId}/message_templates`, {
       headers: {
@@ -29,7 +29,7 @@ const getTemplatesFromMeta = async () => {
 };
 
 const createTemplate = async ({name, language, category, components}) => {
-  //const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
+
   try {
     const response = await axios.post(`${url_base}${version}/${businessId}/message_templates`, {
       name,

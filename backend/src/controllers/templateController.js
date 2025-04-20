@@ -29,6 +29,17 @@ const syncTemplates = async (req, res) => {
   }
 };
 
+const getTemplatesWhatsapp = async (req, res) => {
+  try {
+    const templates = await whatsappService.getTemplatesFromMeta();
+    console.log(templates);
+    res.json(templates);
+  } catch (error) {
+    console.error('❌ Error obteniendo plantillas:', error);
+    res.status(500).json({ error: 'Error al obtener las plantillas' });
+  }
+};
+
 const getTemplates = async (req, res) => {
   try {
     const templates = await dbService.getTemplatesFromDB();
@@ -119,5 +130,6 @@ module.exports = {
   getTemplates,
   createTemplate,
   deleteTemplate,
+  getTemplatesWhatsapp
   //updateTemplate
 };

@@ -4,7 +4,7 @@ const axios = require('axios');
 const fs = require("fs");
 const FormData = require("form-data");
 const path = require("path");
-const dbService = require("./dbService"); 
+const dbService = require("./dbService");
 
 const token = process.env.TOKEN_DEV;
 const phoneId = process.env.PHONE_NUMBER_ID;
@@ -29,7 +29,7 @@ const getTemplatesFromMeta = async () => {
   }
 };
 
-const createTemplate = async ({name, language, category, components}) => {
+const createTemplate = async ({ name, language, category, components }) => {
 
   try {
     const response = await axios.post(`${url_base}${version}/${businessId}/message_templates`, {
@@ -37,7 +37,7 @@ const createTemplate = async ({name, language, category, components}) => {
       language,
       category,
       components
-    },{
+    }, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -49,30 +49,30 @@ const createTemplate = async ({name, language, category, components}) => {
   }
 };
 
-const deleteTemplate = async ({templateId, name}) => {
+const deleteTemplate = async ({ templateId, name }) => {
   try {
-    const response = await axios.delete(`${url_base}${version}/${bussinessId}/message_templates/hsm_id=${templateId}&name=${name}`,{
+    const response = await axios.delete(`${url_base}${version}/${bussinessId}/message_templates/hsm_id=${templateId}&name=${name}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
     return response.data;
-  }catch (error) {
+  } catch (error) {
     console.error('❌ Error eliminando plantilla en Meta:', error.message);
     throw error;
   }
 };
 
-const updateTemplate = async ({templateId, name, language, category, components}) => {
+const updateTemplate = async ({ templateId, name, language, category, components }) => {
   try {
     const response = await axios.post(`${url_base}${version}/${templateId}`, {
       name,
       language,
       category,
       components
-    },{
+    }, {
       headers: {
-        Authorization: `Bearer ${token}`  
+        Authorization: `Bearer ${token}`
       }
     });
     return response.data;
@@ -172,14 +172,41 @@ const buildTemplateComponents = (components, parameters = []) => {
 
 const sendTemplateMessage = async ({ phone, template, template_name, language, parameters }) => {
   const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
-  console.log(phone, template_name, language, parsedParameters);
+  console.log("📦 Enviando plantilla con params:", parsedParameters);
 
   try {
-    const response_template = await dbService.getTemplateByIdFromDB(template);
-    if (!response_template) throw new Error("Plantilla no encontrada");
+    const components = [];
 
-    const components = buildTemplateComponents(response_template.components, parsedParameters);
+    // BODY
+    const bodyParams = parsedParameters.find(p => p.body)?.body;
+    if (bodyParams && bodyParams.length) {
+      components.push({
+        type: "body",
+        parameters: bodyParams.map(p => ({ type: "text", text: p }))
+      });
+    }
 
+    // BUTTONS (button1, button2, etc.)
+    const buttonComponents = parsedParameters.filter(p => {
+      const key = Object.keys(p)[0];
+      return key.startsWith("button");
+    });
+
+    if (buttonComponents.length) {
+      const buttons = buttonComponents.map((btnObj, index) => {
+        const key = Object.keys(btnObj)[0];
+        const params = btnObj[key];
+        return {
+          type: "button",
+          sub_type: "url",
+          index,
+          parameters: params.map(p => ({ type: "text", text: p }))
+        };
+      });
+
+      components.push(...buttons);
+    }
+    
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",

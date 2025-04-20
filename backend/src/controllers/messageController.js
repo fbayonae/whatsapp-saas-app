@@ -64,7 +64,6 @@ const sendMessageTemplate = async (req, res) => {
       return res.status(404).json({ error: "Plantilla no encontrada" });
     }
 
-    const parsedParams = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
     const template_name = response_template.name;
 
      // Función para verificar si hay {{n}} en algún componente
@@ -73,41 +72,32 @@ const sendMessageTemplate = async (req, res) => {
       comp.buttons?.some(btn => /{{\d+}}/.test(btn.url || ""))
     );
 
-    // Sustituciones para guardar en BBDD
-    const substitutions = (text = "") => {
-      return text.replace(/{{(\d+)}}/g, (_, n) => parsedParams[n - 1] || "");
-    };
+    // Preparar componentes según parámetros recibidos
+    const bodyParams = parameters.find(p => p.body)?.body || [];
+    const buttonParams = parameters.filter(p => Object.keys(p)[0].startsWith("button"));
 
-    const body = substitutions(response_template.components.find(c => c.type === "BODY")?.text || "");
-    const header = substitutions(response_template.components.find(c => c.type === "HEADER")?.text || "");
-    const footer = substitutions(response_template.components.find(c => c.type === "FOOTER")?.text || "");
+    const components = [];
 
-    const actions = [];
-    const buttonsComponent = response_template.components.find(c => c.type === "BUTTONS");
-
-    if (buttonsComponent && buttonsComponent.buttons?.length) {
-      for (const btn of buttonsComponent.buttons) {
-        if (btn.type === "URL") {
-          actions.push({
-            type: "url",
-            text: btn.text,
-            url: substitutions(btn.url)
-          });
-        } else if (btn.type === "PHONE_NUMBER") {
-          actions.push({
-            type: "phone_number",
-            text: btn.text
-          });
-        } else {
-          actions.push({ type: btn.type.toLowerCase(), text: btn.text });
-        }
-      }
+    if (bodyParams.length) {
+      components.push({
+        type: "body",
+        parameters: bodyParams.map(p => ({ type: "text", text: p }))
+      });
     }
 
-    console.log("Header:", header);
-    console.log("Body:", body);
-    console.log("Footer:", footer);
-    console.log("Actions:", actions);
+    if (buttonParams.length) {
+      const buttons = buttonParams.map((btnObj, index) => {
+        const key = Object.keys(btnObj)[0];
+        const params = btnObj[key];
+        return {
+          type: "button",
+          sub_type: "url",
+          index,
+          parameters: params.map(p => ({ type: "text", text: p }))
+        };
+      });
+      components.push(...buttons);
+    }
 
     // ✅ Construir payload de envío según si hay parámetros o no
     const payload = {
@@ -118,20 +108,30 @@ const sendMessageTemplate = async (req, res) => {
     };
 
     if (hasParams) {
-      payload.parameters = parsedParams;
+      payload.parameters = components;
     }
 
     const response = await whatsappService.sendTemplateMessage(payload);
     console.log(response);
 
+    // Composición del mensaje guardado
+    const bodyComponent = response_template.components.find(c => c.type === "BODY");
+    const footerComponent = response_template.components.find(c => c.type === "FOOTER");
+    const headerComponent = response_template.components.find(c => c.type === "HEADER");
+
+    let finalText = bodyComponent?.text || "";
+    if (bodyParams.length) {
+      finalText = finalText.replace(/{{(\d+)}}/g, (_, index) => bodyParams[parseInt(index) - 1] || "");
+    }
+
     // Guardar mensaje con sustituciones
     const savedMessage = await dbService.createMessageToDB({
       conversationId,
       type: "template",
-      header,
-      content: body,
-      footer,
-      actions,
+      content: finalText,
+      header: headerComponent?.text || "",
+      footer: footerComponent?.text || "",
+      action: JSON.stringify(buttonParams),
       id_meta: response.messages?.[0]?.id || null
     });
 

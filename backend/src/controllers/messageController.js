@@ -124,6 +124,11 @@ const sendMessageTemplate = async (req, res) => {
       finalText = finalText.replace(/{{(\d+)}}/g, (_, index) => bodyParams[parseInt(index) - 1] || "");
     }
 
+    console.log("Final Text:", finalText);
+    console.log("Header:", headerComponent?.text);
+    console.log("Footer:", footerComponent?.text);
+    console.log("Button Params:", buttonParams);
+
     // Guardar mensaje con sustituciones
     const savedMessage = await dbService.createMessageToDB({
       conversationId,

@@ -147,7 +147,7 @@ model Message {
   id_meta        String
   content        String
   type           String
-  status         String    @default("sent")
+  status         String    @default("pending")
   contextId      String?
   direction      String    // 'inbound' o 'outbound'
   media_id       String?

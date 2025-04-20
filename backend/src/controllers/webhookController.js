@@ -199,8 +199,30 @@ const handleTemplateQualityUpdate = async (value) => {
   }
 };
 
+const handleEchoMessage = async (value) => {
+  const echoes = value.message_echoes || [];
+
+  for (const msg of echoes) {
+    const messageId = msg.id;
+    const to = msg.to;
+    const content = msg.text?.body || "";
+    const timestamp = new Date(Number(msg.timestamp) * 1000).toISOString();
+
+    console.log(`📤 Echo recibido: ${content} → ${to} (${timestamp})`);
+
+    // Opcional: actualizar estado en la BBDD
+    await prisma.message.updateMany({
+      where: { id_meta: messageId },
+      data: { status: "sent", deliveredAt: timestamp }
+    });
+  }
+};
+
+
+
 module.exports = {
   handleWebhookMessage,
   handleTemplateStatusUpdate,
-  handleTemplateQualityUpdate
+  handleTemplateQualityUpdate,
+  handleEchoMessage 
 };

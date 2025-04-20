@@ -50,6 +50,10 @@ router.post("/", (req, res) => {
           webhookControler.handleTemplateQualityUpdate(value);
           break;
 
+        case "message_echoes":
+          webhookControler.handleEchoMessage(value);
+          break;
+
         default:
           console.log(`⚠️ Webhook recibido con campo desconocido: ${field}`);
       }

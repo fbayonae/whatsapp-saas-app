@@ -46,11 +46,11 @@ const generateTemplatePayload = async (req, res) => {
       parameters: []
     };
 
-    // BODY parameters si contiene {{...}}
+    // BODY si tiene placeholders
     const bodyComponent = template.components.find(c => c.type === "BODY");
-    if (bodyComponent?.text && bodyComponent.text.includes("{{")) {
-      const bodyMatches = bodyComponent.text.match(/{{\d+}}/g) || [];
-      if (bodyMatches.length > 0) {
+    if (bodyComponent?.text?.includes("{{")) {
+      const bodyMatches = bodyComponent.text.match(/{{\d+}}/g);
+      if (bodyMatches?.length) {
         payload.parameters.push({
           type: "body",
           parameters: bodyMatches.map((_, i) => ({
@@ -61,33 +61,25 @@ const generateTemplatePayload = async (req, res) => {
       }
     }
 
-    // BUTTONS con parámetros {{...}}
+    // BUTTONS con URL y parámetros
     const buttonComponent = template.components.find(c => c.type === "BUTTONS");
-    if (buttonComponent && buttonComponent.buttons?.length) {
+    if (buttonComponent?.buttons?.length) {
       buttonComponent.buttons.forEach((btn, i) => {
         if (btn.type === "URL" && btn.url?.includes("{{")) {
-          const urlMatches = btn.url.match(/{{\d+}}/g) || [];
-          if (urlMatches.length > 0) {
-            const buttonParams = urlMatches.map((_, j) => ({
-              type: "text",
-              text: `valor_btn${i + 1}_${j + 1}`
-            }));
-
+          const urlMatches = btn.url.match(/{{\d+}}/g);
+          if (urlMatches?.length) {
             payload.parameters.push({
               type: "button",
               sub_type: "url",
               index: i,
-              parameters: buttonParams
+              parameters: urlMatches.map((_, j) => ({
+                type: "text",
+                text: `valor_btn${i + 1}_${j + 1}`
+              }))
             });
           }
-        } else if (btn.type === "PHONE_NUMBER") {
-          payload.parameters.push({
-            type: "button",
-            sub_type: "phone_number",
-            index: i,
-            parameters: []
-          });
         }
+        // ❌ Eliminar el else-if del tipo PHONE_NUMBER si no tiene parámetros
       });
     }
 
@@ -97,6 +89,7 @@ const generateTemplatePayload = async (req, res) => {
     return res.status(500).json({ error: "Error interno generando el payload" });
   }
 };
+
 
 
 const getTemplatesWhatsapp = async (req, res) => {

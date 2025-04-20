@@ -111,9 +111,6 @@ const sendMessageTemplate = async (req, res) => {
       payload.parameters = components;
     }
 
-    const response = await whatsappService.sendTemplateMessage(payload);
-    console.log(response);
-
     // Composición del mensaje guardado
     const bodyComponent = response_template.components.find(c => c.type === "BODY");
     const footerComponent = response_template.components.find(c => c.type === "FOOTER");
@@ -128,6 +125,9 @@ const sendMessageTemplate = async (req, res) => {
     console.log("Header:", headerComponent?.text);
     console.log("Footer:", footerComponent?.text);
     console.log("Button Params:", buttonParams);
+
+    const response = await whatsappService.sendTemplateMessage(payload);
+    console.log(response);
 
     // Guardar mensaje con sustituciones
     const savedMessage = await dbService.createMessageToDB({

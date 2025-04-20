@@ -57,7 +57,6 @@ const saveComponentToDB = async (component, templateId) => {
           type: btn.type,
           text: btn.text,
           url: btn.url || null,
-          phoneNumber: btn.phone_number || null,
           example: btn.example ? JSON.stringify(btn.example) : null,
           component: { connect: { id: savedComponent.id } }
         }

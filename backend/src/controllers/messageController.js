@@ -90,14 +90,18 @@ const sendMessageTemplate = async (req, res) => {
         } else if (btn.type === "PHONE_NUMBER") {
           actions.push({
             type: "phone_number",
-            text: btn.text,
-            phone_number: btn.phone_number
+            text: btn.text
           });
         } else {
           actions.push({ type: btn.type.toLowerCase(), text: btn.text });
         }
       }
     }
+
+    console.log("Header:", header);
+    console.log("Body:", body);
+    console.log("Footer:", footer);
+    console.log("Actions:", actions);
 
     // Enviar mensaje a WhatsApp
     const response = await whatsappService.sendTemplateMessage({

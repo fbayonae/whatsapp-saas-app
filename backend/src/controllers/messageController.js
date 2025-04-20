@@ -60,10 +60,10 @@ const sendMessageTemplate = async (req, res) => {
 
     const response_template = await dbService.getTemplateByIdFromDB(template);
 
-    if (!template_name) {
+    if (!response_template) {
       return res.status(404).json({ error: "Plantilla no encontrada" });
     }
-    
+
     const template_name = response_template.name;
 
     const response = await whatsappService.sendTemplateMessage({phone, template_name, language, parameters});

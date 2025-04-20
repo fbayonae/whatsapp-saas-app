@@ -67,6 +67,12 @@ const sendMessageTemplate = async (req, res) => {
     const parsedParams = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
     const template_name = response_template.name;
 
+     // Función para verificar si hay {{n}} en algún componente
+     const hasParams = response_template.components.some(comp =>
+      /{{\d+}}/.test(comp.text || "") ||
+      comp.buttons?.some(btn => /{{\d+}}/.test(btn.url || ""))
+    );
+
     // Sustituciones para guardar en BBDD
     const substitutions = (text = "") => {
       return text.replace(/{{(\d+)}}/g, (_, n) => parsedParams[n - 1] || "");
@@ -103,13 +109,18 @@ const sendMessageTemplate = async (req, res) => {
     console.log("Footer:", footer);
     console.log("Actions:", actions);
 
-    // Enviar mensaje a WhatsApp
-    const response = await whatsappService.sendTemplateMessage({
+    // ✅ Construir payload de envío según si hay parámetros o no
+    const payload = {
       phone,
       template_name,
       language,
-      parameters: parsedParams
-    });
+    };
+
+    if (hasParams) {
+      payload.parameters = parsedParams;
+    }
+
+    const response = await whatsappService.sendTemplateMessage(payload);
     console.log(response);
 
     // Guardar mensaje con sustituciones

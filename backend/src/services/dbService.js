@@ -30,46 +30,35 @@ const saveTemplateToDB = async (template) => {
 const saveComponentToDB = async (component, templateId) => {
   console.log("saveComponentToDB");
 
-  // Comprobamos si el componente ya existe para evitar duplicados (solo uno por tipo por plantilla)
-  const existing = await prisma.component.findFirst({
+  // Evitar componentes duplicados
+  const existingComponent = await prisma.component.findFirst({
     where: {
       type: component.type,
+      format: component.format || '',
+      text: component.text || '',
       templateId: templateId
     }
   });
 
-  let savedComponent;
+  const savedComponent = existingComponent || await prisma.component.create({
+    data: {
+      type: component.type,
+      format: component.format || '',
+      text: component.text || '',
+      example: component.example?.body_text ? JSON.stringify(component.example.body_text) : null,
+      template: { connect: { id: templateId } }
+    }
+  });
 
-  if (existing) {
-    savedComponent = await prisma.component.update({
-      where: { id: existing.id },
-      data: {
-        format: component.format || '',
-        text: component.text || '',
-        example: component.example || null
-      }
-    });
-  } else {
-    savedComponent = await prisma.component.create({
-      data: {
-        type: component.type,
-        format: component.format || '',
-        text: component.text || '',
-        example: component.example || null,
-        template: { connect: { id: templateId } }
-      }
-    });
-  }
-
-  // Guardar botones si existen
-  if (component.type === 'BUTTON' && component.buttons?.length) {
+  if (component.type === 'BUTTONS' && component.buttons?.length) {
     for (const btn of component.buttons) {
       await prisma.button.create({
         data: {
           type: btn.type,
           text: btn.text,
           url: btn.url || null,
-          example: btn.example || null,
+          phoneNumber: btn.phone_number || null,
+          example: btn.example ? JSON.stringify(btn.example) : null,
           component: { connect: { id: savedComponent.id } }
         }
       });

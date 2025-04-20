@@ -60,6 +60,11 @@ const deleteTemplate = async (req, res) => {
       return res.status(404).json({ error: 'Plantilla no encontrada' });
     }
 
+    const response = await dbService.deleteTemplateFromDB(template_id_meta);
+    if (!response) {
+      return res.status(500).json({ error: 'Error al eliminar la plantilla de la base de datos' });
+    }
+    console.log("Plantilla eliminada de la base de datos");
     /*const response = await whatsappService.deleteTemplate({
       templateId: template_id_meta,
       name: template.name

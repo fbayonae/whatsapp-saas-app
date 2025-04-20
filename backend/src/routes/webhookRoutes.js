@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const webhookControler  = require('../controllers/webhookController');
+const webhookControler = require('../controllers/webhookController');
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN; 
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 // Ruta de verificación del webhook
 router.get("/", (req, res) => {
@@ -25,33 +25,37 @@ router.get("/", (req, res) => {
 
 // Ruta para recibir mensajes
 router.post("/", (req, res) => {
-    // ✅ Confirmación para Meta
-    res.sendStatus(200);
-  
-    const entries = req.body.entry || [];
-  
-    entries.forEach(entry => {
-      const changes = entry.changes || [];
-  
-      changes.forEach(change => {
-        const field = change.field;
-        const value = change.value;
-  
-        switch (field) {
-          case "messages":
-            webhookControler.handleWebhookMessage(value);
-            break;
-  
-          case "message_template_status_update":
-            webhookControler.handleTemplateStatusUpdate(value);
-            break;
-  
-          default:
-            console.log(`⚠️ Webhook recibido con campo desconocido: ${field}`);
-        }
-      });
+  // ✅ Confirmación para Meta
+  res.sendStatus(200);
+
+  const entries = req.body.entry || [];
+
+  entries.forEach(entry => {
+    const changes = entry.changes || [];
+
+    changes.forEach(change => {
+      const field = change.field;
+      const value = change.value;
+
+      switch (field) {
+        case "messages":
+          webhookControler.handleWebhookMessage(value);
+          break;
+
+        case "message_template_status_update":
+          webhookControler.handleTemplateStatusUpdate(value);
+          break;
+
+        case "message_template_quality_update":
+          webhookControler.handleTemplateQualityUpdate(value);
+          break;
+
+        default:
+          console.log(`⚠️ Webhook recibido con campo desconocido: ${field}`);
+      }
     });
   });
+});
 
 
 module.exports = router;

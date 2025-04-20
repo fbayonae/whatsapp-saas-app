@@ -112,6 +112,7 @@ const sendMessageTemplate = async (req, res) => {
     // ✅ Construir payload de envío según si hay parámetros o no
     const payload = {
       phone,
+      template,
       template_name,
       language,
     };

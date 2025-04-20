@@ -4,6 +4,7 @@ const axios = require('axios');
 const fs = require("fs");
 const FormData = require("form-data");
 const path = require("path");
+const dbService = require("./dbService"); 
 
 const token = process.env.TOKEN_DEV;
 const phoneId = process.env.PHONE_NUMBER_ID;
@@ -107,10 +108,78 @@ const sendTextMessage = async (phone, message) => {
   }
 };
 
-const sendTemplateMessage = async ({phone, template_name, language, parameters}) => {
+const buildTemplateComponents = (components, parameters = []) => {
+  const paramList = [...parameters];
+  const result = [];
+
+  for (const comp of components) {
+    // BODY
+    if (comp.type === "BODY" && /{{\d+}}/.test(comp.text || "")) {
+      const placeholders = comp.text.match(/{{\d+}}/g) || [];
+      result.push({
+        type: "body",
+        parameters: placeholders.map((_, i) => ({
+          type: "text",
+          text: paramList[i] || ""
+        }))
+      });
+    }
+
+    // BOTONES
+    if (comp.type === "BUTTONS" && comp.buttons?.length) {
+      const buttons = comp.buttons.map((btn, i) => {
+        if (btn.type === "URL" && btn.url?.includes("{{")) {
+          const match = btn.url.match(/{{(\d+)}}/);
+          const idx = match ? parseInt(match[1], 10) - 1 : -1;
+          return {
+            type: "url",
+            sub_type: "url",
+            index: i,
+            parameters: [
+              {
+                type: "text",
+                text: paramList[idx] || ""
+              }
+            ]
+          };
+        } else if (btn.type === "PHONE_NUMBER") {
+          return {
+            type: "phone_number",
+            sub_type: "phone_number",
+            index: i
+          };
+        } else if (btn.type === "QUICK_REPLY") {
+          return {
+            type: "quick_reply",
+            sub_type: "quick_reply",
+            index: i
+          };
+        }
+        return null;
+      }).filter(Boolean);
+
+      if (buttons.length > 0) {
+        result.push({
+          type: "button",
+          buttons
+        });
+      }
+    }
+  }
+
+  return result;
+};
+
+const sendTemplateMessage = async ({ phone, template, template_name, language, parameters }) => {
   const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
   console.log(phone, template_name, language, parsedParameters);
+
   try {
+    const template = await dbService.getTemplateByIdFromDB(template);
+    if (!template) throw new Error("Plantilla no encontrada");
+
+    const components = buildTemplateComponents(template.components, parsedParameters);
+
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",
@@ -118,18 +187,8 @@ const sendTemplateMessage = async ({phone, template_name, language, parameters})
       type: "template",
       template: {
         name: template_name,
-        language: {
-          code: language
-        },
-        components: [
-          {
-            type: "body",
-            parameters: parsedParameters.map(param => ({
-              type: "text",
-              text: param
-            }))
-          }
-        ]
+        language: { code: language },
+        components: components.length > 0 ? components : undefined
       }
     }, {
       headers: {
@@ -140,7 +199,7 @@ const sendTemplateMessage = async ({phone, template_name, language, parameters})
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Error enviando mensaje:', error.message);
+    console.error('❌ Error enviando mensaje:', error?.response?.data || error.message);
     throw error;
   }
 };

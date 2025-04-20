@@ -90,6 +90,7 @@ model Component {
   type        String     // header, body, footer, button, etc.
   format      String
   text        String
+  example     JSON?
   templateId  Int
 
   template    Template   @relation(fields: [templateId], references: [id])
@@ -104,6 +105,7 @@ model Button {
   type         String     // quick_reply, url, call_to_action, etc.
   text         String
   url          String?
+  example      JSON?
   componentId  Int
 
   component    Component  @relation(fields: [componentId], references: [id])

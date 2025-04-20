@@ -29,15 +29,39 @@ const saveTemplateToDB = async (template) => {
 
 const saveComponentToDB = async (component, templateId) => {
   console.log("saveComponentToDB");
-  const savedComponent = await prisma.component.create({
-    data: {
+
+  // Comprobamos si el componente ya existe para evitar duplicados (solo uno por tipo por plantilla)
+  const existing = await prisma.component.findFirst({
+    where: {
       type: component.type,
-      format: component.format || '',
-      text: component.text || '',
-      template: { connect: { id: templateId } }
+      templateId: templateId
     }
   });
 
+  let savedComponent;
+
+  if (existing) {
+    savedComponent = await prisma.component.update({
+      where: { id: existing.id },
+      data: {
+        format: component.format || '',
+        text: component.text || '',
+        example: component.example || null
+      }
+    });
+  } else {
+    savedComponent = await prisma.component.create({
+      data: {
+        type: component.type,
+        format: component.format || '',
+        text: component.text || '',
+        example: component.example || null,
+        template: { connect: { id: templateId } }
+      }
+    });
+  }
+
+  // Guardar botones si existen
   if (component.type === 'BUTTON' && component.buttons?.length) {
     for (const btn of component.buttons) {
       await prisma.button.create({
@@ -45,6 +69,7 @@ const saveComponentToDB = async (component, templateId) => {
           type: btn.type,
           text: btn.text,
           url: btn.url || null,
+          example: btn.example || null,
           component: { connect: { id: savedComponent.id } }
         }
       });

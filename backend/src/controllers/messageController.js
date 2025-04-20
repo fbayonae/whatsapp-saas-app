@@ -56,9 +56,9 @@ const sendMessageTemplate = async (req, res) => {
       return res.status(404).json({ error: "Conversación no encontrada" });
     }
 
-    const phoneNumber = conversation.contact.phoneNumber;
+    const phone = conversation.contact.phoneNumber;
 
-    const response = await whatsappService.sendTemplateMessage({phoneNumber, template, language, parameters});
+    const response = await whatsappService.sendTemplateMessage({phone, template, language, parameters});
     console.log(response);
 
     const savedMessage = await dbService.createMessageToDB({

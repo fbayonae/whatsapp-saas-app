@@ -103,9 +103,6 @@ router.post("/send-template",
         body("language")
             .notEmpty()
             .withMessage("El idioma es obligatorio"),
-        body("parameters")
-            .notEmpty()
-            .withMessage("Los parametros son obligatorios"),
     ],
     validate,
     messageController.sendMessageTemplate

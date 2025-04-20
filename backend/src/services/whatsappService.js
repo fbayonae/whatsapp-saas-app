@@ -171,26 +171,36 @@ const buildTemplateComponents = (components, parameters = []) => {
 };
 
 const sendTemplateMessage = async ({ phone, template, template_name, language, parameters }) => {
-  const parsedParameters = typeof parameters === 'string' ? JSON.parse(parameters) : parameters;
+  const parsedParameters = Array.isArray(parameters)
+    ? parameters
+    : typeof parameters === 'string'
+      ? JSON.parse(parameters)
+      : [];
 
   try {
-    
+    // Construir el objeto base del template
+    const templatePayload = {
+      name: template_name,
+      language: { code: language }
+    };
+
+    if (parsedParameters.length > 0) {
+      templatePayload.components = parsedParameters;
+    }
+
     const response = await axios.post(`${url_base}${version}/${phoneId}/messages`, {
       messaging_product: "whatsapp",
       recipient_type: "individual",
       to: phone,
       type: "template",
-      template: {
-        name: template_name,
-        language: { code: language },
-        components: parsedParameters.length > 0 ? parsedParameters : undefined
-      }
+      template: templatePayload
     }, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
       }
     });
+
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -198,6 +208,7 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
     throw error;
   }
 };
+
 
 const sendMediaMessage = async ({ phone, media_id, media_type, caption }) => {
   try {

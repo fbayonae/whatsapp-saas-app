@@ -1,23 +1,33 @@
 FROM node:23.11.0-slim
 
-# Crear directorio de trabajo
+# Establecer variables de entorno para no tener prompts en instalaciones
+ENV NODE_ENV=production
+
+# Establecer directorio de trabajo
 WORKDIR /app
-RUN mkdir -p uploads
-RUN mkdir -p downloads
 
-# Copiar package.json y package-lock.json
+# Crear carpetas necesarias
+RUN mkdir -p uploads downloads
+
+# Instalar dependencias necesarias para ciertos paquetes nativos (opcional)
+# Solo si usas librerías que necesitan compilación como sharp, bcrypt, etc.
+RUN apt-get update && apt-get install -y \
+  python3 \
+  build-essential \
+  && rm -rf /var/lib/apt/lists/*
+
+# Copiar y instalar dependencias
 COPY package*.json ./
+RUN npm install --omit=dev && npm install -g nodemon
 
-# Instalar dependencias y nodemon globalmente
-RUN npm install && npm install -g nodemon
-# Copiar el resto de los archivos de la aplicación
+# Copiar el resto del código
 COPY . .
 
-# Exponer el puerto de la aplicación
+# Generar Prisma Client (sin bloquear si no hay schema aún)
+RUN npx prisma generate || echo "No Prisma schema yet"
+
+# Exponer puerto de la app
 EXPOSE 3001
 
-# Compila el cliente de Prisma
-RUN npx prisma generate || echo "Sin schema definido todavía"
-
-# Usar nodemon en lugar de node
+# Comando por defecto
 CMD ["nodemon", "src/index.js"]

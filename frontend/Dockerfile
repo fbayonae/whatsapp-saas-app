@@ -1,7 +1,7 @@
 FROM node:23.11.0-slim AS build
 
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm ci
 
 COPY . .

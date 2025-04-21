@@ -207,6 +207,18 @@ const checkConversationWindow = async (conversationId) => {
   return isWithin24Hours(lastMessage.createdAt);
 };
 
+const getActiveSessionsByUser = async (userId) => {
+  return await prisma.session.findMany({
+    where: {
+      userId,
+      expiresAt: {
+        gt: new Date()
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+};
+
 module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
@@ -218,5 +230,6 @@ module.exports = {
   getConversationFromDB,
   createMessageToDB,
   getTemplateByIdFromDB,
-  checkConversationWindow
+  checkConversationWindow,
+  getActiveSessionsByUser
 };

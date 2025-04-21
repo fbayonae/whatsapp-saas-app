@@ -1,4 +1,4 @@
-FROM node:20.19-iron
+FROM node:23.11.0-slim
 
 # Crear directorio de trabajo
 WORKDIR /app

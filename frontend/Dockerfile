@@ -1,4 +1,4 @@
-FROM node:20.19-iron AS build
+FROM node:23.11.0-slim AS build
 WORKDIR /app
 
 COPY package.json ./

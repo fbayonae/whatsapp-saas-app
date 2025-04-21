@@ -10,9 +10,11 @@ export default function Contacts() {
     axios.get("/contacts")
       .then((res) => {
         setContacts(res.data || []);
+        setLoading(false); // <-- AÑADE ESTO
       })
       .catch((err) => {
         console.error("❌ Error al obtener contactos:", err);
+        setLoading(false); // <-- AÑADE ESTO
       });
   }, []);
 

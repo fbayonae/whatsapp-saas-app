@@ -169,7 +169,7 @@ const handleTemplateStatusUpdate = async (value) => {
   }
 };
 
-// ✅ Procesa actualizaciones de estado de plantillas
+// ✅ Procesa actualizaciones de calidad de plantillas
 const handleTemplateQualityUpdate = async (value) => {
   const {
     previous_quality_score,
@@ -189,6 +189,36 @@ const handleTemplateQualityUpdate = async (value) => {
       data: {
         quality: new_quality_score,
         qualityPrev: previous_quality_score || null
+      }
+    });
+
+    console.log(`✅ Calidad actualizada para la plantilla "${message_template_name}" (${message_template_id}) => ${new_quality_score}`);
+    return updated;
+  } catch (error) {
+    console.error("❌ Error actualizando estado de plantilla:", error);
+  }
+};
+
+// ✅ Procesa actualizaciones de categoria de plantillas
+const handleTemplateCategoryUpdate = async (value) => {
+  const {
+    previous_category,
+    new_category,
+    correct_category,
+    message_template_id,
+    message_template_name,
+    message_template_language
+  } = value;
+
+  try {
+    const updated = await prisma.template.updateMany({
+      where: {
+        id_meta: message_template_id.toString(),
+        name: message_template_name,
+        language: message_template_language
+      },
+      data: {
+        category: correct_category
       }
     });
 
@@ -224,5 +254,6 @@ module.exports = {
   handleWebhookMessage,
   handleTemplateStatusUpdate,
   handleTemplateQualityUpdate,
+  handleTemplateCategoryUpdate,
   handleEchoMessage 
 };

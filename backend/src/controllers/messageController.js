@@ -9,6 +9,14 @@ const mediaUtils = require("../utils/mediaUtils");
 const sendMessage = async (req, res) => {
   const { conversationId, text } = req.body;
 
+  const withinWindow = await dbService.checkConversationWindow(conversationId);
+
+  if (!withinWindow) {
+    return res.status(403).json({
+      error: "La ventana de 24 horas ha expirado. Solo se pueden enviar mensajes de tipo plantilla."
+    });
+  }
+
   if (!conversationId || !text) {
     return res.status(400).json({ error: "conversationId y text son requeridos" });
   }
@@ -129,6 +137,14 @@ const sendMessageMedia = async (req, res) => {
     const { conversationId, caption } = req.body;
     const file = req.file;
 
+    const withinWindow = await dbService.checkConversationWindow(conversationId);
+
+    if (!withinWindow) {
+      return res.status(403).json({
+        error: "La ventana de 24 horas ha expirado. Solo se pueden enviar mensajes de tipo plantilla."
+      });
+    }
+
     // 1. Obtener conversación y número
     const conversation = await dbService.getConversationFromDB(conversationId);
 
@@ -207,7 +223,15 @@ const sendMessageMedia = async (req, res) => {
 const sendMessageCTA = async (req, res) => {
 
   const { conversationId, header, header_type, body, footer, action } = req.body;
-  console.log(req.body);
+
+  const withinWindow = await dbService.checkConversationWindow(conversationId);
+
+  if (!withinWindow) {
+    return res.status(403).json({
+      error: "La ventana de 24 horas ha expirado. Solo se pueden enviar mensajes de tipo plantilla."
+    });
+  }
+
 
   if (!conversationId || !body || !action) {
     return res.status(400).json({ error: "conversationId, action y body son requeridos" });
@@ -258,6 +282,15 @@ const sendMessageCTA = async (req, res) => {
 const sendMessageReply = async (req, res) => {
 
   const { conversationId, header, body, footer, buttons, metadata } = req.body;
+
+  const withinWindow = await dbService.checkConversationWindow(conversationId);
+
+  if (!withinWindow) {
+    return res.status(403).json({
+      error: "La ventana de 24 horas ha expirado. Solo se pueden enviar mensajes de tipo plantilla."
+    });
+  }
+
   const file = req.file;
   let header_type = req.body.header_type || '';
   let header_media_id = '';

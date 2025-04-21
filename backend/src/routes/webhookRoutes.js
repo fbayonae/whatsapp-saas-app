@@ -50,6 +50,10 @@ router.post("/", (req, res) => {
           webhookControler.handleTemplateQualityUpdate(value);
           break;
 
+        case "template_category_update":
+          webhookControler.handleTemplateCategoryUpdate(value);
+          break;
+
         case "message_echoes":
           webhookControler.handleEchoMessage(value);
           break;

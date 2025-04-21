@@ -195,6 +195,17 @@ const createMessageToDB = async ({ conversationId, type, content, id_meta, conte
   }
 };
 
+const checkConversationWindow = async (conversationId) => {
+  const lastMessage = await prisma.message.findFirst({
+    where: { conversationId },
+    orderBy: { createdAt: "desc" }
+  });
+
+  if (!lastMessage) return false;
+
+  return isWithin24Hours(lastMessage.createdAt);
+};
+
 module.exports = {
   saveTemplateToDB,
   getTemplatesFromDB,
@@ -205,5 +216,6 @@ module.exports = {
   getMessagesFromDB,
   getConversationFromDB,
   createMessageToDB,
-  getTemplateByIdFromDB
+  getTemplateByIdFromDB,
+  checkConversationWindow
 };

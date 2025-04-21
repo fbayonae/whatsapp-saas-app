@@ -16,9 +16,9 @@ export default function Contacts() {
       });
   }, []);
 
-  const filteredContacts = contacts.filter((c) => {
+  const filteredContacts = contacts.filter((c) => 
     c.name.toLowerCase().includes(search.toLowerCase())
-  });
+  );
 
   return (
     <div className="p-6">

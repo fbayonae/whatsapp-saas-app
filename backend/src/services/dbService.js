@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { isWithin24Hours } = require('../utils/dateUtils');
+const { isWithin24Hours } = require('../utils/timeUtils');
 
 const saveTemplateToDB = async (template) => {
   console.log("saveTemplateToDB");

@@ -42,10 +42,13 @@ model LoginAttempt {
 }
 
 model Session {
-  id        Int      @id @default(autoincrement())
-  token     String   @unique
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  id            Int      @id @default(autoincrement())
+  token         String   @unique
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+  userAgent     String
+  ip            String
+  refreshToken  String 
 
   userId    Int
   user      User     @relation(fields: [userId], references: [id])

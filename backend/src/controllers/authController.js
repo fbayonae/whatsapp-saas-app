@@ -14,7 +14,14 @@ const login = async (req, res) => {
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+    if (!user) {
+      await prisma.loginAttempt.create({
+        data: { email, ip, userAgent, success: false }
+      });
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    userId = user.id;
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
     if (!isValid) {
@@ -51,6 +58,16 @@ const login = async (req, res) => {
 
     await prisma.loginAttempt.create({
       data: { email, ip, userAgent, success: true, userId }
+    });
+
+    await prisma.session.create({
+      data: {
+        userId: user.id,
+        ip,
+        userAgent,
+        refreshToken,
+        createdAt: new Date()
+      }
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -156,6 +173,10 @@ const logout = async (req, res) => {
     await prisma.refreshToken.updateMany({
       where: { token: refreshToken },
       data: { revoked: true }
+    });
+
+    await prisma.session.deleteMany({
+      where: { refreshToken }
     });
 
     res.clearCookie("refreshToken", {

@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require("helmet");
 const dotenv = require('dotenv');
+const cookieParser = require("cookie-parser");
 cors = require('cors');
 const whatsappRoutes = require('./routes/whatsapp');
 const authRoutes = require('./routes/authRoutes');
@@ -60,6 +61,8 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+app.use(cookieParser());
 
 // necesario para leer POST de Meta
 app.use(express.json({ limit: '5mb' })); 

@@ -29,11 +29,10 @@ export default function SettingsPage() {
     const handleSaveFileMakerPreferences = async () => {
         try {
           const filemakerConfig = {
-            fmHost: preferences.fmHost?.trim(),
-            fmDatabase: preferences.fmDatabase?.trim(),
-            fmUsername: preferences.fmUsername?.trim(),
-            fmPassword: preferences.fmPassword?.trim(),
-            fmLayout: preferences.fmLayout?.trim(),
+            filemakerHost: preferences.filemakerHost?.trim(),
+            filemakerDatabase: preferences.filemakerDatabase?.trim(),
+            filemakerUser: preferences.filemakerUser?.trim(),
+            filemakerPassword: preferences.filemakerPassword?.trim()
           };
       
           const response = await axios.put("/preferences", filemakerConfig);

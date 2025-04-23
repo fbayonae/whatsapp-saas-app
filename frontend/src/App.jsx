@@ -5,6 +5,7 @@ import Templates from "./pages/Templates";
 import Contacts from "./pages/Contacts";
 import Chats from "./pages/Chats";
 import Login from "./pages/Login";
+import Config from "./pages/Config";
 import PrivateRoute from "./components/PrivateRoute";
 import Welcome from "./pages/Welcome";
 

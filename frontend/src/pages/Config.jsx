@@ -108,7 +108,7 @@ export default function SettingsPage() {
                         name="filemakerPassword"
                         placeholder="Contraseña"
                         className="border px-4 py-2 rounded"
-                        value={preferences.filemakerPassword}
+                        value={preferences.filemakerPass}
                         onChange={handleChange}
                     />
                 </div>

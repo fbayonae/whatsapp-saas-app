@@ -17,14 +17,14 @@ const getFMConfig = async () => {
 
 // Login y guardar token
 const login = async () => {
-  const { filemakerHost, filemakerDatabase, filemakerUser, filemakerPassword } = await getFMConfig();
+  const { filemakerHost, filemakerDatabase, filemakerUser, filemakerPass } = await getFMConfig();
 
   const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
 
   const response = await axios.post(url, null, {
     auth: {
       username: filemakerUser,
-      password: filemakerPassword
+      password: filemakerPass
     },
     headers: { "Content-Type": "application/json" }
   });

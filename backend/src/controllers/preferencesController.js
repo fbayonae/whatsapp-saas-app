@@ -10,6 +10,7 @@ const getPreferences = async (req, res) => {
 };
 
 const updatePreferences = async (req, res) => {
+    console.log("updatePreferences", req.body);
     try {
         const updated = await dbService.createOrUpdatePreferences(req.body);
         res.json({ message: "Preferencias actualizadas", data: updated });

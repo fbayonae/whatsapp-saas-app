@@ -30,6 +30,7 @@ export default function App() {
         <Route path="plantillas" element={<Templates />} />
         <Route path="contactos" element={<Contacts />} />
         <Route path="chats" element={<Chats />} />
+        <Route path="configuracion" element={<Config />} />
       </Route>
     </Routes>
   );

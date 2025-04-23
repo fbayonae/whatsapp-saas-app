@@ -46,10 +46,10 @@ export default function SidebarLayout() {
 
         {/* Bottom buttons */}
         <div className="p-4 border-t border-gray-200">
-          <button className="w-full flex items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition">
+          <Link to="/configuracion" className="w-full flex items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition">
             <Settings size={20} />
             <span className="ml-3">Configuración</span>
-          </button>
+          </Link>
           <button 
             onClick={handleLogout}
             className="w-full mt-2 flex items-center px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">

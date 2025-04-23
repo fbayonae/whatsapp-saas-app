@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "../utils/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function SettingsPage() {
     const [preferences, setPreferences] = useState({
@@ -24,6 +25,25 @@ export default function SettingsPage() {
     const handleChange = (e) => {
         setPreferences({ ...preferences, [e.target.name]: e.target.value });
     };
+
+    const handleSaveFileMakerPreferences = async () => {
+        try {
+          const filemakerConfig = {
+            fmHost: preferences.fmHost?.trim(),
+            fmDatabase: preferences.fmDatabase?.trim(),
+            fmUsername: preferences.fmUsername?.trim(),
+            fmPassword: preferences.fmPassword?.trim(),
+            fmLayout: preferences.fmLayout?.trim(),
+          };
+      
+          const response = await axios.put("/preferences", filemakerConfig);
+      
+          toast.success("✅ Configuración de FileMaker guardada");
+        } catch (error) {
+          console.error("❌ Error guardando preferencias de FileMaker:", error);
+          toast.error("❌ Error al guardar la configuración");
+        }
+      };
 
     const { host, database, username, password } = preferences || {};
     const canTestConnection = [host, database, username, password].every(
@@ -92,6 +112,14 @@ export default function SettingsPage() {
                         value={preferences.filemakerPassword}
                         onChange={handleChange}
                     />
+                </div>
+                <div className="mt-6 flex justify-end">
+                    <button
+                        onClick={handleSaveFileMakerPreferences} // esta función la defines tú
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded transition"
+                    >
+                        Guardar
+                    </button>
                 </div>
             </div>
 

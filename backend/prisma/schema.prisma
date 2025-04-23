@@ -20,6 +20,9 @@ model Preference {
   filemakerPass     String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@map("preferences")
+  @@schema("whatsapp")
 }
 
 model User {

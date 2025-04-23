@@ -32,7 +32,7 @@ export default function SettingsPage() {
             filemakerHost: preferences.filemakerHost?.trim(),
             filemakerDatabase: preferences.filemakerDatabase?.trim(),
             filemakerUser: preferences.filemakerUser?.trim(),
-            filemakerPassword: preferences.filemakerPassword?.trim()
+            filemakerPass: preferences.filemakerPassword?.trim()
           };
       
           const response = await axios.put("/preferences", filemakerConfig);

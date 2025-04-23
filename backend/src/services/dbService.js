@@ -10,15 +10,15 @@ const { isWithin24Hours } = require('../utils/timeUtils');
 const createOrUpdatePreferences = async (data) => {
   
   try {
-    const existing = await prisma.preferences.findFirst();
+    const existing = await prisma.preference.findFirst();
     if (existing) {
-      return await prisma.preferences.update({
+      return await prisma.preference.update({
         where: { id: existing.id },
         data
       });
     }
 
-    return await prisma.preferences.create({
+    return await prisma.preference.create({
       data
     });
   } catch (error) {

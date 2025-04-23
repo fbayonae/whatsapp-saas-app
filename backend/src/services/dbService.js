@@ -2,6 +2,59 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { isWithin24Hours } = require('../utils/timeUtils');
 
+/*******************************************************
+ * PREFERENCES
+ *******************************************************/
+
+// Actualizar o crear preferencias
+const updatePreferences = async (data) => {
+  try {
+    const existing = await prisma.preference.findFirst();
+    if (existing) {
+      return await prisma.preference.update({
+        where: { id: existing.id },
+        data
+      });
+    } else {
+      return await prisma.preference.create({ data });
+    }
+  } catch (error) {
+    console.error("❌ Error actualizando preferencias:", error);
+    throw error;
+  }
+};
+
+// Obtener las preferencias
+const getPreferences = async () => {
+  try {
+    return await prisma.preference.findFirst();
+  } catch (error) {
+    console.error("❌ Error obteniendo preferencias:", error);
+    throw error;
+  }
+};
+
+/*******************************************************
+ * SESSIONS
+ *******************************************************/
+
+// Buscar sesion activa
+const getActiveSessionsByUser = async (userId) => {
+  return await prisma.session.findMany({
+    where: {
+      userId,
+      expiresAt: {
+        gt: new Date()
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+};
+
+/*******************************************************
+ * TEMPLATES 
+ *******************************************************/
+
 const saveTemplateToDB = async (template) => {
   console.log("saveTemplateToDB");
   try {
@@ -67,7 +120,6 @@ const saveComponentToDB = async (component, templateId) => {
 
   return savedComponent;
 };
-
 
 const getTemplatesFromDB = async () => {
   return await prisma.template.findMany({
@@ -135,12 +187,20 @@ const deleteTemplateFromDB = async (id) => {
   }
 }
 
+/*******************************************************
+ * CONTACTS
+ *******************************************************/
+
 const getContactsFromDB = async () => {
   return await prisma.contact.findMany({
     orderBy: { createdAt: 'desc' }
   });
 
 };
+
+/*******************************************************
+ * CONVERSATIONS
+ *******************************************************/
 
 const getConversationsFromDB = async () => {
   return await prisma.conversation.findMany({
@@ -159,6 +219,10 @@ const getConversationFromDB = async (conversationId) => {
     }
   });
 };
+
+/*******************************************************
+ * MESSAGES
+ *******************************************************/
 
 const getMessagesFromDB = async (conversationId) => {
   return await prisma.message.findMany({
@@ -207,17 +271,7 @@ const checkConversationWindow = async (conversationId) => {
   return isWithin24Hours(lastMessage.createdAt);
 };
 
-const getActiveSessionsByUser = async (userId) => {
-  return await prisma.session.findMany({
-    where: {
-      userId,
-      expiresAt: {
-        gt: new Date()
-      }
-    },
-    orderBy: { createdAt: "desc" }
-  });
-};
+
 
 module.exports = {
   saveTemplateToDB,

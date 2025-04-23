@@ -7,22 +7,21 @@ const { isWithin24Hours } = require('../utils/timeUtils');
  *******************************************************/
 
 // Actualizar o crear preferencias
-const updatePreferences = async (data) => {
-  try {
-    const existing = await prisma.preference.findFirst();
-    if (existing) {
-      return await prisma.preference.update({
-        where: { id: existing.id },
-        data
-      });
-    } else {
-      return await prisma.preference.create({ data });
-    }
-  } catch (error) {
-    console.error("❌ Error actualizando preferencias:", error);
-    throw error;
+const createOrUpdatePreferences = async (data) => {
+  const existing = await prisma.preferences.findFirst();
+
+  if (existing) {
+    return await prisma.preferences.update({
+      where: { id: existing.id },
+      data
+    });
   }
+
+  return await prisma.preferences.create({
+    data
+  });
 };
+
 
 // Obtener las preferencias
 const getPreferences = async () => {
@@ -285,5 +284,7 @@ module.exports = {
   createMessageToDB,
   getTemplateByIdFromDB,
   checkConversationWindow,
-  getActiveSessionsByUser
+  getActiveSessionsByUser,
+  createOrUpdatePreferences,
+  getPreferences
 };

@@ -11,7 +11,7 @@ const getPreferences = async (req, res) => {
 
 const updatePreferences = async (req, res) => {
     try {
-        const updated = await dbService.updatePreferences(req.body);
+        const updated = await dbService.createOrUpdatePreferences(req.body);
         res.json({ message: "Preferencias actualizadas", data: updated });
     } catch (error) {
         res.status(500).json({ error: "Error al actualizar preferencias" });

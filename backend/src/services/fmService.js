@@ -17,19 +17,38 @@ const getFMConfig = async () => {
 
 // Login y guardar token
 const login = async () => {
-  const { filemakerHost, filemakerDatabase, filemakerUser, filemakerPass } = await getFMConfig();
+  try {
+    const { filemakerHost, filemakerDatabase, filemakerUser, filemakerPass } = await getFMConfig();
 
-  const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
-  
-  const response = await axios.post(url, null, {
-    headers: { 
-      "Content-Type": "application/json",
-      "Authorization": `Basic ${Buffer.from(`${filemakerUser}:${filemakerPass}`).toString("base64")}`
+    if (!filemakerHost || !filemakerDatabase || !filemakerUser || !filemakerPass) {
+      throw new Error("Faltan datos de configuración para FileMaker");
     }
-  });
-  console.log("Respuesta de FileMaker:", response.data);
-  token = response.data.response.token;
-  return token;
+
+    // Codificar en base64 user:password
+    const credentials = Buffer.from(`${filemakerUser}:${filemakerPass}`).toString("base64");
+
+    const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
+
+    const response = await axios.post(url, null, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${credentials}`,
+      }
+    });
+
+    console.log("Respuesta de FileMaker:", response.data);
+
+    const token = response.data?.response?.token;
+    if (!token) {
+      throw new Error("Token no recibido en la respuesta");
+    }
+
+    return token;
+
+  } catch (error) {
+    console.error("❌ Error al conectar con FileMaker:", error.response?.data || error.message);
+    throw error;
+  }
 };
 
 // Logout

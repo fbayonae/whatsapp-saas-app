@@ -55,7 +55,7 @@ const generateTemplatePayload = async (req, res) => {
           type: "body",
           parameters: bodyMatches.map((_, i) => ({
             type: "text",
-            text: `valor_body_${i + 1}`
+            text: `[[valor_body_${i + 1}]]`
           }))
         });
       }
@@ -74,7 +74,7 @@ const generateTemplatePayload = async (req, res) => {
               index: i,
               parameters: urlMatches.map((_, j) => ({
                 type: "text",
-                text: `valor_btn${i + 1}_${j + 1}`
+                text: `[[valor_button${i + 1}_${j + 1}]]`
               }))
             });
           }

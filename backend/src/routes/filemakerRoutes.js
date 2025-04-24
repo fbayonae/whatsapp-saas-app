@@ -2,8 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const filemakerService = require("../services/fmService");
+const auth = require("../utils/authMiddleware").auth;
 
-router.post("/loggin", async (req, res) => {
+router.post("/loggin", auth, async (req, res) => {
   try {
     const data = await filemakerService.login();
     res.json(data);

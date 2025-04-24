@@ -177,6 +177,7 @@ model Message {
   action         Json?
   metadata       Json?
   interactive    Json?
+  origin         String    @default("web")
   createdAt      DateTime  @default(now())
   timestamp      DateTime?
   conversationId Int

@@ -66,6 +66,7 @@ const login = async (req, res) => {
         ip,
         userAgent,
         refreshToken,
+        token: refreshToken,
         createdAt: new Date(),
         expiresAt: new Date(Date.now() + Number(process.env.JWT_REFRESH_SECRET_EXPIRES_IN) * 1000)
       }

@@ -28,7 +28,7 @@ const login = async () => {
     },
     headers: { "Content-Type": "application/json" }
   });
-  console.log("Respuesta de FileMaker:", response);
+  console.log("Respuesta de FileMaker:", response.data);
   token = response.data.response.token;
   return token;
 };

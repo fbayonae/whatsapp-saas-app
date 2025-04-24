@@ -36,10 +36,11 @@ const login = async () => {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      httpsAgent: new https.Agent({ rejectUnauthorized: false })  // ⚠ solo desarrollo
+      httpsAgent: new https.Agent({ rejectUnauthorized: false }),  // ⚠ solo desarrollo
+      responseType: "text"
     });
 
-    console.log("Respuesta de FileMaker:", response.data);
+    console.log("Respuesta de FileMaker:", response);
 
     const token = response.data?.response?.token;
 

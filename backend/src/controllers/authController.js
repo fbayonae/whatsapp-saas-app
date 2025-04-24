@@ -64,7 +64,7 @@ const login = async (req, res) => {
       data: {
         userId: user.id,
         ip,
-        userAgent || null,
+        userAgente: userAgent || null,
         refreshToken,
         token: refreshToken,
         createdAt: new Date(),

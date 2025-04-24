@@ -44,16 +44,15 @@ export default function SettingsPage() {
         }
       };
 
-    const { host, database, username, password } = preferences || {};
-    const canTestConnection = [host, database, username, password].every(
+    const { filemakerHost, filemakerDatabase, filemakerUser, filemakerPass } = preferences || {};
+    const canTestConnection = [filemakerHost, filemakerDatabase, filemakerUser, filemakerPass].every(
         v => typeof v === "string" && v.trim() !== ""
     );
-
 
     const testConnection = async () => {
         setIsTesting(true);
         try {
-            const response = await axios.post("/filemaker/test", preferences);
+            const response = await axios.post("/fm/loggin", preferences);
             alert("✅ Conexión exitosa con FileMaker");
         } catch (err) {
             alert("❌ Fallo en la conexión con FileMaker");

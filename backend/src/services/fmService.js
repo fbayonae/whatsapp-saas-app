@@ -39,7 +39,7 @@ const login = async () => {
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),  // ⚠ solo desarrollo
     });
 
-    console.log("Respuesta de FileMaker:", response);
+    console.log("Respuesta de FileMaker:", response.data);
 
     const token = response.data?.response?.token;
 

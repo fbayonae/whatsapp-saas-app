@@ -12,7 +12,7 @@ const chatRoutes = require("./routes/chatsRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
 const mediaRoutes = require("./routes/mediaRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
-const fmRoutes = require("./routes/fmRoutes");
+const fmRoutes = require("./routes/filemakerRoutes");
 const rateLimiter = require("./utils/rateLimiter");
 
 dotenv.config();

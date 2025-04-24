@@ -31,7 +31,7 @@ const login = async () => {
 
     const response = await axios.post(url, null, {
       headers: {
-        Authorization: `Basic ${credentials}`,
+        "Authorization": `Basic ${credentials}`,
         "Content-Type": "application/json",
         "Accept": "application/json"
       }

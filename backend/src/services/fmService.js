@@ -30,14 +30,13 @@ const login = async () => {
     console.log("Credenciales codificadas:", credentials);
     const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
     
-    const response = await axios.post(url, null, {
+    const response = await axios.post(url, {}, {
       headers: {
         "Authorization": `Basic ${credentials}`,
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),  // ⚠ solo desarrollo
-      responseType: "text"
     });
 
     console.log("Respuesta de FileMaker:", response);

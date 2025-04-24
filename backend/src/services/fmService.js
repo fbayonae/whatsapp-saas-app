@@ -28,7 +28,7 @@ const login = async () => {
     const credentials = Buffer.from(`${filemakerUser}:${filemakerPass}`).toString("base64");
     console.log("Credenciales codificadas:", credentials);
     const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
-
+    console.log("URL de conexión:", url);
     const response = await axios.post(url, null, {
       headers: {
         "Authorization": `Basic ${credentials}`,

@@ -20,13 +20,12 @@ const login = async () => {
   const { filemakerHost, filemakerDatabase, filemakerUser, filemakerPass } = await getFMConfig();
 
   const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
-  console.log(filemakerDatabase, filemakerUser, filemakerPass, filemakerHost, url);
+  
   const response = await axios.post(url, null, {
-    auth: {
-      username: filemakerUser,
-      password: filemakerPass
-    },
-    headers: { "Content-Type": "application/json" }
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Basic ${Buffer.from(`${filemakerUser}:${filemakerPass}`).toString("base64")}`
+    }
   });
   console.log("Respuesta de FileMaker:", response.data);
   token = response.data.response.token;

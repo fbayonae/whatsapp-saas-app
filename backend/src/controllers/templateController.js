@@ -74,7 +74,7 @@ const generateTemplatePayload = async (req, res) => {
               index: i,
               parameters: urlMatches.map((_, j) => ({
                 type: "text",
-                text: `[[valor_button${i + 1}_${j + 1}]]`
+                text: `[[valor_button${i}_${j + 1}]]`
               }))
             });
           }

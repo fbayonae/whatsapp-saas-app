@@ -26,7 +26,7 @@ const login = async () => {
 
     // Codificar en base64 user:password
     const credentials = Buffer.from(`${filemakerUser}:${filemakerPass}`).toString("base64");
-
+    console.log("Credenciales codificadas:", credentials);
     const url = `${filemakerHost}/fmi/data/vLatest/databases/${filemakerDatabase}/sessions`;
 
     const response = await axios.post(url, null, {
@@ -39,6 +39,7 @@ const login = async () => {
     console.log("Respuesta de FileMaker:", response.data);
 
     const token = response.data?.response?.token;
+
     if (!token) {
       throw new Error("Token no recibido en la respuesta");
     }

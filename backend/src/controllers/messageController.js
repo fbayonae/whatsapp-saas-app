@@ -278,7 +278,7 @@ const sendMessageCTA = async (req, res) => {
 const sendMessageReply = async (req, res) => {
 
   const { conversationId, header, body, footer, buttons, metadata } = req.body;
-
+  console.log ( "PASA"); 
   const withinWindow = await dbService.checkConversationWindow(parseInt(conversationId));
 
   if (!withinWindow) {
@@ -335,7 +335,7 @@ const sendMessageReply = async (req, res) => {
     }
 
     const response = await whatsappService.sendReplyMessage({ phone, header_type, header, header_media_id, body, footer, buttons });
-    
+
     const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
     const parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
 

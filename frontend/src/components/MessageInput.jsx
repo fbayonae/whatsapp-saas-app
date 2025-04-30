@@ -138,6 +138,13 @@ export default function MessageInput({ conversationId, onMessageSent }) {
           onClose={() => setShowPlantillaModal(false)}
         />
       )}
+
+      {showTemplateEditor && (
+        <MessageTemplateEditor
+          conversationId={conversationId}
+          onClose={() => setShowTemplateEditor(false)}
+        />
+      )}
     </div>
   );
 }

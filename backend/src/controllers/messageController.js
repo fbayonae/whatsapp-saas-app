@@ -138,7 +138,7 @@ const sendMessageMedia = async (req, res) => {
     const file = req.file;
     console.log("file", file);
     console.log("req.body", req.body);
-    const withinWindow = await dbService.checkConversationWindow(conversationId);
+    const withinWindow = await dbService.checkConversationWindow(parseInt(conversationId));
 
     if (!withinWindow) {
       return res.status(403).json({
@@ -147,7 +147,7 @@ const sendMessageMedia = async (req, res) => {
     }
 
     // 1. Obtener conversación y número
-    const conversation = await dbService.getConversationFromDB(conversationId);
+    const conversation = await dbService.getConversationFromDB(parseInt(conversationId));
 
     if (!conversation) {
       return res.status(404).json({ error: "Conversación no encontrada" });

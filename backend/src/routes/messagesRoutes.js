@@ -63,7 +63,6 @@ router.post("/send-cta",
 
 router.post("/send-reply",
     auth,
-    upload.single("file"),
     [
         body("conversationId")
             .isInt({ gt: 0 })

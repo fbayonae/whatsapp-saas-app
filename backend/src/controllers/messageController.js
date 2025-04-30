@@ -136,7 +136,8 @@ const sendMessageMedia = async (req, res) => {
   try {
     const { conversationId, caption } = req.body;
     const file = req.file;
-
+    console.log("file", file);
+    console.log("req.body", req.body);
     const withinWindow = await dbService.checkConversationWindow(conversationId);
 
     if (!withinWindow) {

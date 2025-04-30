@@ -54,64 +54,90 @@ export default function MessageTemplateEditor({ conversationId, onClose }) {
     setPreview(parsedText);
   };
 
+  const isFormValid = parameters.every(section =>
+    section.parameters.every(param => param.text && param.text.trim() !== "")
+  );
+
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white w-full max-w-6xl rounded-lg shadow-lg flex h-[80vh]">
+      <div className="bg-white w-full max-w-6xl rounded-lg shadow-lg flex flex-col h-[90vh]">
 
-        {/* Columna izquierda: listado de plantillas */}
-        <div className="w-1/4 border-r overflow-y-auto p-4">
-          <h2 className="font-bold mb-4">Plantillas</h2>
-          {templates.map((tpl) => (
-            <div
-              key={tpl.id}
-              onClick={() => setSelectedTemplate(tpl)}
-              className={`cursor-pointer px-3 py-2 rounded hover:bg-indigo-100 ${
-                selectedTemplate?.id === tpl.id ? "bg-indigo-200" : ""
-              }`}
-            >
-              {tpl.name}
+        <div className="flex flex-1">
+          {/* Columna izquierda: listado de plantillas */}
+          <div className="w-1/4 border-r overflow-y-auto p-4">
+            <h2 className="font-bold mb-4">Plantillas</h2>
+            {templates.map((tpl) => (
+              <div
+                key={tpl.id}
+                onClick={() => setSelectedTemplate(tpl)}
+                className={`cursor-pointer px-3 py-2 rounded hover:bg-indigo-100 ${
+                  selectedTemplate?.id === tpl.id ? "bg-indigo-200" : ""
+                }`}
+              >
+                {tpl.name}
+              </div>
+            ))}
+          </div>
+
+          {/* Centro: parámetros */}
+          <div className="w-2/4 p-6 overflow-y-auto">
+            <h2 className="font-bold mb-4">Completar plantilla</h2>
+            {parameters.length === 0 && (
+              <p className="text-gray-500">Esta plantilla no requiere parámetros.</p>
+            )}
+
+            {parameters.map((section, sIndex) => (
+              <div key={sIndex} className="mb-6">
+                <h4 className="font-semibold capitalize mb-2">{section.type}</h4>
+                {section.parameters.map((param, pIndex) => (
+                  <input
+                    key={pIndex}
+                    type="text"
+                    value={param.text}
+                    onChange={(e) => handleParamChange(sIndex, pIndex, e.target.value)}
+                    className="mb-2 w-full px-4 py-2 border rounded shadow-sm"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* Derecha: vista previa */}
+          <div className="w-1/4 p-6 border-l overflow-y-auto">
+            <h2 className="font-bold mb-4">Vista previa</h2>
+            <div className="bg-[#e5ddd5] rounded-lg p-4">
+              <div className="bg-white rounded-xl p-4 shadow-md relative">
+                {selectedTemplate?.components.find(c => c.type === "HEADER")?.text && (
+                  <div className="font-bold text-lg text-black mb-2">
+                    {selectedTemplate.components.find(c => c.type === "HEADER")?.text}
+                  </div>
+                )}
+                <div className="text-base text-black leading-snug">
+                  {preview || "Previsualización del cuerpo del mensaje"}
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-
-        {/* Centro: parámetros */}
-        <div className="w-2/4 p-6 overflow-y-auto">
-          <h2 className="font-bold mb-4">Completar plantilla</h2>
-          {parameters.length === 0 && (
-            <p className="text-gray-500">Esta plantilla no requiere parámetros.</p>
-          )}
-
-          {parameters.map((section, sIndex) => (
-            <div key={sIndex} className="mb-6">
-              <h4 className="font-semibold capitalize mb-2">{section.type}</h4>
-              {section.parameters.map((param, pIndex) => (
-                <input
-                  key={pIndex}
-                  type="text"
-                  value={param.text}
-                  onChange={(e) => handleParamChange(sIndex, pIndex, e.target.value)}
-                  className="mb-2 w-full px-4 py-2 border rounded shadow-sm"
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-
-        {/* Derecha: vista previa */}
-        <div className="w-1/4 p-6 border-l overflow-y-auto">
-          <h2 className="font-bold mb-4">Vista previa</h2>
-          <div className="bg-gray-100 rounded p-4 text-sm whitespace-pre-line">
-            {preview || "Selecciona una plantilla para ver la vista previa"}
           </div>
         </div>
-      </div>
 
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-      >
-        Cerrar
-      </button>
+        {/* Botones inferiores */}
+        <div className="flex justify-end p-4 border-t">
+          <button
+            onClick={onClose}
+            className="mr-3 px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+          >
+            Cancelar
+          </button>
+          <button
+            disabled={!isFormValid}
+            className={`px-4 py-2 rounded text-white ${
+              isFormValid ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"
+            }`}
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,23 @@ export default function MessageInput({ conversationId, onMessageSent }) {
   const [text, setText] = useState("");
   const [file, setFile] = useState(null);
   const [showPlantillaModal, setShowPlantillaModal] = useState(false);
+  const [canSendRegularMessage, setCanSendRegularMessage] = useState(true);
+
+  useEffect(() => {
+    const checkConversationTime = async () => {
+      try {
+        const res = await axios.get(`/conversations/${conversationId}/check-window`);
+        setCanSendRegularMessage(res.data.within24Hours);
+      } catch (error) {
+        console.error("❌ Error verificando ventana de 24h:", error);
+        setCanSendRegularMessage(false); // fallback seguro
+      }
+    };
+
+    if (conversationId) {
+      checkConversationTime();
+    }
+  }, [conversationId]);
 
   const handleSend = async () => {
     if (!text && !file) return;
@@ -51,6 +68,7 @@ export default function MessageInput({ conversationId, onMessageSent }) {
       )}
 
       {/* Zona de entrada de mensaje */}
+      {canSendRegularMessage ? (
       <div className="flex items-center gap-2">
 
         {/* Botón plantilla */}
@@ -90,6 +108,17 @@ export default function MessageInput({ conversationId, onMessageSent }) {
           Enviar
         </button>
       </div>
+      ) : (
+        <div className="bg-yellow-100 text-yellow-800 px-4 py-3 rounded flex justify-between items-center">
+          <p className="text-sm">Han pasado más de 24h desde el último mensaje. Solo puedes enviar una plantilla.</p>
+          <button
+            onClick={() => setShowPlantillaModal(true)}
+            className="ml-4 bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm"
+          >
+            Enviar plantilla
+          </button>
+        </div>
+      )}
 
       {/* Modal de plantilla */}
       {showPlantillaModal && (

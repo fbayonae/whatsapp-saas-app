@@ -10,6 +10,12 @@ router.get("/",
     chatController.getConversations
 );
 
+router.get("/:id/check-window", 
+    auth, 
+    chatController.checkWindow24h
+);
+
+
 router.get("/:id/messages",
     auth,
     [

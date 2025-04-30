@@ -22,7 +22,23 @@ const getMessagesByConversation = async (req, res) => {
   }
 };
 
+const checkWindow24h = async (req, res) => {
+  const conversationId = parseInt(req.params.id, 10);
+  if (isNaN(conversationId)) {
+    return res.status(400).json({ error: "ID de conversación inválido" });
+  }
+
+  try {
+    const within24Hours = await dbService.checkConversationWindow(conversationId);
+    res.json({ within24Hours });
+  } catch (error) {
+    console.error("❌ Error verificando ventana de 24h:", error);
+    res.status(500).json({ error: "Error interno verificando ventana de 24h" });
+  }
+};
+
 module.exports = { 
     getConversations, 
-    getMessagesByConversation 
+    getMessagesByConversation,
+    checkWindow24h 
 };

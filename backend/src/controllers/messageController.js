@@ -32,7 +32,6 @@ const sendMessage = async (req, res) => {
     const phoneNumber = conversation.contact.phoneNumber;
 
     const response = await whatsappService.sendTextMessage(phoneNumber, text);
-    console.log(response);
 
     const savedMessage = await dbService.createMessageToDB({
       conversationId,
@@ -136,8 +135,7 @@ const sendMessageMedia = async (req, res) => {
   try {
     const { conversationId, caption } = req.body;
     const file = req.file;
-    console.log("file", file);
-    console.log("req.body", req.body);
+
     const withinWindow = await dbService.checkConversationWindow(parseInt(conversationId));
 
     if (!withinWindow) {
@@ -179,8 +177,6 @@ const sendMessageMedia = async (req, res) => {
       media_type: detectedMediaType, // o "image", según lo que esperes
       caption
     });
-
-    console.log(response);
 
     // 3. Obtener información del archivo subido 
     const media_response = await whatsappService.getMediaData(media_id);
@@ -254,7 +250,6 @@ const sendMessageCTA = async (req, res) => {
     }
 
     const response = await whatsappService.sendCTAMessage({ phone, header_type, header, body, footer, action });
-    console.log(response);
 
     const savedMessage = await dbService.createMessageToDB({
       conversationId: parseInt(conversationId),
@@ -296,9 +291,6 @@ const sendMessageReply = async (req, res) => {
   let header_type = req.body.header_type || '';
   let header_media_id = '';
   let media_response = '';
-
-  console.log(req.body);
-  console.log(file);
 
   if (!conversationId || !body || !buttons) {
     return res.status(400).json({ error: "conversationId, buttons y body son requeridos" });
@@ -343,8 +335,7 @@ const sendMessageReply = async (req, res) => {
     }
 
     const response = await whatsappService.sendReplyMessage({ phone, header_type, header, header_media_id, body, footer, buttons });
-    console.log(response);
-
+    
     const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
     const parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
 

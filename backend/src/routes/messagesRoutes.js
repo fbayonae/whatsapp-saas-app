@@ -80,7 +80,7 @@ router.post("/send-reply",
                     throw new Error("Debe haber al menos un botón");
                 }
                 for (const b of parsed) {
-                    if (!b.reply?.id || !b.reply?.title) {
+                    if (!(b.id && b.title) && !(b.reply?.id && b.reply?.title)) {
                         throw new Error("Cada botón debe tener un id y title");
                     }
                 }

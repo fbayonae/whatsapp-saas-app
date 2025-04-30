@@ -9,7 +9,7 @@ const mediaUtils = require("../utils/mediaUtils");
 const sendMessage = async (req, res) => {
   const { conversationId, text } = req.body;
 
-  const withinWindow = await dbService.checkConversationWindow(conversationId);
+  const withinWindow = await dbService.checkConversationWindow(parseInt(conversationId));
 
   if (!withinWindow) {
     return res.status(403).json({
@@ -23,7 +23,7 @@ const sendMessage = async (req, res) => {
 
   try {
     // 1. Obtener conversación y número
-    const conversation = await dbService.getConversationFromDB(conversationId);
+    const conversation = await dbService.getConversationFromDB(parseInt(conversationId));
 
     if (!conversation) {
       return res.status(404).json({ error: "Conversación no encontrada" });
@@ -57,7 +57,7 @@ const sendMessageTemplate = async (req, res) => {
   }
 
   try {
-    const conversation = await dbService.getConversationFromDB(conversationId);
+    const conversation = await dbService.getConversationFromDB(parseInt(conversationId));
     if (!conversation) return res.status(404).json({ error: "Conversación no encontrada" });
 
     const phone = conversation.contact.phoneNumber;
@@ -225,7 +225,7 @@ const sendMessageCTA = async (req, res) => {
 
   const { conversationId, header, header_type, body, footer, action } = req.body;
 
-  const withinWindow = await dbService.checkConversationWindow(conversationId);
+  const withinWindow = await dbService.checkConversationWindow(parseInt(conversationId));
 
   if (!withinWindow) {
     return res.status(403).json({
@@ -241,7 +241,7 @@ const sendMessageCTA = async (req, res) => {
   try {
 
     // 1. Obtener conversación y número
-    const conversation = await dbService.getConversationFromDB(conversationId);
+    const conversation = await dbService.getConversationFromDB(parseInt(conversationId));
 
     if (!conversation) {
       return res.status(404).json({ error: "Conversación no encontrada" });
@@ -284,7 +284,7 @@ const sendMessageReply = async (req, res) => {
 
   const { conversationId, header, body, footer, buttons, metadata } = req.body;
 
-  const withinWindow = await dbService.checkConversationWindow(conversationId);
+  const withinWindow = await dbService.checkConversationWindow(parseInt(conversationId));
 
   if (!withinWindow) {
     return res.status(403).json({
@@ -330,7 +330,7 @@ const sendMessageReply = async (req, res) => {
     }
 
     // 1. Obtener conversación y número
-    const conversation = await dbService.getConversationFromDB(conversationId);
+    const conversation = await dbService.getConversationFromDB(parseInt(conversationId));
 
     if (!conversation) {
       return res.status(404).json({ error: "Conversación no encontrada" });

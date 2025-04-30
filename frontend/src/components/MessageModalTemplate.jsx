@@ -66,7 +66,6 @@ export default function MensajePlantillaModal({ onClose, conversationId, onMessa
                     formData.append("file", headerFile);
                 }
                 formData.append("buttons", JSON.stringify(replies));
-                console.log("formData buttons", formData);
                 const response = await axios.post("/messages/send-reply", formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });

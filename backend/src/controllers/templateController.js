@@ -152,12 +152,65 @@ const createTemplate = async (req, res) => {
 
     // Validar tipos permitidos
     const allowedComponentTypes = ["HEADER", "BODY", "FOOTER", "BUTTONS"];
-    const validatedComponents = components.map(component => {
-      if (!allowedComponentTypes.includes(component.type)) {
-        throw new Error(`Tipo de componente no permitido: ${component.type}`);
-      }
-      return component;
-    });
+
+    const validatedComponents = components
+      .filter(component => {
+        if (!allowedComponentTypes.includes(component.type)) {
+          throw new Error(`Tipo de componente no permitido: ${component.type}`);
+        }
+
+        if (
+          component.type === "HEADER" &&
+          component.format === "TEXT" &&
+          (!component.text || component.text.trim() === "")
+        ) {
+          return false;
+        }
+
+        if (
+          (component.type === "BODY" || component.type === "FOOTER") &&
+          (!component.text || component.text.trim() === "")
+        ) {
+          return false;
+        }
+
+        if (
+          component.type === "BUTTONS" &&
+          (!Array.isArray(component.buttons) || component.buttons.length === 0)
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+      .map(component => {
+        // Limpieza de botones vacíos
+        if (component.type === "BUTTONS" && Array.isArray(component.buttons)) {
+          const validButtons = component.buttons.filter(btn =>
+            btn.type === "QUICK_REPLY" &&
+            btn.reply?.title &&
+            btn.reply.title.trim() !== ""
+          );
+          return { ...component, buttons: validButtons };
+        }
+
+        // Añadir ejemplos si no existen
+        if (component.type === "BODY" && !component.example) {
+          const matches = component.text?.match(/{{\d+}}/g) || [];
+          if (matches.length > 0) {
+            const exampleBody = matches.map((_, i) => `Ejemplo${i + 1}`);
+            component.example = { body_text: exampleBody };
+          }
+        }
+
+        if (component.type === "HEADER" && component.format === "TEXT" && !component.example) {
+          if ((component.text || "").includes("{{")) {
+            component.example = { header_text: ["EjemploHeader"] };
+          }
+        }
+
+        return component;
+      });
 
     // Enviar plantilla a WhatsApp
     const response = await whatsappService.createTemplate({
@@ -244,10 +297,24 @@ const updateTemplate = async (req, res) => {
           return { ...component, buttons: validButtons };
         }
 
+        // Añadir ejemplos si no existen
+        if (component.type === "BODY" && !component.example) {
+          const matches = component.text?.match(/{{\d+}}/g) || [];
+          if (matches.length > 0) {
+            const exampleBody = matches.map((_, i) => `Ejemplo${i + 1}`);
+            component.example = { body_text: exampleBody };
+          }
+        }
+
+        if (component.type === "HEADER" && component.format === "TEXT" && !component.example) {
+          if ((component.text || "").includes("{{")) {
+            component.example = { header_text: ["EjemploHeader"] };
+          }
+        }
+
         return component;
       });
 
-    // Enviar plantilla a WhatsApp
     const response = await whatsappService.updateTemplate({
       templateId,
       name,
@@ -257,8 +324,8 @@ const updateTemplate = async (req, res) => {
     });
 
     console.log(response);
-    
-    let template = {
+
+    const template = {
       name,
       language,
       category: response.category,
@@ -280,6 +347,7 @@ const updateTemplate = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar la plantilla' });
   }
 };
+
 
 
 module.exports = {

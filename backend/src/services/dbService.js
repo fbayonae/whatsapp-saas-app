@@ -64,7 +64,7 @@ const saveTemplateToDB = async (template) => {
   console.log("saveTemplateToDB");
   try {
     const saved = await prisma.template.upsert({
-      where: { id_meta: template.id },
+      where: { id_meta: template.id_meta },
       update: {
         category: template.category,
         language: template.language,
@@ -105,7 +105,7 @@ const saveComponentToDB = async (component, templateId) => {
       format: component.format || '',
       text: component.text || '',
       example: component.example?.body_text ? JSON.stringify(component.example.body_text) : null,
-      template: { connect: { id: templateId } }
+      template: { connect: { id: parseInt(templateId) } }
     }
   });
 

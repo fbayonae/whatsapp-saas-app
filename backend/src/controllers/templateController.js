@@ -255,7 +255,9 @@ const updateTemplate = async (req, res) => {
       category,
       components: validatedComponents
     });
+
     console.log(response);
+    
     let template = {
       name,
       language,

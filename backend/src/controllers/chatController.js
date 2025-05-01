@@ -26,10 +26,6 @@ const checkWindow24h = async (req, res) => {
 
   const {conversationId} = req.params;
 
-  if (isNaN(conversationId)) {
-    return res.status(400).json({ error: "ID de conversación inválido" });
-  }
-
   try {
     const within24Hours = await dbService.checkConversationWindow(parseInt(conversationId));
     res.json({ within24Hours });

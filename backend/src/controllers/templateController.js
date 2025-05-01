@@ -201,14 +201,51 @@ const updateTemplate = async (req, res) => {
   }
 
   try {
-    // Validar tipos permitidos
     const allowedComponentTypes = ["HEADER", "BODY", "FOOTER", "BUTTONS"];
-    const validatedComponents = components.map(component => {
-      if (!allowedComponentTypes.includes(component.type)) {
-        throw new Error(`Tipo de componente no permitido: ${component.type}`);
-      }
-      return component;
-    });
+
+    const validatedComponents = components
+      .filter(component => {
+        if (!allowedComponentTypes.includes(component.type)) {
+          throw new Error(`Tipo de componente no permitido: ${component.type}`);
+        }
+
+        if (
+          component.type === "HEADER" &&
+          component.format === "TEXT" &&
+          (!component.text || component.text.trim() === "")
+        ) {
+          return false;
+        }
+
+        if (
+          (component.type === "BODY" || component.type === "FOOTER") &&
+          (!component.text || component.text.trim() === "")
+        ) {
+          return false;
+        }
+
+        if (
+          component.type === "BUTTONS" &&
+          (!Array.isArray(component.buttons) || component.buttons.length === 0)
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+      .map(component => {
+        // Limpieza de botones vacíos
+        if (component.type === "BUTTONS" && Array.isArray(component.buttons)) {
+          const validButtons = component.buttons.filter(btn =>
+            btn.type === "QUICK_REPLY" &&
+            btn.reply?.title &&
+            btn.reply.title.trim() !== ""
+          );
+          return { ...component, buttons: validButtons };
+        }
+
+        return component;
+      });
 
     // Enviar plantilla a WhatsApp
     const response = await whatsappService.updateTemplate({
@@ -218,8 +255,6 @@ const updateTemplate = async (req, res) => {
       category,
       components: validatedComponents
     });
-
-    console.log(response);
 
     let template = {
       name,
@@ -243,6 +278,7 @@ const updateTemplate = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar la plantilla' });
   }
 };
+
 
 module.exports = {
   syncTemplates,

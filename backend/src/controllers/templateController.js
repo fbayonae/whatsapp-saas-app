@@ -212,7 +212,7 @@ const updateTemplate = async (req, res) => {
 
     // Enviar plantilla a WhatsApp
     const response = await whatsappService.updateTemplate({
-      id_meta: templateId,
+      templateId,
       name,
       language,
       category,

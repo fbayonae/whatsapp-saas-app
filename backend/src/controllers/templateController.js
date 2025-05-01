@@ -90,8 +90,6 @@ const generateTemplatePayload = async (req, res) => {
   }
 };
 
-
-
 const getTemplatesWhatsapp = async (req, res) => {
   try {
     const templates = await whatsappService.getTemplatesFromMeta();
@@ -194,10 +192,63 @@ const createTemplate = async (req, res) => {
   }
 };
 
+const updateTemplate = async (req, res) => {
+  const templateId = req.params.id_meta;
+  const { name, language, category, components } = req.body;
+
+  if (!name || !language || !category || !components || !Array.isArray(components)) {
+    return res.status(400).json({ error: "Faltan campos obligatorios o formato inválido" });
+  }
+
+  try {
+    // Validar tipos permitidos
+    const allowedComponentTypes = ["HEADER", "BODY", "FOOTER", "BUTTONS"];
+    const validatedComponents = components.map(component => {
+      if (!allowedComponentTypes.includes(component.type)) {
+        throw new Error(`Tipo de componente no permitido: ${component.type}`);
+      }
+      return component;
+    });
+
+    // Enviar plantilla a WhatsApp
+    const response = await whatsappService.updateTemplate({
+      id_meta: templateId,
+      name,
+      language,
+      category,
+      components: validatedComponents
+    });
+
+    console.log(response);
+
+    let template = {
+      name,
+      language,
+      category: response.category,
+      status: response.status,
+      id_meta: response.id,
+      components: validatedComponents
+    };
+
+    const saveTemplate = await dbService.saveTemplateToDB(template);
+    if (template.components?.length) {
+      for (const comp of template.components) {
+        await dbService.saveComponentToDB(comp, response.id);
+      }
+    }
+
+    res.json({ succes: true, message: "Plantilla actualizada correctamente", template: saveTemplate });
+  } catch (error) {
+    console.error('❌ Error actualizando plantilla:', error);
+    res.status(500).json({ error: 'Error al actualizar la plantilla' });
+  }
+};
+
 module.exports = {
   syncTemplates,
   getTemplates,
   createTemplate,
+  updateTemplate,
   deleteTemplate,
   getTemplatesWhatsapp,
   generateTemplatePayload

@@ -415,6 +415,7 @@ module.exports = {
   getTemplatesFromMeta,
   createTemplate,
   deleteTemplate,
+  updateTemplate,
   sendTextMessage,
   sendMediaMessage,
   sendCTAMessage,

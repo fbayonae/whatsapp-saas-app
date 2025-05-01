@@ -13,6 +13,19 @@ router.post("/create",
     auth,
     templateController.createTemplate
 );
+router.put("/update/:id_meta",
+    auth,
+    [
+        param("id_meta")
+            .notEmpty()
+            .withMessage("El id es requerido")
+            .isLength({ min: 6 })
+            .withMessage("El id debe tener al menos 6 caracteres")
+            .matches(/^[a-zA-Z0-9\-_.]+$/)
+            .withMessage("El id contiene caracteres no válidos"),
+    ],
+    templateController.updateTemplate
+);
 router.delete("/delete/:id_meta",
     auth,
     [

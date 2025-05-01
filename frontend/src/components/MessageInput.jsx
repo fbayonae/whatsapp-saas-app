@@ -15,7 +15,7 @@ export default function MessageInput({ conversationId, onMessageSent }) {
   useEffect(() => {
     const checkConversationTime = async () => {
       try {
-        const res = await axios.get(`/conversations/${conversationId}/check-window`);
+        const res = await axios.get(`/chats/${conversationId}/check-window`);
         setCanSendRegularMessage(res.data.within24Hours);
       } catch (error) {
         console.error("❌ Error verificando ventana de 24h:", error);

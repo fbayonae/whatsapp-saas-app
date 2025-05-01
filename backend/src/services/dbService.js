@@ -265,7 +265,7 @@ const createMessageToDB = async ({ conversationId, type, content, id_meta, conte
   }
 };
 
-const checkConversationWindow = async (conversationId) => {
+const checkConversationWindow = async ({conversationId}) => {
   const lastMessage = await prisma.message.findFirst({
     where: { conversationId },
     orderBy: { createdAt: "desc" }

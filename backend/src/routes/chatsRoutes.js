@@ -12,9 +12,14 @@ router.get("/",
 
 router.get("/:id/check-window", 
     auth, 
+    [
+        param("id")
+            .isInt({ min: 1 })
+            .withMessage("El ID de la conversación debe ser un número entero positivo")
+    ],
+    validate,
     chatController.checkWindow24h
 );
-
 
 router.get("/:id/messages",
     auth,

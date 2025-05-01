@@ -4,30 +4,36 @@ import { SquareArrowUpRight, Plus, Trash2 } from "lucide-react";
 
 export default function TemplateEditorModal({ template, onClose }) {
   const [header, setHeader] = useState("");
+  const [headerExample, setHeaderExample] = useState("");
   const [headerType, setHeaderType] = useState("text");
   const [headerFile, setHeaderFile] = useState(null);
   const [body, setBody] = useState("");
+  const [bodyExamples, setBodyExamples] = useState([]);
   const [footer, setFooter] = useState("");
+  const [footerExample, setFooterExample] = useState("");
   const [category, setCategory] = useState("UTILITY");
   const [replies, setReplies] = useState([]);
   const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     if (template) {
-      const bodyComponent = template.components?.find(c => c.type === "BODY")?.text || "";
+      const bodyComponent = template.components?.find(c => c.type === "BODY") || {};
       const headerComponent = template.components?.find(c => c.type === "HEADER") || null;
-      const footerComponent = template.components?.find(c => c.type === "FOOTER")?.text || "";
+      const footerComponent = template.components?.find(c => c.type === "FOOTER") || {};
       const replyButtons = template.components?.find(c => c.type === "BUTTONS")?.buttons || [];
 
       if (headerComponent) {
         setHeaderType(headerComponent.format?.toLowerCase() || "text");
         if (headerComponent.format === "TEXT") {
           setHeader(headerComponent.text || "");
+          setHeaderExample(headerComponent.example?.header_text?.[0] || "");
         }
       }
 
-      setBody(bodyComponent);
-      setFooter(footerComponent);
+      setBody(bodyComponent.text || "");
+      setBodyExamples(bodyComponent.example?.body_text || []);
+      setFooter(footerComponent.text || "");
+      setFooterExample(footerComponent.example?.footer_text || "");
       setReplies(replyButtons.map(btn => ({ text: btn.text })));
       setCategory(template.category || "UTILITY");
     }
@@ -58,10 +64,19 @@ export default function TemplateEditorModal({ template, onClose }) {
       headerType !== "none" && {
         type: "HEADER",
         format: headerType.toUpperCase(),
-        ...(headerType === "text" ? { text: header } : {})
+        ...(headerType === "text" ? { text: header } : {}),
+        ...(header && header.includes("{{") && headerExample ? { example: { header_text: [headerExample] } } : {})
       },
-      { type: "BODY", text: body },
-      footer && { type: "FOOTER", text: footer },
+      {
+        type: "BODY",
+        text: body,
+        ...(body.includes("{{") && bodyExamples.length > 0 ? { example: { body_text: bodyExamples } } : {})
+      },
+      footer && {
+        type: "FOOTER",
+        text: footer,
+        ...(footer.includes("{{") && footerExample ? { example: { footer_text: footerExample } } : {})
+      },
       replies.length > 0 && {
         type: "BUTTONS",
         buttons: replies.map(r => ({ type: "QUICK_REPLY", text: r.text }))
@@ -118,6 +133,7 @@ export default function TemplateEditorModal({ template, onClose }) {
               onChange={(e) => {
                 setHeaderType(e.target.value);
                 setHeader("");
+                setHeaderExample("");
                 setHeaderFile(null);
                 markModified();
               }}
@@ -127,12 +143,23 @@ export default function TemplateEditorModal({ template, onClose }) {
               <option value="document">Documento</option>
             </select>
             {headerType === "text" ? (
-              <input
-                type="text"
-                className="w-full border rounded px-2 py-1"
-                value={header}
-                onChange={(e) => { setHeader(e.target.value); markModified(); }}
-              />
+              <>
+                <input
+                  type="text"
+                  className="w-full border rounded px-2 py-1 mb-1"
+                  value={header}
+                  onChange={(e) => { setHeader(e.target.value); markModified(); }}
+                />
+                {header.includes("{{") && (
+                  <input
+                    type="text"
+                    className="w-full border rounded px-2 py-1"
+                    placeholder="Ejemplo de header"
+                    value={headerExample}
+                    onChange={(e) => { setHeaderExample(e.target.value); markModified(); }}
+                  />
+                )}
+              </>
             ) : (
               <input
                 type="file"
@@ -146,20 +173,48 @@ export default function TemplateEditorModal({ template, onClose }) {
           <div>
             <label className="block font-semibold">Cuerpo</label>
             <textarea
-              className="w-full border rounded px-2 py-1"
+              className="w-full border rounded px-2 py-1 mb-1"
               value={body}
               onChange={(e) => { setBody(e.target.value); markModified(); }}
             />
+            {body.includes("{{") && (
+              <>
+                {Array.from(body.matchAll(/{{\d+}}/g)).map((match, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    className="w-full border rounded px-2 py-1 mb-1"
+                    placeholder={`Ejemplo para ${match[0]}`}
+                    value={bodyExamples[index] || ""}
+                    onChange={(e) => {
+                      const updated = [...bodyExamples];
+                      updated[index] = e.target.value;
+                      setBodyExamples(updated);
+                      markModified();
+                    }}
+                  />
+                ))}
+              </>
+            )}
           </div>
 
           <div>
             <label className="block font-semibold">Pie</label>
             <input
               type="text"
-              className="w-full border rounded px-2 py-1"
+              className="w-full border rounded px-2 py-1 mb-1"
               value={footer}
               onChange={(e) => { setFooter(e.target.value); markModified(); }}
             />
+            {footer.includes("{{") && (
+              <input
+                type="text"
+                className="w-full border rounded px-2 py-1"
+                placeholder="Ejemplo de footer"
+                value={footerExample}
+                onChange={(e) => { setFooterExample(e.target.value); markModified(); }}
+              />
+            )}
           </div>
 
           <div className="space-y-2">

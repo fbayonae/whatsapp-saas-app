@@ -58,6 +58,20 @@ export default function MessageTemplateEditor({ conversationId, onClose }) {
     section.parameters.every(param => param.text && param.text.trim() !== "")
   );
 
+  const handleSendTemplate = async () => {
+    try {
+      await axios.post("/messages/send-template", {
+        conversationId,
+        template: selectedTemplate.id_meta,
+        language: selectedTemplate.language,
+        parameters,
+      });
+      onClose();
+    } catch (err) {
+      console.error("❌ Error enviando plantilla:", err);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white w-full max-w-6xl rounded-lg shadow-lg flex flex-col h-[90vh]">
@@ -130,6 +144,7 @@ export default function MessageTemplateEditor({ conversationId, onClose }) {
           </button>
           <button
             disabled={!isFormValid}
+            onClick={handleSendTemplate}
             className={`px-4 py-2 rounded text-white ${
               isFormValid ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"
             }`}

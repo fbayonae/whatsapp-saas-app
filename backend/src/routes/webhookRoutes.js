@@ -30,11 +30,8 @@ router.post("/", (req, res) => {
 
   const entries = req.body.entry || [];
 
-  entries.forEach(entry => {
-    const changes = entry.changes || [];
-
-    changes.forEach(change => {
-      const field = change.field;
+  for (const entry of entries) {
+    for (const change of entry.changes || []) {
       const value = change.value;
 
       switch (field) {
@@ -61,8 +58,8 @@ router.post("/", (req, res) => {
         default:
           console.log(`⚠️ Webhook recibido con campo desconocido: ${field}`);
       }
-    });
-  });
+    }
+  }
 });
 
 

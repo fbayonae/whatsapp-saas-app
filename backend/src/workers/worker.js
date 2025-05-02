@@ -2,14 +2,14 @@
 require("dotenv").config();
 const { Worker } = require("bullmq");
 const connection = require("../queues/connection");
-const processMessage = require("../queues/messageProcessor");
+const messageProcessor = require("../queues/messageProcessor");
 
 const messageWorker = new Worker(
   "messages",
   async (job) => {
     try {
         const { msg, contact_wa } = job.data;
-        await processMessage(msg, contact_wa);
+        await messageProcessor.processMessage(msg, contact_wa);
     } catch (err) {
       console.error("❌ Error procesando mensaje en worker:", err);
     }

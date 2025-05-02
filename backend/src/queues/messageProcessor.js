@@ -89,14 +89,4 @@ const processMessage = async (msg, contact_wa) => {
     }
 };
 
-// 🧠 Worker BullMQ que se ejecuta al recibir un nuevo trabajo
-new Worker(
-    "messages",
-    async (job) => {
-        const { message, contact } = job.data;
-        await processMessage(message, contact);
-    },
-    { connection }
-);
-
 module.exports = { processMessage };

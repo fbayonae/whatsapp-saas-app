@@ -34,7 +34,7 @@ router.post("/", (req, res) => {
     for (const change of entry.changes || []) {
       const value = change.value;
 
-      switch (field) {
+      switch (change.field) {
         case "messages":
           webhookControler.handleWebhookMessage(value);
           break;

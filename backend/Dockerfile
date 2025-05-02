@@ -30,4 +30,4 @@ RUN npx prisma generate || echo "No Prisma schema yet"
 EXPOSE 3001
 
 # Comando por defecto
-CMD ["nodemon", "src/index.js"]
+CMD ["node", "nodemon", "src/index.js"]

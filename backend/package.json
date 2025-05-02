@@ -27,7 +27,9 @@
         "helmet": "8.1.0",
         "express-rate-limit": "7.5.0",
         "express-validator":"7.2.1",
-        "cookie-parser": "^1.4.6"
+        "cookie-parser": "^1.4.6",
+        "bullmq": "^5.52.1",
+        "ioredis": "^5.6.1"
     }
   }
   

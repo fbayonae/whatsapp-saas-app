@@ -71,7 +71,27 @@ services:
       - "5050:80"
     networks:
       - whatsapp-net
-      
+
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - whatsapp-net
+
+  worker:
+    build:
+      context: .
+    command: node src/workers/worker.js
+    depends_on:
+      - redis
+    networks:
+      - whatsapp-net
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
 networks:
   whatsapp-net:
 

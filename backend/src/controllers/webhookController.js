@@ -2,12 +2,31 @@ const express = require("express");
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const whatsappService = require("../services/whatsappService");
+//const whatsappService = require("../services/whatsappService");
+const messageQueue = require("../queues/messageQueue");
 
 //const VERIFY_TOKEN = process.env.VERIFY_TOKEN; // defínelo en tu .env
 
-// ✅ Procesa mensajes entrantes
+// ✅ Procesa mensajes entrantes y los encola
 const handleWebhookMessage = async (value) => {
+  const messages = value.messages || [];
+  const contact_wa = value.contacts || [];
+
+  for (const msg of messages) {
+    try {
+      const jobData = {
+        message: msg,
+        contact: contact_wa[0] || {}
+      };
+
+      await messageQueue.add("incoming-message", jobData);
+      console.log(`📥 Mensaje encolado con ID: ${msg.id}`);
+    } catch (error) {
+      console.error(`❌ Error al encolar el mensaje: ${error.message}`, error);
+    }
+  }
+};
+/*const handleWebhookMessage = async (value) => {
   const messages = value.messages || [];
   const contact_wa = value.contacts || [];
 
@@ -137,7 +156,7 @@ const handleWebhookMessage = async (value) => {
       console.error(`❌ Error procesando mensaje: ${error.message}`, error);
     }
   }
-};
+};*/
 
 // ✅ Procesa actualizaciones de estado de plantillas
 const handleTemplateStatusUpdate = async (value) => {

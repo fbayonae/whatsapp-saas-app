@@ -7,6 +7,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const processMessage = async (msg, contact_wa) => {
+    console.log("📥 Mensaje recibido:", msg);
     try {
         const from = msg.from;
         const text = msg.text?.body || '';

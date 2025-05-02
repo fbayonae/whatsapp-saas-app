@@ -18,7 +18,7 @@ services:
       - db
 
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: whatsapp_frontend
@@ -58,7 +58,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-    - whatsapp-net
+      - whatsapp-net
 
   pgadmin:
     image: dpage/pgadmin4
@@ -81,19 +81,23 @@ services:
       - whatsapp-net
 
   worker:
-    build:
-      context: .
+    build: ./backend
     command: node src/workers/worker.js
     depends_on:
       - redis
+      - backend
     networks:
       - whatsapp-net
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
 networks:
   whatsapp-net:
+
 
 volumes:
   pgdata:

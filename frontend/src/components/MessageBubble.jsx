@@ -119,7 +119,7 @@ export default function MessageBubble({ message, allMessages = [] }) {
         {(isReply || isTemplate) && (
           <div className="bg-white text-black rounded-lg p-3 shadow space-y-2">
             {/* Header */}
-            {message.header_type === "text" && message.header && (
+            { (message.header_type === "text" || message.header_type === null )&& message.header && (
               <div className="font-bold text-lg">{message.header}</div>
             )}
 

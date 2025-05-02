@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 const processMessage = async (msg, contact_wa) => {
     console.log("📥 Mensaje recibido:", msg);
+    console.log("📥 Contacto recibido:", contact_wa); 
     try {
         const from = msg.from;
         const text = msg.text?.body || '';

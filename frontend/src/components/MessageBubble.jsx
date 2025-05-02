@@ -119,7 +119,7 @@ export default function MessageBubble({ message, allMessages = [] }) {
         {(isReply || isTemplate) && (
           <div className="bg-white text-black rounded-lg p-3 shadow space-y-2">
             {/* Header */}
-            { (message.header_type === "text" || message.header_type === null )&& message.header && (
+            {(message.header_type === "text" || message.header_type === null) && message.header && (
               <div className="font-bold text-lg">{message.header}</div>
             )}
 
@@ -138,22 +138,44 @@ export default function MessageBubble({ message, allMessages = [] }) {
             )}
 
             {/* Botones */}
-            {Array.isArray(message.action) && message.action.length > 0 && (
+            {/* Botones o acciones de plantilla */}
+            {message.action && (
               <>
                 <hr className="my-2" />
                 <div className="space-y-1">
-                  {message.action.map((btn, idx) => (
-                    <button
-                      key={idx}
-                      className="w-full flex items-center justify-center gap-2 text-green-600 text-sm py-1 px-3 rounded-lg hover:bg-green-50 border"
-                    >
-                      <Undo className="w-5 h-5" />
-                      {btn.reply?.title || btn.text || "Botón"}
-                    </button>
-                  ))}
+                  {(() => {
+                    let parsedActions = [];
+
+                    try {
+                      parsedActions = typeof message.action === "string"
+                        ? JSON.parse(message.action)
+                        : Array.isArray(message.action)
+                          ? message.action
+                          : [];
+                    } catch (err) {
+                      console.warn("⚠️ Error al parsear action:", err);
+                    }
+
+                    return parsedActions.map((btn, idx) => {
+                      const label = btn.parameters?.[0]?.text || "Botón";
+                      const isURL = btn.sub_type === "url";
+
+                      return (
+                        <button
+                          key={idx}
+                          className="w-full flex items-center justify-center gap-2 text-green-600 text-sm py-1 px-3 rounded-lg hover:bg-green-50 border"
+                          {...(isURL ? { onClick: () => window.open(btn.parameters?.[0]?.text, "_blank") } : {})}
+                        >
+                          <Undo className="w-4 h-4" />
+                          {label}
+                        </button>
+                      );
+                    });
+                  })()}
                 </div>
               </>
             )}
+
           </div>
         )}
 

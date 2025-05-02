@@ -8,8 +8,8 @@ const messageWorker = new Worker(
   "messages",
   async (job) => {
     try {
-        const { msg, contact_wa } = job.data;
-        await messageProcessor.processMessage(msg, contact_wa);
+        const { message, contact  } = job.data;
+        await messageProcessor.processMessage(message, contact);
     } catch (err) {
       console.error("❌ Error procesando mensaje en worker:", err);
     }

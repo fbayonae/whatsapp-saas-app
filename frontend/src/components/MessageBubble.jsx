@@ -115,35 +115,48 @@ export default function MessageBubble({ message, allMessages = [] }) {
           </div>
         )}
 
-        {/* Reply */}
+        {/* Reply y Template */}
         {(isReply || isTemplate) && (
-          <div className="bg-white text-black rounded-lg p-3 shadow">
+          <div className="bg-white text-black rounded-lg p-3 shadow space-y-2">
+            {/* Header */}
             {message.header_type === "text" && message.header && (
-              <div className="font-bold text-lg mb-1">{message.header}</div>
+              <div className="font-bold text-lg">{message.header}</div>
             )}
 
             {message.header_type !== "text" && mediaUrl && (
-              <div className="mb-2">
-                <ImagePreview message={message} />
-              </div>
+              <ImagePreview message={message} />
             )}
 
-            <div className="text-sm">{message.content}</div>
-            {message.footer && <div className="text-xs text-gray-600 mt-2">{message.footer}</div>}
-            <hr className="my-2" />
-            <div className="space-y-1">
-              {Array.isArray(message.action) && message.action.map((btn, idx) => (
-                <button
-                  key={idx}
-                  className="w-full flex items-center justify-center gap-2 text-green-600 text-sm py-1 px-3 rounded-lg hover:bg-green-50 border"
-                >
-                  <Undo className="w-5 h-5" />
-                  {btn.reply?.title || "Respuesta"}
-                </button>
-              ))}
-            </div>
+            {/* Cuerpo */}
+            {message.content && (
+              <div className="text-sm">{message.content}</div>
+            )}
+
+            {/* Footer */}
+            {message.footer && (
+              <div className="text-xs text-gray-600">{message.footer}</div>
+            )}
+
+            {/* Botones */}
+            {Array.isArray(message.action) && message.action.length > 0 && (
+              <>
+                <hr className="my-2" />
+                <div className="space-y-1">
+                  {message.action.map((btn, idx) => (
+                    <button
+                      key={idx}
+                      className="w-full flex items-center justify-center gap-2 text-green-600 text-sm py-1 px-3 rounded-lg hover:bg-green-50 border"
+                    >
+                      <Undo className="w-5 h-5" />
+                      {btn.reply?.title || btn.text || "Botón"}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
+
 
         {isInteractive && (
           <div className={`text-sm mt-2`}>{message.content}</div>

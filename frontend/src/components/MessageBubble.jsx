@@ -16,6 +16,7 @@ export default function MessageBubble({ message, allMessages = [] }) {
   const isCTA = message.type === "cta";
   const isReply = message.type === "reply";
   const isInteractive = message.type === "interactive";
+  const isTemplate = message.type === "template";
 
   /*const contextMessage = message.contextId && allMessages.length
     ? allMessages.find((m) => m.id_meta?.toString() === message.contextId?.toString())
@@ -115,7 +116,7 @@ export default function MessageBubble({ message, allMessages = [] }) {
         )}
 
         {/* Reply */}
-        {isReply && (
+        {(isReply || isTemplate) && (
           <div className="bg-white text-black rounded-lg p-3 shadow">
             {message.header_type === "text" && message.header && (
               <div className="font-bold text-lg mb-1">{message.header}</div>

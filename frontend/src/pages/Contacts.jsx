@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
+import CreateContactModal from "./components/CreateContactModal";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +20,7 @@ export default function Contacts() {
       });
   }, []);
 
-  const filteredContacts = contacts.filter((c) => 
+  const filteredContacts = contacts.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -34,6 +36,12 @@ export default function Contacts() {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+        <button
+          onClick={() => setShowModal(true)}
+          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+        >
+          Crear contacto
+        </button>
       </div>
 
       {loading ? (
@@ -68,6 +76,10 @@ export default function Contacts() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {showModal && (
+        <CreateContactModal onClose={() => setShowModal(false)} />
       )}
     </div>
   );

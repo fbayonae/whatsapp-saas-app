@@ -3,6 +3,7 @@ const { body, param } = require("express-validator");
 const router = express.Router();
 const contactController = require("../controllers/contactController");
 const auth = require("../utils/authMiddleware").auth;
+const validate = require("../utils/validators");
 
 router.get("/",
     auth,

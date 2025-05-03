@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
 import CreateContactModal from "../components/CreateContactModal";
-import {  Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
@@ -29,7 +29,7 @@ export default function Contacts() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Contactos registrados</h1>
 
-      <div className="mb-4">
+      <div className="mb-4 flex justify-between items-center">
         <input
           type="text"
           placeholder="Buscar por nombre o teléfono..."

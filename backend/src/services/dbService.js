@@ -8,7 +8,7 @@ const { isWithin24Hours } = require('../utils/timeUtils');
 
 // Actualizar o crear preferencias
 const createOrUpdatePreferences = async (data) => {
-  
+
   try {
     const existing = await prisma.preference.findFirst();
     if (existing) {
@@ -200,8 +200,66 @@ const getContactsFromDB = async () => {
   return await prisma.contact.findMany({
     orderBy: { createdAt: 'desc' }
   });
-
 };
+
+const createContactFromDB = async ({ phoneNumber, name }) => {
+  try {
+    const contact = await prisma.contact.create({
+      data: {
+        phoneNumber,
+        name,
+      },
+    });
+    return contact;
+  } catch (error) {
+    console.error("❌ Error creando contacto:", error);
+    throw error;
+  }
+};
+
+const deleteContactFromDB = async ({ id, phoneNumber }) => {
+  try {
+    const deleted = await prisma.contact.deleteMany({
+      where: {
+        ...(id && { id }),
+        ...(phoneNumber && { phoneNumber }),
+      },
+    });
+    return deleted;
+  } catch (error) {
+    console.error("❌ Error eliminando contacto:", error);
+    throw error;
+  }
+};
+
+const getConversationsByContactFromDB = async ({ id, phoneNumber }) => {
+  try {
+    // Buscar contacto por ID o phoneNumber
+    const contact = await prisma.contact.findFirst({
+      where: {
+        ...(id && { id }),
+        ...(phoneNumber && { phoneNumber }),
+      },
+      include: {
+        conversations: {
+          orderBy: { lastMessageAt: 'desc' },
+          include: { messages: true },
+        },
+      },
+    });
+
+    if (!contact) {
+      throw new Error("Contacto no encontrado");
+    }
+
+    return contact.conversations;
+  } catch (error) {
+    console.error("❌ Error obteniendo conversaciones del contacto:", error);
+    throw error;
+  }
+};
+
+
 
 /*******************************************************
  * CONVERSATIONS
@@ -265,7 +323,7 @@ const createMessageToDB = async ({ conversationId, type, content, id_meta, conte
   }
 };
 
-const checkConversationWindow = async ({conversationId}) => {
+const checkConversationWindow = async ({ conversationId }) => {
   const lastMessage = await prisma.message.findFirst({
     where: { conversationId },
     orderBy: { createdAt: "desc" }
@@ -284,6 +342,9 @@ module.exports = {
   deleteTemplateFromDB,
   saveComponentToDB,
   getContactsFromDB,
+  createContactFromDB,
+  deleteContactFromDB,
+  getConversationsByContactFromDB,
   getConversationsFromDB,
   getMessagesFromDB,
   getConversationFromDB,

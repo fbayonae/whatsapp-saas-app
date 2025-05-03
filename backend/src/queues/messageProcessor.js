@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 const processMessage = async (msg, contact_wa) => {
     console.log("📥 Mensaje recibido:", msg);
-    console.log("📥 Contacto recibido:", contact_wa); 
+    console.log("📥 Contacto recibido:", contact_wa);
     try {
         const from = msg.from;
         const text = msg.text?.body || '';
@@ -38,54 +38,56 @@ const processMessage = async (msg, contact_wa) => {
             }
         }
 
-        // Buscar o crear contacto y conversación
-        let conversation = await prisma.conversation.findFirst({
-            where: { contact: { phoneNumber: from } },
-            include: { contact: true },
-        });
+        const interactiveText = msg.interactive?.button_reply?.title || '';
 
-        let contact;
-        if (!conversation) {
-            contact = await prisma.contact.upsert({
+        // Transacción para garantizar atomicidad
+        await prisma.$transaction(async (tx) => {
+            // 1. Buscar o crear contacto
+            const contact = await tx.contact.upsert({
                 where: { phoneNumber: from },
                 update: {},
                 create: { phoneNumber: from, name },
             });
 
-            conversation = await prisma.conversation.create({
+            // 2. Buscar o crear conversación
+            let conversation = await tx.conversation.findFirst({
+                where: { contactId: contact.id },
+            });
+
+            if (!conversation) {
+                conversation = await tx.conversation.create({
+                    data: {
+                        contactId: contact.id,
+                        lastMessageAt: timestamp,
+                    },
+                });
+            } else {
+                await tx.conversation.update({
+                    where: { id: conversation.id },
+                    data: { lastMessageAt: timestamp },
+                });
+            }
+
+            // 3. Crear mensaje
+            await tx.message.create({
                 data: {
-                    contactId: contact.id,
-                    lastMessageAt: timestamp,
+                    conversationId: conversation.id,
+                    direction: 'INBOUND',
+                    content: text || mediaInfo?.caption || interactiveText,
+                    timestamp,
+                    type,
+                    id_meta: meta_id,
+                    contextId,
+                    status: 'RECEIVED',
+                    media_id: mediaInfo?.mediaId,
+                    media_mimeType: mediaInfo?.mimeType,
+                    media_sha256: mediaInfo?.sha256,
+                    interactive: msg.interactive || null,
                 },
             });
-        } else {
-            contact = conversation.contact;
-            await prisma.conversation.update({
-                where: { id: conversation.id },
-                data: { lastMessageAt: timestamp },
-            });
-        }
 
-        const interactiveText = msg.interactive?.button_reply?.title || '';
-
-        await prisma.message.create({
-            data: {
-                conversationId: conversation.id,
-                direction: 'INBOUND',
-                content: text || mediaInfo?.caption || interactiveText,
-                timestamp,
-                type,
-                id_meta: meta_id,
-                contextId,
-                status: 'RECEIVED',
-                media_id: mediaInfo?.mediaId,
-                media_mimeType: mediaInfo?.mimeType,
-                media_sha256: mediaInfo?.sha256,
-                interactive: msg.interactive || null,
-            }
+            console.log(`✅ Mensaje guardado en conversación ${conversation.id}`);
         });
-
-        console.log(`✅ Mensaje guardado en conversación ${conversation.id}`);
     } catch (error) {
         console.error("❌ Error procesando mensaje:", error.message, error);
     }

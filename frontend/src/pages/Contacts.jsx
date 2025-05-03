@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
 import CreateContactModal from "../components/CreateContactModal";
+import {  Plus } from "lucide-react";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
@@ -38,10 +39,11 @@ export default function Contacts() {
         />
         <button
           onClick={() => setShowModal(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+          className="ml-4 bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 flex items-center gap-2"
         >
-          Crear contacto
+          <Plus className="w-4 h-4" /> Nuevo contacto
         </button>
+
       </div>
 
       {loading ? (

@@ -26,6 +26,19 @@ const createContact = async (req, res) => {
   }
 };
 
+const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const { name, phoneNumber } = req.body;
+
+  try {
+    const updated = await dbService.updateContactInDB(id, { name, phoneNumber });
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error("❌ Error al actualizar contacto:", err);
+    return res.status(500).json({ error: "No se pudo actualizar el contacto" });
+  }
+};
+
 const deleteContact = async (req, res) => {
   const { id } = req.params;
 
@@ -63,6 +76,7 @@ const getConversationsByContact = async (req, res) => {
 module.exports = { 
   getAllContacts,
   createContact,
+  updateContact,
   deleteContact,
   getConversationsByContact 
 };

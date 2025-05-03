@@ -232,6 +232,20 @@ const deleteContactFromDB = async ({ id, phoneNumber }) => {
   }
 };
 
+const updateContactFromDB = async (id, data) => {
+  try {
+    const updated = await prisma.contact.update({
+      where: { id: parseInt(id) },
+      data
+    });
+    return updated;
+  } catch (error) {
+    console.error("❌ Error actualizando contacto:", error);
+    throw error;
+  }
+};
+
+
 const getConversationsByContactFromDB = async ({ id, phoneNumber }) => {
   try {
     // Buscar contacto por ID o phoneNumber
@@ -343,6 +357,7 @@ module.exports = {
   saveComponentToDB,
   getContactsFromDB,
   createContactFromDB,
+  updateContactFromDB,
   deleteContactFromDB,
   getConversationsByContactFromDB,
   getConversationsFromDB,

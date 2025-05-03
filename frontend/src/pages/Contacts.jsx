@@ -35,7 +35,7 @@ export default function Contacts() {
           placeholder="Buscar por nombre o teléfono..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full md:w-1/3 border px-3 py-2 rounded"
         />
         <button
           onClick={() => setShowModal(true)}

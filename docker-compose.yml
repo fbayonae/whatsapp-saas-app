@@ -49,10 +49,8 @@ services:
     image: postgres:15
     container_name: whatsapp_postgres
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminpass
-      POSTGRES_DB: whatsapp_db
+    env_file:
+      - ./backend/.env
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -64,9 +62,8 @@ services:
     image: dpage/pgadmin4
     container_name: whatsapp_pgadmin
     restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@tg.es
-      PGADMIN_DEFAULT_PASSWORD: adminpass
+    env_file:
+      - ./backend/.env
     ports:
       - "5050:80"
     networks:

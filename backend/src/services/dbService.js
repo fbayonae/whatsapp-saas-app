@@ -236,7 +236,10 @@ const updateContactFromDB = async (id, data) => {
   try {
     const updated = await prisma.contact.update({
       where: { id: parseInt(id) },
-      data: { name, phoneNumber }
+      data: {
+        name: data.name,
+        phoneNumber: data.phoneNumber
+      }
     });
     return updated;
   } catch (error) {

@@ -75,6 +75,16 @@ services:
   redis:
     image: redis:6
     container_name: redis
+    command:
+      [
+        "redis-server",
+        "--requirepass", "${REDIS_PASSWORD}",
+        "--rename-command", "FLUSHALL", "",
+        "--rename-command", "CONFIG", "",
+        "--rename-command", "DEBUG", ""
+      ]
+    env_file:
+      - ./backend/.env
     ports:
       - "6379:6379"
     networks:

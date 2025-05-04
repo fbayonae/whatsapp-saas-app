@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
 import CreateContactModal from "../components/CreateContactModal";
-import { Plus, Pencil  } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const fetchContacts = async () => {
+    try {
+      const res = await axios.get("/contacts");
+      setContacts(res.data || []);
+    } catch (err) {
+      console.error("❌ Error al obtener contactos:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    axios.get("/contacts")
-      .then((res) => {
-        setContacts(res.data || []);
-        setLoading(false); // <-- AÑADE ESTO
-      })
-      .catch((err) => {
-        console.error("❌ Error al obtener contactos:", err);
-        setLoading(false); // <-- AÑADE ESTO
-      });
+    fetchContacts();
   }, []);
 
   const filteredContacts = contacts.filter((c) =>
@@ -38,12 +42,14 @@ export default function Contacts() {
           className="w-full md:w-1/3 border px-3 py-2 rounded"
         />
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            setEditingContact(null);
+            setShowModal(true);
+          }}
           className="ml-4 bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> Nuevo contacto
         </button>
-
       </div>
 
       {loading ? (
@@ -56,6 +62,7 @@ export default function Contacts() {
                 <th className="px-4 py-2 text-left">Nombre</th>
                 <th className="px-4 py-2 text-left">Teléfono</th>
                 <th className="px-4 py-2 text-left">Creado el</th>
+                <th className="px-4 py-2 text-left">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -66,11 +73,22 @@ export default function Contacts() {
                   <td className="px-4 py-2">
                     {new Date(contact.createdAt).toLocaleString()}
                   </td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => {
+                        setEditingContact(contact);
+                        setShowModal(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                  </td>
                 </tr>
               ))}
               {filteredContacts.length === 0 && (
                 <tr>
-                  <td colSpan="3" className="text-center py-4 text-gray-500">
+                  <td colSpan="4" className="text-center py-4 text-gray-500">
                     No se encontraron contactos.
                   </td>
                 </tr>
@@ -81,7 +99,11 @@ export default function Contacts() {
       )}
 
       {showModal && (
-        <CreateContactModal onClose={() => setShowModal(false)} />
+        <CreateContactModal
+          onClose={() => setShowModal(false)}
+          contact={editingContact}
+          onSuccess={fetchContacts}
+        />
       )}
     </div>
   );

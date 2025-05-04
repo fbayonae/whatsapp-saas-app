@@ -31,7 +31,7 @@ const updateContact = async (req, res) => {
   const { name, phoneNumber } = req.body;
 
   try {
-    const updated = await dbService.updateContactInDB(id, { name, phoneNumber });
+    const updated = await dbService.updateContactFromDB(id, { name, phoneNumber });
     return res.status(200).json(updated);
   } catch (err) {
     console.error("❌ Error al actualizar contacto:", err);

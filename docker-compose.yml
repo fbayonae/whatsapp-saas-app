@@ -75,6 +75,8 @@ services:
   redis:
     image: redis:6
     container_name: redis
+    env_file:
+      - ./backend/.env
     command:
       [
         "redis-server",
@@ -83,8 +85,6 @@ services:
         "--rename-command", "CONFIG", "",
         "--rename-command", "DEBUG", ""
       ]
-    env_file:
-      - ./backend/.env
     ports:
       - "6379:6379"
     networks:

@@ -44,7 +44,7 @@ const getPreferences = async () => {
  *******************************************************/
 
 const getUsersFromDB = async () => {
-  return await prisma.contact.findMany({
+  return await prisma.user.findMany({
     orderBy: { createdAt: 'desc' }
   });
 };

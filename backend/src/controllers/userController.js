@@ -4,6 +4,7 @@ const  dbService  = require('../services/dbService');
 const getAllUsers = async (req, res) => {
   try {
     const users = await dbService.getUsersFromDB();
+    console.log("✅ Usuarios obtenidos:", users);
     res.json(users);
   } catch (error) {
     console.error("❌ Error al obtener usuarios:", error);

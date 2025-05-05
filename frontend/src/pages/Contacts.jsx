@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
-import CreateContactModal from "../components/CreateContactModal";
+import CreateContactModal from "./components/contacts/CreateContactModal";
 import { Plus, Pencil } from "lucide-react";
 
 export default function Contacts() {

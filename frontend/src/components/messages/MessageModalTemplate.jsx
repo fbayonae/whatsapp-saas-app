@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "../utils/axiosInstance";
+import axios from "../../utils/axiosInstance";
 import { SquareArrowUpRight, Undo, Plus, Trash2, FileImage } from "lucide-react";
 
 export default function MensajePlantillaModal({ onClose, conversationId, onMessageSent }) {

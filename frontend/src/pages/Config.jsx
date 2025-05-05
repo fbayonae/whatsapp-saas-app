@@ -1,4 +1,37 @@
-import React, { useState, useEffect } from "react";
+// SettingsPage.jsx
+import React, { useState } from "react";
+import ConfigMenuBar from "./components/config/ConfigMenuBar";
+import ConfigSettings from "./components/config/ConfigSettings";
+import ConfigUsers from "./components/config/ConfigUsers";
+import ConfigLogs from "./components/config/ConfigLogs";
+
+export default function SettingsPage() {
+    const [activeTab, setActiveTab] = useState("config");
+
+    const renderActiveTab = () => {
+        switch (activeTab) {
+            case "config":
+                return <ConfigSettings />;
+            case "users":
+                return <ConfigUsers />;
+            case "logs":
+                return <ConfigLogs />;
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="p-6 space-y-6">
+            <ConfigMenuBar activeTab={activeTab} setActiveTab={setActiveTab} />
+            {renderActiveTab()}
+        </div>
+    );
+}
+
+
+
+/*import React, { useState, useEffect } from "react";
 import axios from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 
@@ -65,7 +98,7 @@ export default function SettingsPage() {
         <div className="p-6 space-y-8">
             <h1 className="text-2xl font-bold">Configuración del sistema</h1>
 
-            {/* Bloque FileMaker */}
+            {// Bloque FileMaker }
             <div className="border rounded-lg shadow p-6 space-y-4">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold">FileMaker</h2>
@@ -121,7 +154,7 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            {/* Bloque WhatsApp */}
+            {// Bloque WhatsApp }
             <div className="border rounded-lg shadow p-6 space-y-4">
                 <h2 className="text-xl font-semibold">WhatsApp</h2>
                 <p className="text-gray-500">Próximamente: configuraciones relacionadas con WhatsApp.</p>
@@ -129,3 +162,4 @@ export default function SettingsPage() {
         </div>
     );
 }
+*/

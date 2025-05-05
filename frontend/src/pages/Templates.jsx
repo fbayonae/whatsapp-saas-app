@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
 import { Pencil, Plus, CheckCircle, CircleX, Clock  } from "lucide-react";
-import TemplateModalEditor from "../components/TemplateModalEditor";
+import TemplateModalEditor from "../components/Templates/TemplateModalEditor";
 
 export default function Templates() {
   const [templates, setTemplates] = useState([]);

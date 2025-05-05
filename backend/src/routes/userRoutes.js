@@ -8,3 +8,5 @@ router.get("/",
     auth,
     userController.getAllUsers
 );
+
+module.exports = router;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import ImagePreview from "./components/utils/ImagePreview";
+//import ImagePreview from "./components/utils/ImagePreview";
 import MessageInput from "./components/messages/MessageInput";
 import MessageBubble from "./components/messages/MessageBubble";
 import axios from "./utils/axiosInstance";

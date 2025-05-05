@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import ImagePreview from "../components/utils/ImagePreview";
-import MessageInput from "../components/messages/MessageInput";
-import MessageBubble from "../components/messages/MessageBubble";
+import ImagePreview from "../utils/ImagePreview";
+import MessageInput from "../messages/MessageInput";
+import MessageBubble from "../messages/MessageBubble";
 import axios from "../utils/axiosInstance";
 
 export default function Chats() {

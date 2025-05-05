@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../utils/axiosInstance";
 import { Paperclip, X, LayoutTemplate, MessageSquareText } from "lucide-react";
-import MessageModalTemplate from "../components/MessageModalTemplate";
-import MessageTemplateEditor from "../components/MessageTemplateEditor";
+import MessageModalTemplate from "./MessageModalTemplate";
+import MessageTemplateEditor from "./MessageTemplateEditor";
 
 
 export default function MessageInput({ conversationId, onMessageSent }) {

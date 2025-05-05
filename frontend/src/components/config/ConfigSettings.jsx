@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "@utils/axiosInstance";
+import axios from "@utils/axiosInstance.jsx";
 import { toast } from "react-toastify";
 
 export default function ConfigSettings() {

@@ -1,9 +1,9 @@
 // SettingsPage.jsx
 import React, { useState } from "react";
-import ConfigMenuBar from "@components/config/ConfigMenuBar";
-import ConfigSettings from "@components/config/ConfigSettings";
-import ConfigUsers from "@components/config/ConfigUsers";
-import ConfigLogs from "@components/config/ConfigLogs";
+import ConfigMenuBar from "@components/config/ConfigMenuBar.jsx";
+import ConfigSettings from "@components/config/ConfigSettings.jsx";
+import ConfigUsers from "@components/config/ConfigUsers.jsx";
+import ConfigLogs from "@components/config/ConfigLogs.jsx";
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState("config");

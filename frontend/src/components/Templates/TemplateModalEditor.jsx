@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../utils/axiosInstance";
+import axios from "@utils/axiosInstance";
 import { SquareArrowUpRight, Plus, Trash2 } from "lucide-react";
 
 export default function TemplateEditorModal({ template, onClose }) {

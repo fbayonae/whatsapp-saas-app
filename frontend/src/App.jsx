@@ -1,13 +1,13 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SidebarLayout from "./components/utils/SidebarLayout";
-import Templates from "./pages/Templates";
-import Contacts from "./pages/Contacts";
-import Chats from "./pages/Chats";
-import Login from "./pages/Login";
-import Config from "./pages/Config";
-import PrivateRoute from "./components/utils/PrivateRoute";
-import Welcome from "./pages/Welcome";
+import Templates from "@pages/Templates";
+import Contacts from "@pages/Contacts";
+import Chats from "@pages/Chats";
+import Login from "@pages/Login";
+import Config from "@pages/Config";
+import PrivateRoute from "@components/utils/PrivateRoute";
+import Welcome from "@pages/Welcome";
 
 export default function App() {
   return (

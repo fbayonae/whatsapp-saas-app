@@ -1,5 +1,5 @@
 import React from "react";
-import ImagePreview from "../utils/ImagePreview";
+import ImagePreview from "@components/utils/ImagePreview";
 import { FileText, Music, File, SquareArrowUpRight, Undo } from "lucide-react";
 
 export default function MessageBubble({ message, allMessages = [] }) {

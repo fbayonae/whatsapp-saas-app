@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../utils/axiosInstance";
+import axios from "@utils/axiosInstance";
 
 export default function CreateContactModal({ onClose, contact = null, onSuccess }) {
     const [name, setName] = useState(contact?.name || "");

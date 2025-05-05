@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "@utils/axiosInstance";
 import { Pencil, Plus } from "lucide-react";
+import UserModal from "@components/config/UserModalEditor.jsx";
 
 export default function ConfigUsers() {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         axios.get("/users")
@@ -22,7 +25,10 @@ export default function ConfigUsers() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">Usuarios del sistema</h2>
-                <button className="flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                <button
+                    className="flex items-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                    onClick={() => { setSelectedUser(null); setShowModal(true); }}
+                >
                     <Plus className="w-4 h-4 mr-2" /> Nuevo Usuario
                 </button>
             </div>
@@ -54,7 +60,10 @@ export default function ConfigUsers() {
                                 <td className="px-4 py-2 capitalize">{user.role}</td>
                                 <td className="px-4 py-2">{new Date(user.createdAt).toLocaleDateString("es-ES")}</td>
                                 <td className="px-4 py-2">
-                                    <button className="text-indigo-600 hover:text-indigo-800">
+                                    <button
+                                        className="text-indigo-600 hover:text-indigo-800"
+                                        onClick={() => { setSelectedUser(user); setShowModal(true); }}
+                                    >
                                         <Pencil className="w-4 h-4" />
                                     </button>
                                 </td>
@@ -63,6 +72,12 @@ export default function ConfigUsers() {
                     </tbody>
                 </table>
             </div>
+            {showModal && (
+                <UserModal
+                    user={selectedUser}
+                    onClose={() => setShowModal(false)}
+                />
+            )}
         </div>
     );
 }

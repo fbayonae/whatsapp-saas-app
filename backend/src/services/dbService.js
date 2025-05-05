@@ -66,6 +66,13 @@ const getActiveSessionsByUser = async (userId) => {
   });
 };
 
+const getSessionsUserFromDB = async (userId) => {
+  return await prisma.session.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' }
+  });
+};
+
 /*******************************************************
  * TEMPLATES 
  *******************************************************/
@@ -382,5 +389,6 @@ module.exports = {
   getActiveSessionsByUser,
   createOrUpdatePreferences,
   getPreferences,
-  getUsersFromDB
+  getUsersFromDB,
+  getSessionsUserFromDB
 };

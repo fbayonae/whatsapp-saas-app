@@ -226,7 +226,7 @@ const createTemplate = async (req, res) => {
       name,
       language,
       category: response.category,
-      status: response.status,
+      status: response.status || "PENDING",
       id_meta: response.id,
       components: validatedComponents
     };
@@ -329,7 +329,7 @@ const updateTemplate = async (req, res) => {
       name,
       language,
       category: response.category,
-      status: response.status,
+      status: response.status || "PENDING",
       id_meta: response.id,
       components: validatedComponents
     };

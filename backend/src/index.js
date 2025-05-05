@@ -12,6 +12,7 @@ const chatRoutes = require("./routes/chatsRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
 const mediaRoutes = require("./routes/mediaRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
+const userRoutes = require("./routes/userRoutes");
 const fmRoutes = require("./routes/filemakerRoutes");
 const rateLimiter = require("./utils/rateLimiter");
 
@@ -73,6 +74,7 @@ app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 app.use('/auth', authRoutes);
 app.use('/webhook', webhookRoutes);
 app.use('/api/preferences', rateLimiter.apiLimiter, preferenceRoutes);
+app.use('/api/users', rateLimiter.apiLimiter, userRoutes);
 app.use('/api/fm', rateLimiter.apiLimiter, fmRoutes);
 app.use('/api/templates', rateLimiter.apiLimiter, templatesRoutes);
 app.use("/api/contacts", rateLimiter.apiLimiter, contactRoutes);

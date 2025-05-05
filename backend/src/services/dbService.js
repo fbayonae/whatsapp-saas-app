@@ -40,6 +40,16 @@ const getPreferences = async () => {
 };
 
 /*******************************************************
+ * USERS
+ *******************************************************/
+
+const getUsersFromDB = async () => {
+  return await prisma.contact.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+};
+
+/*******************************************************
  * SESSIONS
  *******************************************************/
 
@@ -371,5 +381,6 @@ module.exports = {
   checkConversationWindow,
   getActiveSessionsByUser,
   createOrUpdatePreferences,
-  getPreferences
+  getPreferences,
+  getUsersFromDB
 };

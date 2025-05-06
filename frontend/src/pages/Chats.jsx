@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import MessageInput from "@components/messages/MessageInput.jsx";
 import MessageBubble from "@components/messages/MessageBubble.jsx";
 import NewChatModal from "@components/messages/NewChatModal.jsx";
-import {SquarePen} from "lucide-react";
+import { SquarePen } from "lucide-react";
 import axios from "@utils/axiosInstance.jsx";
 
 export default function Chats() {
@@ -80,14 +80,16 @@ export default function Chats() {
     <div className="flex h-[calc(100vh-80px)]">
       {/* Panel izquierdo */}
       <div className="w-1/3 border-r overflow-y-auto">
-        <h2 className="text-lg font-semibold p-4 bg-indigo-600 text-white">Conversaciones</h2>
-        <div className="px-4 mb-4">
+        <h2 className="text-lg font-semibold p-4 bg-indigo-600 text-white">Conversaciones
           <button
             onClick={() => setShowNewChatModal(true)}
-            className="px-4 py-2 rounded"
+            className="px-4 py-2 rounded text-white"
           >
             <SquarePen className="w-5 h-5" />
           </button>
+        </h2>
+        <div className="px-4 mb-4">
+
         </div>
 
         {conversations.map(conv => (

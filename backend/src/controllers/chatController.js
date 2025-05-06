@@ -11,6 +11,22 @@ const getConversations = async (req, res) => {
   }
 };
 
+const createConversation = async (req, res) => {
+  const { contactId } = req.body;
+
+  if (!contactId) {
+    return res.status(400).json({ error: "Faltan datos para crear la conversación" });
+  }
+
+  try {
+    const conversation = await dbService.createConversationFromDB(contactId);
+    res.status(201).json(conversation);
+  } catch (error) {
+    console.error("❌ Error al crear conversación:", error);
+    res.status(500).json({ error: "Error al crear conversación" });
+  }
+};
+
 const getMessagesByConversation = async (req, res) => {
   const { id } = req.params;
   try {
@@ -38,5 +54,6 @@ const checkWindow24h = async (req, res) => {
 module.exports = { 
     getConversations, 
     getMessagesByConversation,
-    checkWindow24h 
+    checkWindow24h,
+    createConversation 
 };

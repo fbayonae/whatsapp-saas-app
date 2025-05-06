@@ -1,5 +1,5 @@
 const express = require("express");
-const { param } = require("express-validator");
+const { param, body } = require("express-validator");
 const router = express.Router();
 const chatController = require("../controllers/chatController");
 const auth = require("../utils/authMiddleware").auth;
@@ -10,8 +10,18 @@ router.get("/",
     chatController.getConversations
 );
 
-router.get("/:id/check-window", 
-    auth, 
+router.post("/",
+    auth,
+    [
+        body("contactId")
+            .isInt({ min: 1 })
+            .withMessage("El ID del contacto debe ser un número entero positivo")
+    ],
+    chatController.createConversation
+);
+
+router.get("/:id/check-window",
+    auth,
     [
         param("id")
             .isInt({ min: 1 })

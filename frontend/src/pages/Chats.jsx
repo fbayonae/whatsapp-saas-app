@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 //import ImagePreview from "./components/utils/ImagePreview";
 import MessageInput from "@components/messages/MessageInput.jsx";
 import MessageBubble from "@components/messages/MessageBubble.jsx";
+import NewChatModal from "@components/messages/NewChatModal.jsx";
 import axios from "@utils/axiosInstance.jsx";
 
 export default function Chats() {
@@ -9,6 +10,7 @@ export default function Chats() {
   const [selectedConv, setSelectedConv] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [showNewChatModal, setShowNewChatModal] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -25,22 +27,26 @@ export default function Chats() {
 
   useEffect(() => {
     if (!selectedConv) return;
-  
+
     // Cargar mensajes iniciales
     axios.get(`/chats/${selectedConv.id}/messages`)
       .then(res => setMessages(res.data))
       .catch(err => console.error("❌ Error cargando mensajes", err));
-  
+
     // ⏱️ Iniciar refresco periódico
     const interval = setInterval(() => {
       axios.get(`/chats/${selectedConv.id}/messages`)
         .then(res => setMessages(res.data))
         .catch(err => console.error("❌ Error refrescando mensajes", err));
     }, 5000); // cada 5 segundos
-  
+
     return () => clearInterval(interval); // limpiar al cambiar de conversación
   }, [selectedConv]);
-  
+
+  const handleNewChatCreated = (newConversation) => {
+    setConversations((prev) => [newConversation, ...prev]);
+    setSelectedConv(newConversation);
+  };
 
   const handleSelect = (conv) => {
     setSelectedConv(conv);
@@ -51,15 +57,15 @@ export default function Chats() {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-  
+
     if (!newMessage.trim()) return;
-  
+
     try {
       const res = await axios.post("/api/messages/send", {
         conversationId: selectedConv.id,
         text: newMessage.trim()
       });
-  
+
       // Añadir el mensaje al estado actual
       setMessages((prev) => [...prev, res.data.message]);
       setNewMessage("");
@@ -74,13 +80,21 @@ export default function Chats() {
       {/* Panel izquierdo */}
       <div className="w-1/3 border-r overflow-y-auto">
         <h2 className="text-lg font-semibold p-4 bg-indigo-600 text-white">Conversaciones</h2>
+        <div className="px-4 mb-4">
+          <button
+            onClick={() => setShowNewChatModal(true)}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded"
+          >
+            + Nuevo Chat
+          </button>
+        </div>
+
         {conversations.map(conv => (
           <div
             key={conv.id}
             onClick={() => handleSelect(conv)}
-            className={`p-4 cursor-pointer hover:bg-gray-100 ${
-              selectedConv?.id === conv.id ? "bg-indigo-100" : ""
-            }`}
+            className={`p-4 cursor-pointer hover:bg-gray-100 ${selectedConv?.id === conv.id ? "bg-indigo-100" : ""
+              }`}
           >
             <div className="font-medium">{conv.contact?.name || "Sin nombre"}</div>
             <div className="text-sm text-gray-600">{conv.contact?.phoneNumber}</div>
@@ -95,20 +109,28 @@ export default function Chats() {
           {selectedConv ? `Chat con ${selectedConv.contact?.name || selectedConv.contact?.phoneNumber}` : "Selecciona una conversación"}
         </h2>
         <div className="flex-1 overflow-y-auto space-y-4 pr-4 bg-[#e5ddd5]">
-        {messages.map((msg) => (
+          {messages.map((msg) => (
             <MessageBubble key={msg.id} message={msg} />
-        ))}
-            <div ref={bottomRef} />
+          ))}
+          <div ref={bottomRef} />
         </div>
         <div>
-        <MessageInput
+          <MessageInput
             conversationId={selectedConv?.id}
             onMessageSent={(msg) => {
-                setMessages((prev) => [...prev, msg]);
+              setMessages((prev) => [...prev, msg]);
             }}
-        />
+          />
         </div>
       </div>
+      {showNewChatModal && (
+        <NewChatModal
+          onClose={() => setShowNewChatModal(false)}
+          onChatCreated={handleNewChatCreated}
+          conversations={conversations}
+        />
+      )}
+
     </div>
   );
 }

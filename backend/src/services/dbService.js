@@ -379,6 +379,20 @@ const getConversationFromDB = async (conversationId) => {
   });
 };
 
+const createConversationFromDB = async ( contactId ) => {
+  try {
+    const conversation = await prisma.conversation.create({
+      data: {
+        contactId
+      }
+    });
+    return conversation;
+  } catch (error) {
+    console.error("❌ Error creando conversación:", error);
+    throw error;
+  }
+}
+
 /*******************************************************
  * MESSAGES
  *******************************************************/
@@ -449,6 +463,7 @@ module.exports = {
   getConversationsFromDB,
   getMessagesFromDB,
   getConversationFromDB,
+  createConversationFromDB,
   createMessageToDB,
   getTemplateByIdFromDB,
   checkConversationWindow,

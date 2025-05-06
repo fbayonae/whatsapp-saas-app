@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const prisma = new PrismaClient();
 
 const login = async (req, res) => {
-  const { email, password, userAgent } = req.body;
+  const { email, password } = req.body;
+  const userAgent = req.headers['user-agent'] || "desconocido";
   const ip = req.ip;
 
   if (!email || !password) return res.status(400).json({ error: "Faltan datos" });
@@ -192,47 +193,6 @@ const logout = async (req, res) => {
     res.status(500).json({ error: "Error al cerrar sesión" });
   }
 };
-
-
-/*const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
-
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "Faltan campos obligatorios" });
-  }
-
-  try {
-    // ¿Ya existe el usuario?
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return res.status(409).json({ error: "El usuario ya existe" });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-        role: role || "user",
-      },
-    });
-
-    res.status(201).json({
-      message: "Usuario creado correctamente",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (error) {
-    console.error("❌ Error creando usuario:", error);
-    res.status(500).json({ error: "Error interno al crear el usuario" });
-  }
-};*/
 
 module.exports = {
   login,

@@ -6,18 +6,6 @@ const validate = require('../utils/validators');
 
 const router = express.Router();
 
-// Ruta para registrar un nuevo usuario
-// Se utiliza el middleware de validación para verificar los datos de entrada
-/*router.post('/register',
-    [
-        body('email').isEmail().withMessage("Email inválido"),
-        body('password').isLength({ min: 6 }).withMessage("Contraseña muy corta"),
-        body('role').optional().isIn(['admin', 'client']).withMessage("Rol no válido")
-    ],
-    validate,
-    authController.registerUser
-);*/
-
 // Ruta para iniciar sesión
 // Se utiliza el middleware de limitación de tasa para prevenir ataques de fuerza bruta
 // Se utiliza el middleware de validación para verificar los datos de entrada

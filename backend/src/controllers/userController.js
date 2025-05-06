@@ -13,9 +13,9 @@ const getAllUsers = async (req, res) => {
 
 const getAllSessionsByUser = async (req, res) => {
     const { id } = req.params;
-    console.log("ID del usuario:", id);
+    //console.log("ID del usuario:", id);
     try {
-        const sessions = await dbService.getSessionsUserFromDB(id);
+        const sessions = await dbService.getSessionsUserFromDB( parseInt(id));
         res.json(sessions);
     } catch (error) {
         console.error("❌ Error al obtener sesiones del usuario:", error);

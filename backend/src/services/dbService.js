@@ -120,7 +120,7 @@ const getActiveSessionsByUser = async (userId) => {
 
 const getSessionsUserFromDB = async (id) => {
   return await prisma.session.findMany({
-    where: { userId:id },
+    where: { userId: id },
     orderBy: { createdAt: 'desc' }
   });
 };

@@ -14,8 +14,10 @@ const mediaRoutes = require("./routes/mediaRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
 const userRoutes = require("./routes/userRoutes");
 const fmRoutes = require("./routes/filemakerRoutes");
+const logsRoutes = require("./routes/logsRoutes");
 const rateLimiter = require("./utils/rateLimiter");
 const requestLogger = require("./utils/requestLogger");
+
 
 dotenv.config();
 const app = express();
@@ -85,6 +87,7 @@ app.use("/api/contacts", rateLimiter.apiLimiter, contactRoutes);
 app.use("/api/chats", rateLimiter.apiLimiter, chatRoutes);
 app.use("/api/messages", rateLimiter.apiLimiter, messageRoutes);
 app.use("/api/media",rateLimiter.apiLimiter,  mediaRoutes);
+app.use("/api/logs", logsRoutes);
 
 
 const PORT = process.env.PORT || 3001;

@@ -51,7 +51,7 @@ router.post("/register",
     userController.registerUser
 );
 
-router.get("check-email",
+router.get("/check-email",
     auth,
     [
         param("email")

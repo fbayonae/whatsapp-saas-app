@@ -29,7 +29,8 @@
         "express-validator":"7.2.1",
         "cookie-parser": "^1.4.6",
         "bullmq": "^5.52.1",
-        "ioredis": "^5.6.1"
+        "ioredis": "^5.6.1",
+        "geoip-lite": "^1.4.10"
     }
   }
   

@@ -1,12 +1,18 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const geoip = require("geoip-lite");
 const prisma = new PrismaClient();
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, browser, os } = req.body;
   const userAgent = req.headers['user-agent'] || "desconocido";
-  const ip = req.ip;
+  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+  const location = geoip.lookup(ip);
+
+  const locationInfo = location
+    ? `${location.city || "?"}, ${location.region || "?"}, ${location.country || "?"}`
+    : "Desconocida";
 
   if (!email || !password) return res.status(400).json({ error: "Faltan datos" });
 
@@ -17,7 +23,7 @@ const login = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       await prisma.loginAttempt.create({
-        data: { email, ip, userAgent, success: false }
+        data: { email, ip, userAgent, location, browser, os, success: false }
       });
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
@@ -27,7 +33,7 @@ const login = async (req, res) => {
     const isValid = await bcrypt.compare(password, user.passwordHash);
     if (!isValid) {
       await prisma.loginAttempt.create({
-        data: { email, ip, userAgent, success: false, userId }
+        data: { email, ip, userAgent, location, browser, os, success: false, userId }
       });
       return res.status(401).json({ error: "Contraseña incorrecta" });
     }
@@ -58,7 +64,7 @@ const login = async (req, res) => {
     });
 
     await prisma.loginAttempt.create({
-      data: { email, ip, userAgent, success: true, userId }
+      data: { email, ip, userAgent, location, browser, os, success: true, userId }
     });
 
     await prisma.session.create({
@@ -66,6 +72,9 @@ const login = async (req, res) => {
         userId: user.id,
         ip,
         userAgent: userAgent || "desconocido",
+        location: locationInfo,
+        browser,
+        os,
         refreshToken,
         token: refreshToken,
         createdAt: new Date(),
@@ -90,7 +99,7 @@ const login = async (req, res) => {
     console.error("❌ Error en login:", err);
     if (!loginSuccess) {
       await prisma.loginAttempt.create({
-        data: { email, ip, userAgent, success: false, userId: userId || undefined }
+        data: { email, ip, userAgent, location, browser, os, success: false, userId: userId || undefined }
       });
     }
     res.status(500).json({ error: "Error interno" });

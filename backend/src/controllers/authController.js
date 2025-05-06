@@ -23,7 +23,7 @@ const login = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       await prisma.loginAttempt.create({
-        data: { email, ip, userAgent, location, browser, os, success: false }
+        data: { email, ip, userAgent, locationInfo, browser, os, success: false }
       });
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
@@ -33,7 +33,7 @@ const login = async (req, res) => {
     const isValid = await bcrypt.compare(password, user.passwordHash);
     if (!isValid) {
       await prisma.loginAttempt.create({
-        data: { email, ip, userAgent, location, browser, os, success: false, userId }
+        data: { email, ip, userAgent, locationInfo, browser, os, success: false, userId }
       });
       return res.status(401).json({ error: "Contraseña incorrecta" });
     }
@@ -64,7 +64,7 @@ const login = async (req, res) => {
     });
 
     await prisma.loginAttempt.create({
-      data: { email, ip, userAgent, location, browser, os, success: true, userId }
+      data: { email, ip, userAgent, locationInfo, browser, os, success: true, userId }
     });
 
     await prisma.session.create({
@@ -72,7 +72,7 @@ const login = async (req, res) => {
         userId: user.id,
         ip,
         userAgent: userAgent || "desconocido",
-        location: locationInfo,
+        locationInfo,
         browser,
         os,
         refreshToken,
@@ -99,7 +99,7 @@ const login = async (req, res) => {
     console.error("❌ Error en login:", err);
     if (!loginSuccess) {
       await prisma.loginAttempt.create({
-        data: { email, ip, userAgent, location, browser, os, success: false, userId: userId || undefined }
+        data: { email, ip, userAgent, locationInfo, browser, os, success: false, userId: userId || undefined }
       });
     }
     res.status(500).json({ error: "Error interno" });

@@ -15,6 +15,7 @@ const preferenceRoutes = require("./routes/preferenceRoutes");
 const userRoutes = require("./routes/userRoutes");
 const fmRoutes = require("./routes/filemakerRoutes");
 const rateLimiter = require("./utils/rateLimiter");
+const requestLogger = require("./utils/requestLogger");
 
 dotenv.config();
 const app = express();
@@ -66,6 +67,9 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
+
+// Middleware para registrar las peticiones logs
+app.use(requestLogger);
 
 // necesario para leer POST de Meta
 app.use(express.json({ limit: '5mb' })); 

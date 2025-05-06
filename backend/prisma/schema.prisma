@@ -46,7 +46,7 @@ model LoginAttempt {
   email         String
   success       Boolean
   ip            String
-  userAgent     String
+  userAgent     String?
   locationInfo  String?
   browser       String?
   os            String?

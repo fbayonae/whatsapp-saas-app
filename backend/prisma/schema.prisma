@@ -47,9 +47,9 @@ model LoginAttempt {
   success       Boolean
   ip            String
   userAgent     String
-  locationInfo  String
-  browser       String
-  os            String
+  locationInfo  String?
+  browser       String?
+  os            String?
   createdAt     DateTime @default(now())
 
   userId        Int?
@@ -66,9 +66,9 @@ model Session {
   expiresAt     DateTime
   userAgent     String
   ip            String
-  locationInfo  String
-  browser       String
-  os            String
+  locationInfo  String?
+  browser       String?
+  os            String?
   refreshToken  String 
 
   userId    Int

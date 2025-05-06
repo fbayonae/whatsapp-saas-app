@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import MessageInput from "@components/messages/MessageInput.jsx";
 import MessageBubble from "@components/messages/MessageBubble.jsx";
 import NewChatModal from "@components/messages/NewChatModal.jsx";
+import {SquarePen} from "lucide-react";
 import axios from "@utils/axiosInstance.jsx";
 
 export default function Chats() {
@@ -83,9 +84,9 @@ export default function Chats() {
         <div className="px-4 mb-4">
           <button
             onClick={() => setShowNewChatModal(true)}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded"
+            className="px-4 py-2 rounded"
           >
-            + Nuevo Chat
+            <SquarePen className="w-5 h-5" />
           </button>
         </div>
 

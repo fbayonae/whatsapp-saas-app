@@ -19,7 +19,7 @@ const createConversation = async (req, res) => {
   }
 
   try {
-    const conversation = await dbService.createConversationFromDB(contactId);
+    const conversation = await dbService.createConversationFromDB(parseInt(contactId));
     res.status(201).json(conversation);
   } catch (error) {
     console.error("❌ Error al crear conversación:", error);

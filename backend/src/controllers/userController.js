@@ -1,4 +1,3 @@
-// chatController.js
 const dbService = require('../services/dbService');
 const bcrypt = require('bcrypt');
 
@@ -14,6 +13,7 @@ const getAllUsers = async (req, res) => {
 
 const getAllSessionsByUser = async (req, res) => {
     const { id } = req.params;
+    console.log("ID del usuario:", id);
     try {
         const sessions = await dbService.getSessionsUserFromDB(id);
         res.json(sessions);

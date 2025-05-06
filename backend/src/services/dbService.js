@@ -89,6 +89,16 @@ const createUserFromDB = async ({ name, email, passwordHash, role }) => {
   }
 }
 
+const deleteUserFromDB = async (userId) => {
+  return await prisma.$transaction(async (tx) => {
+    await tx.session.deleteMany({ where: { userId } });
+    await tx.refreshToken.deleteMany({ where: { userId } });
+    await tx.loginAttempt.deleteMany({ where: { userId } });
+
+    return await tx.user.delete({ where: { id: userId } });
+  });
+};
+
 const getUserByEmailFromDB = async (email) => {
   try {
     const user = await prisma.user.findUnique({
@@ -426,6 +436,7 @@ module.exports = {
   saveTemplateToDB,
   createUserFromDB,
   updateUserFromDB,
+  deleteUserFromDB,
   getUserByEmailFromDB,
   getTemplatesFromDB,
   deleteTemplateFromDB,

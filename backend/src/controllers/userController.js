@@ -85,10 +85,28 @@ const checkEmail = async (req, res) => {
     }
 };
 
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const userId = parseInt(id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: "ID inválido" });
+      }
+  
+      const deleted = await dbService.deleteUserFromDB(userId);
+      return res.status(200).json({ success: true, message: "Usuario eliminado", user: deleted });
+    } catch (error) {
+      console.error("❌ Error eliminando usuario:", error);
+      return res.status(500).json({ error: "Error al eliminar el usuario" });
+    }
+  };
+
 module.exports = {
     getAllUsers,
     getAllSessionsByUser,
     updateUser,
     registerUser,
-    checkEmail
+    checkEmail,
+    deleteUser
 };

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "@utils/axiosInstance";
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import UserModal from "@components/config/UserModalEditor.jsx";
+import { toast } from "react-toastify";
 
 export default function ConfigUsers() {
     const [users, setUsers] = useState([]);
@@ -29,6 +30,18 @@ export default function ConfigUsers() {
         setShowModal(false);
         setSelectedUser(null);
         loadUsers();
+    };
+
+    const handleDeleteUser = async (userId) => {
+        if (!window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) return;
+        try {
+            await axios.delete(`/users/${userId}`);
+            toast.success("✅ Usuario eliminado correctamente");
+            loadUsers();
+        } catch (error) {
+            console.error("❌ Error eliminando usuario:", error);
+            toast.error("❌ Error al eliminar el usuario");
+        }
     };
 
     return (
@@ -75,6 +88,12 @@ export default function ConfigUsers() {
                                         onClick={() => { setSelectedUser(user); setShowModal(true); }}
                                     >
                                         <Pencil className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        className="text-red-600 hover:text-red-800"
+                                        onClick={() => handleDeleteUser(user.id)}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
                                     </button>
                                 </td>
                             </tr>

@@ -63,4 +63,13 @@ router.get("/check-email",
     userController.checkEmail
 );
 
+router.delete("/:id", 
+    auth,
+    [
+        param("id")
+            .notEmpty()
+            .withMessage("El id es requerido"),
+    ],
+    userController.deleteUser);
+
 module.exports = router;

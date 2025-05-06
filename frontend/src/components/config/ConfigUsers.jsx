@@ -9,17 +9,27 @@ export default function ConfigUsers() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
+    const loadUsers = useCallback(() => {
         axios.get("/users")
             .then(res => setUsers(res.data))
             .catch(err => console.error("❌ Error cargando usuarios:", err));
     }, []);
+
+    useEffect(() => {
+        loadUsers();
+    }, [loadUsers]);
 
     const filteredUsers = users.filter(user =>
         user.email.toLowerCase().includes(search.toLowerCase()) ||
         user.name.toLowerCase().includes(search.toLowerCase()) ||
         user.role.toLowerCase().includes(search.toLowerCase())
     );
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedUser(null);
+        loadUsers();
+    };
 
     return (
         <div className="space-y-6">
@@ -75,7 +85,7 @@ export default function ConfigUsers() {
             {showModal && (
                 <UserModal
                     user={selectedUser}
-                    onClose={() => setShowModal(false)}
+                    onClose={handleCloseModal}
                 />
             )}
         </div>

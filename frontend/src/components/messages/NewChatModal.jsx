@@ -1,6 +1,6 @@
 // NewChatModal.jsx
 import React, { useState, useEffect } from "react";
-import axios from "@/utils/axiosInstance";
+import axios from "@utils/axiosInstance";
 
 export default function NewChatModal({ onClose, onChatCreated, conversations }) {
   const [contacts, setContacts] = useState([]);

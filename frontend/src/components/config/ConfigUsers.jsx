@@ -93,7 +93,7 @@ export default function ConfigUsers() {
                                         className="text-red-600 hover:text-red-800"
                                         onClick={() => handleDeleteUser(user.id)}
                                     >
-                                        <Trash2 className="w-4 h-4" />
+                                        <Trash2 className="w-4 h-4 ml-4" />
                                     </button>
                                 </td>
                             </tr>

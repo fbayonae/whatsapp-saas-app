@@ -194,7 +194,7 @@ const logout = async (req, res) => {
 };
 
 
-const registerUser = async (req, res) => {
+/*const registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   if (!name || !email || !password) {
@@ -232,7 +232,7 @@ const registerUser = async (req, res) => {
     console.error("❌ Error creando usuario:", error);
     res.status(500).json({ error: "Error interno al crear el usuario" });
   }
-};
+};*/
 
 module.exports = {
   login,

@@ -1,5 +1,5 @@
 const express = require("express");
-const { param } = require('express-validator');
+const { param, body } = require('express-validator');
 const router = express.Router();
 const userController = require("../controllers/userController");
 const auth = require("../utils/authMiddleware").auth;
@@ -18,6 +18,49 @@ router.get("/:id/sessions",
             .withMessage("El id es requerido")
     ],
     userController.getAllSessionsByUser
+);
+
+router.put("/:id",
+    auth,
+    [
+        param("id")
+            .notEmpty()
+            .withMessage("El id es requerido"),
+        body("name").notEmpty().withMessage("El nombre es obligatorio"),
+        body("role").notEmpty().withMessage("El role es obligatorio"),
+    ],
+    userController.updateUser
+);
+
+router.post("/register",
+    auth,
+    [
+        body("name").notEmpty().withMessage("El nombre es obligatorio"),
+        body("role").notEmpty().withMessage("El role es obligatorio"),
+        body("email")
+            .notEmpty()
+            .withMessage("El email es obligatorio")
+            .isEmail()
+            .withMessage("El email no es válido"),
+        body("password")
+            .notEmpty()
+            .withMessage("La contraseña es obligatoria")
+            .isLength({ min: 6 })
+            .withMessage("La contraseña debe tener al menos 6 caracteres"),
+    ],
+    userController.registerUser
+);
+
+router.get("check-email",
+    auth,
+    [
+        param("email")
+            .notEmpty()
+            .withMessage("El email es obligatorio")
+            .isEmail()
+            .withMessage("El email no es válido"),
+    ],
+    userController.checkEmail
 );
 
 module.exports = router;

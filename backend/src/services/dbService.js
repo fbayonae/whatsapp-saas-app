@@ -49,6 +49,58 @@ const getUsersFromDB = async () => {
   });
 };
 
+const updateUserFromDB = async (id, data) => {
+  try {
+    const updateData = {
+      name: data.name,
+      role: data.role,
+    };
+
+    if (data.passwordHash) {
+      updateData.passwordHash = data.passwordHash;
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: parseInt(id) },
+      data: updateData
+    });
+
+    return updated;
+  } catch (error) {
+    console.error("❌ Error actualizando usuario:", error);
+    throw error;
+  }
+};
+
+const createUserFromDB = async ({ name, email, passwordHash, role }) => {
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        passwordHash,
+        role,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.error("❌ Error creando usuario:", error);
+    throw error;
+  }
+}
+
+const getUserByEmailFromDB = async (email) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+    return user;
+  } catch (error) {
+    console.error("❌ Error obteniendo usuario por email:", error);
+    throw error;
+  }
+};
+
 /*******************************************************
  * SESSIONS
  *******************************************************/
@@ -372,6 +424,9 @@ const checkConversationWindow = async ({ conversationId }) => {
 
 module.exports = {
   saveTemplateToDB,
+  createUserFromDB,
+  updateUserFromDB,
+  getUserByEmailFromDB,
   getTemplatesFromDB,
   deleteTemplateFromDB,
   saveComponentToDB,

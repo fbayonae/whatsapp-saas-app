@@ -50,6 +50,7 @@ const registerUser = async (req, res) => {
     }
 
     try {
+        console.log("Creando usuario:", { name, email, password, role });
         // ¿Ya existe el usuario?
         const existing = await prisma.user.findUnique({ where: { email } });
         if (existing) {

@@ -118,9 +118,9 @@ const getActiveSessionsByUser = async (userId) => {
   });
 };
 
-const getSessionsUserFromDB = async (userId) => {
+const getSessionsUserFromDB = async (id) => {
   return await prisma.session.findMany({
-    where: { userId },
+    where: { userId:id },
     orderBy: { createdAt: 'desc' }
   });
 };

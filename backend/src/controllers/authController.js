@@ -236,7 +236,7 @@ const logout = async (req, res) => {
 
 module.exports = {
   login,
-  registerUser,
+  //registerUser,
   refresh,
   logout,
   refreshWithCookie

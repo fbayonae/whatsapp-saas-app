@@ -81,7 +81,7 @@ export default function Chats() {
       {/* Panel izquierdo */}
       <div className="w-1/3 border-r overflow-y-auto">
         <div className="text-lg p-4 bg-indigo-600">
-          <h2 className="text-lg font-semibold p-4 bg-indigo-600 text-white">Conversaciones</h2>
+          <h2 className="font-semibold p-4 bg-indigo-600 text-white">Conversaciones</h2>
           <button
             onClick={() => setShowNewChatModal(true)}
             className="px-4 py-2 rounded text-white"

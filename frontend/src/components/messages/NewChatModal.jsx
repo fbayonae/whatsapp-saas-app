@@ -19,6 +19,10 @@ export default function NewChatModal({ onClose, onChatCreated, conversations }) 
         return pattern.test(phone);
     };
 
+    const sanitizePhone = (input) => {
+        return input.replace(/[^\d]/g, ""); // elimina todo excepto dígitos
+      };
+
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
@@ -35,7 +39,7 @@ export default function NewChatModal({ onClose, onChatCreated, conversations }) 
                 onChatCreated(res.data);
                 onClose();
             } else if (isPhoneValid(phoneNumber)) {
-                const existingContact = contacts.find(c => c.phoneNumber === phoneNumber);
+                const existingContact = contacts.find(c => c.phoneNumber === sanitizePhone(phoneNumber));
                 if (existingContact) {
                     const existingConv = conversations.find(c => c.contact?.id === existingContact.id);
                     if (existingConv) {
@@ -53,8 +57,8 @@ export default function NewChatModal({ onClose, onChatCreated, conversations }) 
                     return;
                 }
                 const contactRes = await axios.post("/contacts", {
-                    phoneNumber,
-                    name: phoneNumber
+                    phoneNumber: sanitizePhone(phoneNumber),
+                    name: sanitizePhone(phoneNumber)
                 });
                 const convRes = await axios.post("/chats", {
                     contactId: selectedContactId

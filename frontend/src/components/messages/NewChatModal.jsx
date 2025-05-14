@@ -23,7 +23,8 @@ export default function NewChatModal({ onClose, onChatCreated, conversations }) 
     setIsSubmitting(true);
     try {
       if (selectedContactId) {
-        const existing = conversations.find(c => c.contact?.id === parseInt(selectedContactId));
+        //const existing = conversations.find(c => c.contact?.id === parseInt(selectedContactId));
+        const existing = conversations.find(c => c.contact?.id == selectedContactId);
         if (existing) {
           onChatCreated(existing);
           onClose();

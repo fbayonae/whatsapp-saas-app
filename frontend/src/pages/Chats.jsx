@@ -45,9 +45,14 @@ export default function Chats() {
   }, [selectedConv]);
 
   const handleNewChatCreated = (newConversation) => {
-    setConversations((prev) => [newConversation, ...prev]);
+    setConversations((prev) => {
+      const alreadyExists = prev.some(c => c.id === newConversation.id);
+      if (alreadyExists) return prev;
+      return [newConversation, ...prev];
+    });
     setSelectedConv(newConversation);
   };
+  
 
   const handleSelect = (conv) => {
     setSelectedConv(conv);

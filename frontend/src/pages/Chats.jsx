@@ -80,14 +80,15 @@ export default function Chats() {
     <div className="flex h-[calc(100vh-80px)]">
       {/* Panel izquierdo */}
       <div className="w-1/3 border-r overflow-y-auto">
-        <h2 className="text-lg font-semibold p-4 bg-indigo-600 text-white">Conversaciones
+        <div className="text-lg p-4 bg-indigo-600">
+          <h2 className="text-lg font-semibold p-4 bg-indigo-600 text-white">Conversaciones</h2>
           <button
             onClick={() => setShowNewChatModal(true)}
             className="px-4 py-2 rounded text-white"
           >
             <SquarePen className="w-5 h-5" />
           </button>
-        </h2>
+        </div>
         <div className="px-4 mb-4">
 
         </div>

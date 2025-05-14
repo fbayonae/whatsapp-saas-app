@@ -52,7 +52,6 @@ export default function Chats() {
     });
     setSelectedConv(newConversation);
   };
-  
 
   const handleSelect = (conv) => {
     setSelectedConv(conv);

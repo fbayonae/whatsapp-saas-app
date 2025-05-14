@@ -45,7 +45,7 @@ router.delete("/:id",
     contactController.deleteContact
 );
 
-router.get("/:id",
+router.get("/:id/conversations",
     auth,
     [
         param("id")

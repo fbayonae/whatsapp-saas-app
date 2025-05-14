@@ -89,10 +89,7 @@ export default function Chats() {
             <SquarePen className="w-5 h-5" />
           </button>
         </div>
-        <div className="px-4 mb-4">
-
-        </div>
-
+        
         {conversations.map(conv => (
           <div
             key={conv.id}

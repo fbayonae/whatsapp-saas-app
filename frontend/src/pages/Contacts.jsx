@@ -31,7 +31,7 @@ export default function Contacts() {
     try {
       await axios.delete(`/contacts/${contactId}`);
       toast.success("✅ Contacto eliminado correctamente");
-      fetchContacts();
+      setContacts((prev) => prev.filter((c) => c.id !== contactId));
     } catch (error) {
       console.error("❌ Error eliminando contacto:", error);
       toast.error("❌ Error al eliminar el contacto");

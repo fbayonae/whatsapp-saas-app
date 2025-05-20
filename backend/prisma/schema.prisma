@@ -107,6 +107,7 @@ model Template {
   createdAt   DateTime    @default(now())
 
   components  Component[]
+  campaigns Campaign[] @relation("TemplateCampaigns")
 
   @@map("templates")
   @@schema("whatsapp")
@@ -148,6 +149,8 @@ model Contact {
   createdAt   DateTime   @default(now())
 
   conversations Conversation[]
+  campaigns CampaignContact[] @relation("ContactCampaigns")
+
 
   @@map("contacts")
   @@schema("whatsapp")
@@ -189,6 +192,7 @@ model Message {
   conversationId Int
 
   conversation   Conversation @relation(fields: [conversationId], references: [id])
+  campaignReference CampaignContact[] @relation("MessageCampaigns")
 
   @@index([conversationId, timestamp])
 

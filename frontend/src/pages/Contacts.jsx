@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "@utils/axiosInstance.jsx";
 import CreateContactModal from "@components/contacts/CreateContactModal.jsx";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
@@ -24,6 +25,18 @@ export default function Contacts() {
   useEffect(() => {
     fetchContacts();
   }, []);
+
+  const handleDeleteContact = async (contactId) => {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este contacto? Esto eliminará también sus conversaciones.")) return;
+    try {
+      await axios.delete(`/contacts/${contactId}`);
+      toast.success("✅ Contacto eliminado correctamente");
+      fetchContacts();
+    } catch (error) {
+      console.error("❌ Error eliminando contacto:", error);
+      toast.error("❌ Error al eliminar el contacto");
+    }
+  };
 
   const filteredContacts = contacts.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
@@ -82,6 +95,12 @@ export default function Contacts() {
                       className="text-blue-600 hover:text-blue-800"
                     >
                       <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteContact(contact.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="w-4 h-4 ml-3" />
                     </button>
                   </td>
                 </tr>

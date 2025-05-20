@@ -195,3 +195,34 @@ model Message {
   @@map("messages")
   @@schema("whatsapp")
 }
+
+model Campaign {
+  id          Int               @id @default(autoincrement())
+  name        String
+  templateId  Int
+  status      String            @default("draft")
+  createdAt   DateTime          @default(now())
+
+  template    Template          @relation(fields: [templateId], references: [id])
+  contacts    CampaignContact[]
+
+  @@map("campaigns")
+  @@schema("whatsapp")
+}
+
+model CampaignContact {
+  id          Int       @id @default(autoincrement())
+  campaignId  Int
+  contactId   Int
+  status      String     @default("pending")
+  errorMsg    String?
+  messageId   Int?
+
+  campaign    Campaign   @relation(fields: [campaignId], references: [id])
+  contact     Contact    @relation(fields: [contactId], references: [id])
+  message     Message?   @relation(fields: [messageId], references: [id])
+
+  @@map("campaign_contacts")
+  @@schema("whatsapp")
+}
+

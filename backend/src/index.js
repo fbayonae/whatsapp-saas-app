@@ -11,6 +11,7 @@ const contactRoutes = require("./routes/contactRoutes");
 const chatRoutes = require("./routes/chatsRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
 const mediaRoutes = require("./routes/mediaRoutes");
+const campaignRoutes = require("./routes/campaignRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
 const userRoutes = require("./routes/userRoutes");
 const fmRoutes = require("./routes/filemakerRoutes");
@@ -86,6 +87,7 @@ app.use('/api/templates', rateLimiter.apiLimiter, templatesRoutes);
 app.use("/api/contacts", rateLimiter.apiLimiter, contactRoutes);
 app.use("/api/chats", rateLimiter.apiLimiter, chatRoutes);
 app.use("/api/messages", rateLimiter.apiLimiter, messageRoutes);
+app.use("/api/campaigns",rateLimiter.apiLimiter,  campaignRoutes);
 app.use("/api/media",rateLimiter.apiLimiter,  mediaRoutes);
 app.use("/api/logs", logsRoutes);
 

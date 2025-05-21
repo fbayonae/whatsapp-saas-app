@@ -75,7 +75,7 @@ export default function CampaignEditModal({ campaignId, onClose }) {
                         {campaign.contacts.length > 0 ? (
                             campaign.contacts.map((c) => (
                                 <div key={c.id} className="flex justify-between px-4 py-2 border-b text-sm">
-                                    <span>{c.contact?.name || c.contact?.phoneNumber}</span>
+                                    <span>{c.contact?.name || c.contact?.phoneNumber} - {c.contact?.phoneNumber}</span>
                                     <span className={`capitalize text-gray-600`}>{c.status}</span>
                                 </div>
                             ))

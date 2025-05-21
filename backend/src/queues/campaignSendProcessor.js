@@ -4,7 +4,7 @@ const connection = require("./connection");
 const whatsappService = require("../services/whatsappService");
 const dbService = require("../services/dbService");
 
-const CampaignSendWorker = new Worker("campaign-messages", async (job) => {
+const CampaignSendWorker = async (data) => {
   const {
     campaignContactId,
     contactPhone,
@@ -12,7 +12,7 @@ const CampaignSendWorker = new Worker("campaign-messages", async (job) => {
     templateName,
     language,
     parameters,
-  } = job.data;
+  } = data;
 
   try {
     const result = await whatsappService.sendTemplateMessage({
@@ -37,6 +37,6 @@ const CampaignSendWorker = new Worker("campaign-messages", async (job) => {
       error: error.message || "Error desconocido",
     });
   }
-}, { connection });
+};
 
 module.exports = {CampaignSendWorker};

@@ -1,7 +1,4 @@
 // src/queues/messageProcessor.js
-const { Worker } = require("bullmq");
-const connection = require("./connection");
-
 const whatsappService = require("../services/whatsappService");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();

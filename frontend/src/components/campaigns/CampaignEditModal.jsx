@@ -21,6 +21,19 @@ export default function CampaignEditModal({ campaignId, onClose }) {
         }
     };
 
+    const handleSendCampaign = async () => {
+        if (!window.confirm("¿Estás seguro de que deseas enviar esta campaña?")) return;
+        try {
+            await axios.post(`/campaigns/${campaign.id}/send`);
+            toast.success("✅ Campaña encolada para envío");
+            onClose(); // o refresca campaña si deseas ver estado actualizado
+        } catch (err) {
+            console.error("❌ Error enviando campaña:", err);
+            toast.error("❌ Error al intentar enviar la campaña");
+        }
+    };
+
+
     if (!campaign) return null;
 
     return (
@@ -64,12 +77,15 @@ export default function CampaignEditModal({ campaignId, onClose }) {
                 <div className="space-y-3">
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold">Destinatarios</h3>
-                        <button
-                            className="text-sm px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded"
-                            onClick={handleAddContacts}
-                        >
-                            <Plus className="w-4 h-4 mr-1 inline-block" /> Añadir contactos
-                        </button>
+                        {campaign.status !== "sent" && (
+                            <button
+                                className="text-sm px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded"
+                                onClick={handleAddContacts}
+                            >
+                                <Plus className="w-4 h-4 mr-1 inline-block" /> Añadir contactos
+                            </button>
+                        )}
+
                     </div>
                     <div className="bg-white border rounded max-h-60 overflow-y-auto">
                         {campaign.contacts.length > 0 ? (
@@ -86,14 +102,34 @@ export default function CampaignEditModal({ campaignId, onClose }) {
                 </div>
 
                 {/* Botón cerrar */}
-                <div className="flex justify-end pt-4">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-                    >
-                        Cerrar
-                    </button>
-                </div>
+                {campaign.status !== "sent" && (
+                    <div className="flex justify-between items-center pt-6 border-t mt-6">
+                        <button
+                            onClick={handleSendCampaign}
+                            className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded"
+                        >
+                            Enviar campaña
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                        >
+                            Cerrar
+                        </button>
+                    </div>
+                )}
+
+                {campaign.status === "sent" && (
+                    <div className="flex justify-end pt-6 border-t mt-6">
+                        <button
+                            onClick={onClose}
+                            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                        >
+                            Cerrar
+                        </button>
+                    </div>
+                )}
+
             </div>
         </div>
 

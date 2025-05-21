@@ -4,6 +4,7 @@ import SidebarLayout from "./components/utils/SidebarLayout.jsx";
 import Templates from "@pages/Templates.jsx";
 import Contacts from "@pages/Contacts.jsx";
 import Chats from "@pages/Chats.jsx";
+import Campaigns from "@pages/Campaigns.jsx";
 import Login from "@pages/Login.jsx";
 import Config from "@pages/Config.jsx";
 import PrivateRoute from "@components/utils/PrivateRoute.jsx";
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="plantillas" element={<Templates />} />
         <Route path="contactos" element={<Contacts />} />
         <Route path="chats" element={<Chats />} />
+        <Route path="campaigns" element={<Campaigns />} />
         <Route path="configuracion" element={<Config />} />
       </Route>
     </Routes>

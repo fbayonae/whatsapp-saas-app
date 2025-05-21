@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, MessageCircle, Users, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, MessageCircle, Megaphone, Users, LogOut, Settings } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -40,6 +40,10 @@ export default function SidebarLayout() {
             <Link to="/chats" className="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
               <MessageCircle size={20} />
               <span className="ml-3">Chats</span>
+            </Link>
+            <Link to="/campaigns" className="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+              <Megaphone size={20} />
+              <span className="ml-3">Campañas</span>
             </Link>
           </nav>
         </div>

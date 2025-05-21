@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import axios from "@utils/axiosInstance.jsx";
 import { toast } from "react-toastify";
+import CampaignModal from "@components/campaigns/CampaignModal";
 
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState([]);
   const [search, setSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const fetchCampaigns = async () => {
     try {
@@ -41,7 +43,11 @@ export default function CampaignsPage() {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Campañas</h1>
-        <button className="flex items-center bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        <button 
+            className="flex items-center bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+            onClick={() => setShowModal(true)}
+        >
+            
           <Plus className="w-4 h-4 mr-2" /> Nueva campaña
         </button>
       </div>
@@ -93,6 +99,12 @@ export default function CampaignsPage() {
           </tbody>
         </table>
       </div>
+      {showModal && (
+        <CampaignModal
+          onClose={() => setShowModal(false)}
+          onSuccess={fetchCampaigns}
+        />
+      )}
     </div>
   );
 }

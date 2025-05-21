@@ -79,7 +79,10 @@ export default function CampaignsPage() {
                                 <td className="px-4 py-2">{c.template?.name || "-"}</td>
                                 <td className="px-4 py-2 capitalize">{c.status}</td>
                                 <td className="px-4 py-2 flex space-x-3">
-                                    <button className="text-indigo-600 hover:text-indigo-800">
+                                    <button
+                                        className="text-indigo-600 hover:text-indigo-800"
+                                        onClick={() => setEditCampaignId(c.id)}
+                                    >
                                         <Pencil className="w-4 h-4" />
                                     </button>
                                     <button

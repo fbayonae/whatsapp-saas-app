@@ -52,6 +52,14 @@ export default function CampaignEditModal({ campaignId, onClose }) {
                     </div>
                 </div>
 
+                {/* Preview del mensaje */}
+                <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">Vista previa del mensaje</h3>
+                    <div className="bg-[#e5ddd5] rounded p-4 text-sm text-gray-900 whitespace-pre-line">
+                        {campaign.template?.components.find((c) => c.type === "BODY")?.text || "Sin contenido."}
+                    </div>
+                </div>
+
                 {/* Contactos asignados */}
                 <div className="space-y-3">
                     <div className="flex justify-between items-center">
@@ -74,14 +82,6 @@ export default function CampaignEditModal({ campaignId, onClose }) {
                         ) : (
                             <p className="p-4 text-sm text-gray-500">No hay contactos asignados.</p>
                         )}
-                    </div>
-                </div>
-
-                {/* Preview del mensaje */}
-                <div className="space-y-2">
-                    <h3 className="text-lg font-semibold">Vista previa del mensaje</h3>
-                    <div className="bg-[#e5ddd5] rounded p-4 text-sm text-gray-900 whitespace-pre-line">
-                        {campaign.template?.components.find((c) => c.type === "BODY")?.text || "Sin contenido."}
                     </div>
                 </div>
 

@@ -415,7 +415,7 @@ const getConversationFromDB = async (conversationId) => {
   });
 };
 
-const createConversationFromDB = async ( contactId ) => {
+const createConversationFromDB = async (contactId) => {
   try {
     const conversation = await prisma.conversation.create({
       data: {
@@ -510,7 +510,11 @@ const getCampaignById = async (id) => {
     return await prisma.campaign.findUnique({
       where: { id },
       include: {
-        template: true,
+        template: {
+          include: {
+            components: true
+          }
+        },
         contacts: {
           include: { contact: true, message: true },
         },

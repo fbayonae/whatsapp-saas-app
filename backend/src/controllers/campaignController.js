@@ -101,7 +101,7 @@ const sendCampaign = async (req, res) => {
             });
         }
 
-        await db.updateCampaignStatus(campaignId, "in_progress");
+        await db.updateCampaign(campaignId, "in_progress");
 
         res.json({ message: `📨 Encolados ${queue.length} mensajes.` });
     } catch (err) {

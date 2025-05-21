@@ -9,6 +9,7 @@ const CampaignSendWorker = new Worker("campaign-messages", async (job) => {
     campaignContactId,
     contactPhone,
     templateId,
+    templateName,
     language,
     parameters,
   } = job.data;
@@ -17,6 +18,7 @@ const CampaignSendWorker = new Worker("campaign-messages", async (job) => {
     const result = await whatsappService.sendTemplateMessage({
       phone: contactPhone,
       template: templateId,
+      template_name: templateName,
       language,
       parameters,
     });

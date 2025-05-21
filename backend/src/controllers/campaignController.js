@@ -96,6 +96,7 @@ const sendCampaign = async (req, res) => {
                 campaignContactId: item.id,
                 contactPhone: item.contact.phoneNumber,
                 templateId: item.campaign.template.id_meta,
+                template_name: item.campaign.template.name,
                 language: item.campaign.template.language,
                 parameters: [], // en el futuro dinámico
             });

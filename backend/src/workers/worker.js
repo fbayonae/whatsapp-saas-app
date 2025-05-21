@@ -24,7 +24,7 @@ const campaignWorker = new Worker(
     async (job) => {
         try {
             if (job.name === "send-campaign-message") {
-                await campaignSendProcessor(job.data);
+                await campaignSendProcessor.CampaignSendWorker(job.data);
             }
         } catch (err) {
             console.error("❌ Error procesando envío de campaña:", err);

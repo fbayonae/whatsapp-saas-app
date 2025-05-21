@@ -39,4 +39,4 @@ const CampaignSendWorker = new Worker("campaign-messages", async (job) => {
   }
 }, { connection });
 
-module.exports = CampaignSendWorker;
+module.exports = {CampaignSendWorker};

@@ -1,4 +1,4 @@
-S// src/queues/CampaignSendProcessor.js
+// src/queues/CampaignSendProcessor.js
 const { Worker } = require("bullmq");
 const connection = require("./connection");
 const whatsappService = require("../services/whatsappService");

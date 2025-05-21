@@ -1,6 +1,6 @@
 // CampaignEditModal.jsx
 import React, { useEffect, useState } from "react";
-import axios from "@/utils/axiosInstance";
+import axios from "@utils/axiosInstance";
 import { Plus } from "lucide-react";
 
 export default function CampaignEditModal({ campaignId, onClose }) {

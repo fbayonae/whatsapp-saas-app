@@ -1,7 +1,7 @@
 // src/pages/Campaigns.jsx
 import React, { useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import axios from "@/utils/axiosInstance";
+import axios from "@utils/axiosInstance.jsx";
 import { toast } from "react-toastify";
 
 export default function CampaignsPage() {

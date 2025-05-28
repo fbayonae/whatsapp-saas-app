@@ -176,7 +176,7 @@ const sendTemplateMessage = async ({ phone, template, template_name, language, p
     : typeof parameters === 'string'
       ? JSON.parse(parameters)
       : [];
-
+  console.log('DATOS: ',phone, template, template_name, language, parsedParameters);
   try {
     // Construir el objeto base del template
     const templatePayload = {

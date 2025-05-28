@@ -9,7 +9,7 @@ const CampaignSendWorker = async (data) => {
     campaignContactId,
     contactPhone,
     templateId,
-    templateName,
+    template_name,
     language,
     parameters,
   } = data;
@@ -18,7 +18,7 @@ const CampaignSendWorker = async (data) => {
     const result = await whatsappService.sendTemplateMessage({
       phone: contactPhone,
       template: templateId,
-      template_name: templateName,
+      template_name,
       language,
       parameters,
     });

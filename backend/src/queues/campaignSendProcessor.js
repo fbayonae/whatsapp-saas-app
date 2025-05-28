@@ -13,7 +13,7 @@ const CampaignSendWorker = async (data) => {
     language,
     parameters,
   } = data;
-
+  console.log(data);
   try {
     const result = await whatsappService.sendTemplateMessage({
       phone: contactPhone,

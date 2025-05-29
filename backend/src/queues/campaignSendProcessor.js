@@ -67,9 +67,7 @@ const CampaignSendWorker = async (data) => {
     });
 
     // 5. Marcar contacto como enviado
-    await dbService.markContactAsSent(campaignContactId, {
-      messageId: savedMessage.id,
-    });
+    await dbService.markContactAsSent(campaignContactId, savedMessage.id);
 
     console.log(`✅ Enviado y registrado mensaje a ${contactPhone}`);
   } catch (error) {

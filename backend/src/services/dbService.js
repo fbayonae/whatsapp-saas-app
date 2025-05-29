@@ -602,13 +602,13 @@ const getCampaignSendQueue = async (campaignId) => {
   }
 };
 
-const markContactAsSent = async (id, id_meta = null) => {
+const markContactAsSent = async (id, messageId = null) => {
   try {
     return await prisma.campaignContact.update({
       where: { id },
       data: {
         status: "sent",
-        messageId: id_meta,
+        messageId: messageId,
       },
     });
   } catch (error) {

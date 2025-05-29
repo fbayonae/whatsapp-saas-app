@@ -220,7 +220,7 @@ model CampaignContact {
   contactId   Int
   status      String     @default("pending")
   errorMsg    String?
-  messageId   String?
+  messageId   Int?
 
   campaign    Campaign    @relation(fields: [campaignId], references: [id])
   contact     Contact     @relation("ContactCampaigns", fields: [contactId], references: [id])

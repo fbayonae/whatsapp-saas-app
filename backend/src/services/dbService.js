@@ -652,6 +652,40 @@ const getCampaignStatus = async (campaignId) => {
   }
 };
 
+const checkAndMarkCampaignAsSent = async (campaignId) => {
+  try {
+    const remaining = await prisma.campaignContact.count({
+      where: {
+        campaignId,
+        status: { in: ["pending", "sending"] },
+      },
+    });
+
+    if (remaining === 0) {
+      await prisma.campaign.update({
+        where: { id: campaignId },
+        data: { status: "sent" },
+      });
+      console.log(`✅ Campaña ${campaignId} marcada como enviada.`);
+    }
+  } catch (error) {
+    console.error("❌ Error verificando estado de campaña:", error);
+    throw error;
+  }
+};
+
+const getCampaignContactById = async (id) => {
+  try {
+    return await prisma.campaignContact.findUnique({
+      where: { id },
+      select: { campaignId: true }
+    });
+  } catch (err) {
+    console.error("❌ Error obteniendo campaignContact:", err);
+    throw err;
+  }
+};
+
 
 
 module.exports = {
@@ -692,4 +726,6 @@ module.exports = {
   markContactAsSent,
   markContactAsError,
   getCampaignStatus,
+  checkAndMarkCampaignAsSent,
+  getCampaignContactById
 };

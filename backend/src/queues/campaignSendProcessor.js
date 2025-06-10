@@ -16,7 +16,7 @@ const CampaignSendWorker = async (data) => {
 
   try {
 
-     // 1. Obtener la conversación del contacto
+    // 1. Obtener la conversación del contacto
     const conversations = await dbService.getConversationsByContactFromDB({ phoneNumber: contactPhone });
     const conversation = conversations?.[0];
     if (!conversation) {
@@ -69,6 +69,10 @@ const CampaignSendWorker = async (data) => {
     // 5. Marcar contacto como enviado
     await dbService.markContactAsSent(campaignContactId, savedMessage.id);
 
+    const campaignContact = await dbService.getCampaignContactById(campaignContactId);
+    await dbService.checkAndMarkCampaignAsSent(campaignContact.campaignId);
+
+
     console.log(`✅ Enviado y registrado mensaje a ${contactPhone}`);
   } catch (error) {
     console.error(`❌ Error al enviar a ${contactPhone}:`, error?.message || error);
@@ -76,45 +80,14 @@ const CampaignSendWorker = async (data) => {
     await dbService.markContactAsError(campaignContactId, {
       error: error.message || "Error desconocido",
     });
+
+    const campaignContact = await dbService.getCampaignContactById(campaignContactId);
+    await dbService.checkAndMarkCampaignAsSent(campaignContact.campaignId);
+
+
   }
+
+
 };
 
-
-/*const CampaignSendWorker = async (data) => {
-  const {
-    campaignContactId,
-    contactPhone,
-    templateId,
-    template_name,
-    language,
-    parameters,
-  } = data;
-  console.log(data);
-  try {
-
-    // Enviar mensaje de plantilla a través del servicio de WhatsApp
-    const result = await whatsappService.sendTemplateMessage({
-      phone: contactPhone,
-      template: templateId,
-      template_name,
-      language,
-      parameters,
-    });
-
-    // Actualizar el estado del envío como enviado
-    await dbService.markContactAsSent(campaignContactId, {
-      id_meta: result.messages?.[0]?.id || null,
-    });
-
-    console.log(`✅ Enviado a ${contactPhone}`);
-  } catch (error) {
-    console.error(`❌ Error al enviar a ${contactPhone}:`, error?.message || error);
-
-    // Marcar como error
-    await dbService.markContactAsError(campaignContactId, {
-      error: error.message || "Error desconocido",
-    });
-  }
-};*/
-
-module.exports = {CampaignSendWorker};
+module.exports = { CampaignSendWorker };

@@ -26,7 +26,10 @@ export default function CampaignEditModal({ campaignId, onClose }) {
         try {
             await axios.post(`/campaigns/${campaign.id}/send`);
             toast.success("✅ Campaña encolada para envío");
-            onClose(); // o refresca campaña si deseas ver estado actualizado
+            setTimeout(() => {
+                onClose();     // ⬅️ Cierra el modal automáticamente
+            }, 500);         // Pequeña espera para evitar conflictos visuales
+
         } catch (err) {
             console.error("❌ Error enviando campaña:", err);
             toast.error("❌ Error al intentar enviar la campaña");

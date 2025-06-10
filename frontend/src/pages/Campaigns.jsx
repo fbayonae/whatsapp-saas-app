@@ -23,6 +23,12 @@ export default function CampaignsPage() {
 
     useEffect(() => {
         fetchCampaigns();
+
+        const interval = setInterval(() => {
+            fetchCampaigns(); // actualiza campañas cada 15 segundos
+        }, 15000);
+
+        return () => clearInterval(interval);
     }, []);
 
     const handleDelete = async (id) => {

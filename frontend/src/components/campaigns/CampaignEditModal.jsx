@@ -26,6 +26,8 @@ export default function CampaignEditModal({ campaignId, onClose }) {
         try {
             await axios.post(`/campaigns/${campaign.id}/send`);
             toast.success("✅ Campaña encolada para envío");
+            // Simular cambio de estado localmente para ocultar botón y cerrar
+            setCampaign(prev => ({ ...prev, status: "sending" }));
             setTimeout(() => {
                 onClose();     // ⬅️ Cierra el modal automáticamente
             }, 500);         // Pequeña espera para evitar conflictos visuales

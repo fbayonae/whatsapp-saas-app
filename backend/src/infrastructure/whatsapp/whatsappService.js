@@ -4,7 +4,6 @@ const axios = require('axios');
 const fs = require("fs");
 const FormData = require("form-data");
 const path = require("path");
-const dbService = require("./dbService");
 
 const token = process.env.TOKEN_DEV;
 const phoneId = process.env.PHONE_NUMBER_ID;

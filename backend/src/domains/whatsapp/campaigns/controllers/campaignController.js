@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 
-const db = require("../services/dbService");
-const CampaignSendQueue = require("../queues/campaignSendQueue");
+//const db = require("../services/dbService");
+const CampaignSendQueue = require("../../../infrastructure/queues/campaignSendQueue");
 
 const getAllCampaigns = async (req, res) => {
     try {

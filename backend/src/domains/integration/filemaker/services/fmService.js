@@ -1,6 +1,7 @@
 const axios = require("axios");
-const dbService = require("./dbService");
 const https = require("https");
+
+const dbService = require("../../../shared/services/preferenceService");
 
 let token = null;
 

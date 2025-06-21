@@ -5,8 +5,8 @@ const { param } = require('express-validator');
 const preferencesController = require('../controllers/preferencesController');
 
 // Middleware 
-const auth = require("../../../core/middleware/authMiddleware").auth;
-const isAdmin = require("../../../core/middleware/authMiddleware").isAdmin;
+const auth = require("../../../core/middleware/auth").auth;
+const isAdmin = require("../../../core/middleware/auth").isAdmin;
 
 const router = express.Router();
 

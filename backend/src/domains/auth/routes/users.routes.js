@@ -1,8 +1,13 @@
 const express = require("express");
 const { param, body } = require('express-validator');
+
 const router = express.Router();
+
+// Controllers
 const userController = require("../controllers/userController");
-const auth = require("../utils/authMiddleware").auth;
+
+// Middlewares
+const auth = require("../../../core/middleware/authMiddleware").auth;
 //const validate = require("../utils/validators");
 
 router.get("/",

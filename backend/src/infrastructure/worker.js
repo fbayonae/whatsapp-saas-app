@@ -1,9 +1,9 @@
 // src/workers/worker.js
 require("dotenv").config();
 const { Worker } = require("bullmq");
-const connection = require("../queues/connection");
-const messageProcessor = require("../queues/messageProcessor");
-const campaignSendProcessor = require("../queues/campaignSendProcessor");
+const connection = require("./queues/connection");
+const messageProcessor = require("./queues/messageProcessor");
+const campaignSendProcessor = require("./queues/campaignSendProcessor");
 
 const messageWorker = new Worker(
     "messages",

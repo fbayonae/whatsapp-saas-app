@@ -5,7 +5,7 @@ const router = express.Router();
 const filemakerService = require("./services/fmService");
 
 // Middleware
-const auth = require("../../../core/middleware/authMiddleware").auth;
+const auth = require("../../../core/middleware/auth").auth;
 
 router.post("/loggin", auth, async (req, res) => {
   try {

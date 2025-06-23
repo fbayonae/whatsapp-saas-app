@@ -1,11 +1,11 @@
 const { validationResult } = require("express-validator");
 
-//const db = require("../services/dbService");
+const dbCampaigns = require("../services/campaignsService");
 const CampaignSendQueue = require("../../../infrastructure/queues/campaignSendQueue");
 
 const getAllCampaigns = async (req, res) => {
     try {
-        const campaigns = await db.getAllCampaigns();
+        const campaigns = await dbCampaigns.getAllCampaigns();
         res.json(campaigns);
     } catch (err) {
         res.status(500).json({ error: "Error al obtener campañas" });
@@ -14,7 +14,7 @@ const getAllCampaigns = async (req, res) => {
 
 const getCampaignById = async (req, res) => {
     try {
-        const campaign = await db.getCampaignById(parseInt(req.params.id));
+        const campaign = await dbCampaigns.getCampaignById(parseInt(req.params.id));
         if (!campaign) return res.status(404).json({ error: "Campaña no encontrada" });
         res.json(campaign);
     } catch (err) {
@@ -28,7 +28,7 @@ const createCampaign = async (req, res) => {
 
     const { name, templateId } = req.body;
     try {
-        const campaign = await db.createCampaign({ name, templateId });
+        const campaign = await dbCampaigns.createCampaign({ name, templateId });
         res.status(201).json(campaign);
     } catch (err) {
         res.status(500).json({ error: "Error al crear campaña" });
@@ -38,7 +38,7 @@ const createCampaign = async (req, res) => {
 const updateCampaign = async (req, res) => {
     try {
         const data = req.body;
-        const updated = await db.updateCampaign(parseInt(req.params.id), data);
+        const updated = await dbCampaigns.updateCampaign(parseInt(req.params.id), data);
         res.json(updated);
     } catch (err) {
         res.status(500).json({ error: "Error al actualizar campaña" });
@@ -47,7 +47,7 @@ const updateCampaign = async (req, res) => {
 
 const deleteCampaign = async (req, res) => {
     try {
-        await db.deleteCampaign(parseInt(req.params.id));
+        await dbCampaigns.deleteCampaign(parseInt(req.params.id));
         res.json({ message: "Campaña eliminada" });
     } catch (err) {
         res.status(500).json({ error: "Error al eliminar campaña" });
@@ -61,7 +61,7 @@ const addContactsToCampaign = async (req, res) => {
     const campaignId = parseInt(req.params.id);
     const { contactIds } = req.body;
     try {
-        const result = await db.addContactsToCampaign(campaignId, contactIds);
+        const result = await dbCampaigns.addContactsToCampaign(campaignId, contactIds);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: "Error al añadir contactos" });
@@ -70,7 +70,7 @@ const addContactsToCampaign = async (req, res) => {
 
 const removeContactFromCampaign = async (req, res) => {
     try {
-        const result = await db.removeContactFromCampaign(
+        const result = await dbCampaigns.removeContactFromCampaign(
             parseInt(req.params.id),
             parseInt(req.params.contactId)
         );
@@ -84,7 +84,7 @@ const sendCampaign = async (req, res) => {
     const campaignId = parseInt(req.params.id);
 
     try {
-        const queue = await db.getCampaignSendQueue(campaignId);
+        const queue = await dbCampaigns.getCampaignSendQueue(campaignId);
 
         if (!queue || queue.length === 0) {
             return res.status(400).json({ error: "No hay contactos pendientes." });
@@ -101,7 +101,7 @@ const sendCampaign = async (req, res) => {
             });
         }
 
-        await db.updateCampaign(campaignId, {status:"In_progress"});
+        await dbCampaigns.updateCampaign(campaignId, { status: "In_progress" });
 
         res.json({ message: `📨 Encolados ${queue.length} mensajes.` });
     } catch (err) {
@@ -112,7 +112,7 @@ const sendCampaign = async (req, res) => {
 
 const getCampaignStatus = async (req, res) => {
     try {
-        const summary = await db.getCampaignStatus(parseInt(req.params.id));
+        const summary = await dbCampaigns.getCampaignStatus(parseInt(req.params.id));
         res.json(summary);
     } catch (err) {
         res.status(500).json({ error: "Error al obtener estado" });

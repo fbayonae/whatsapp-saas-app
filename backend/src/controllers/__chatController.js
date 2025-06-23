@@ -1,5 +1,5 @@
 // chatController.js
-const  dbService  = require('../services/dbService');
+const dbService = require('../services/dbService');
 
 const getConversations = async (req, res) => {
   try {
@@ -40,7 +40,7 @@ const getMessagesByConversation = async (req, res) => {
 
 const checkWindow24h = async (req, res) => {
 
-  const {conversationId} = req.params;
+  const { conversationId } = req.params;
 
   try {
     const within24Hours = await dbService.checkConversationWindow(parseInt(conversationId));
@@ -51,9 +51,9 @@ const checkWindow24h = async (req, res) => {
   }
 };
 
-module.exports = { 
-    getConversations, 
-    getMessagesByConversation,
-    checkWindow24h,
-    createConversation 
+module.exports = {
+  getConversations,
+  getMessagesByConversation,
+  checkWindow24h,
+  createConversation
 };

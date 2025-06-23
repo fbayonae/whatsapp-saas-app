@@ -41,14 +41,13 @@ const validateMediaFile = (file) => {
 };
 
 const detectMediaType = (mimetype) => {
-    if (mimetype.startsWith("image/")) return "image";
-    if (mimetype.startsWith("audio/")) return "audio";
-    if (mimetype.startsWith("audio/")) return "video";
-    return "document"; // fallback general
+  if (mimetype.startsWith("image/")) return "image";
+  if (mimetype.startsWith("audio/")) return "audio";
+  if (mimetype.startsWith("audio/")) return "video";
+  return "document"; // fallback general
 };
-  
-  module.exports = { 
-    detectMediaType,
-    validateMediaFile 
+
+module.exports = {
+  detectMediaType,
+  validateMediaFile
 };
-  

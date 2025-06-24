@@ -3,26 +3,42 @@ generator client {
   previewFeatures = ["multiSchema"]
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
   schemas  = ["auth", "whatsapp"]
 }
 
-model Preference {
-  id                Int      @id @default(autoincrement())
-  name              String   @unique
-  filemakerHost     String?
-  filemakerPort     Int?
-  filemakerDatabase String?
-  filemakerUser     String?
-  filemakerPass     String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("superadmin") // Puedes extender a otros roles admin
+  createdAt    DateTime @default(now())
 
-  @@map("preferences")
-  @@schema("whatsapp")
+  @@map("adminusers")
+  @@schema("auth")
+}
+
+model Tenant {
+  id                Int     @id @default(autoincrement())
+  name              String
+  slug              String   @unique
+  domain            String?  // e.g. empresa1.tudominio.com
+  phoneId           String?
+  token             String?
+  wa_businessId     String?
+  wa_versionGraph   String?   
+  wa_tokendev       String?
+  wa_verify_token   String?
+  wa_phone_number   String?
+  createdAt     DateTime @default(now())
+
+  users         User[]
+
+  @@map("tenants")
+  @@schema("auth")
 }
 
 model User {
@@ -32,6 +48,9 @@ model User {
   name          String
   role          String    @default("user") // puede ser "admin", "user", etc.
   createdAt     DateTime  @default(now())
+
+  tenantId      Int?
+  tenant        Tenant?    @relation(fields: [tenantId], references: [id])
 
   loginAttempts LoginAttempt[]
   sessions      Session[]
@@ -93,6 +112,20 @@ model RefreshToken {
   @@schema("auth")
 }
 
+model Preference {
+  id                Int      @id @default(autoincrement())
+  name              String   @unique
+  filemakerHost     String?
+  filemakerPort     Int?
+  filemakerDatabase String?
+  filemakerUser     String?
+  filemakerPass     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("preferences")
+  @@schema("whatsapp")
+}
 
 model Template {
   id          Int         @id @default(autoincrement())

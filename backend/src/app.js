@@ -2,12 +2,21 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+
 const requestLogger = require("./core/utils/requestLogger");
-const rateLimiter = require("./core/utils/rateLimiter");
+const rateLimiter = require("./core/middleware/rateLimiter");
+
+const env = require("./config/env");
+const logger = require("./config/logger");
+
+const { errorHandler } = require('./core/middleware/error');
+const { authMiddleware } = require('./core/middleware/auth');
+const { tenantMiddleware } = require('./core/middleware/tenant');
 
 // Rutas
 const authRoutes = require("./domains/auth/routes");
-const userRoutes = require("./domains/auth/routes/userRoutes");
+const userRoutes = require("./domains/user/routes");
+const tenantRoutes = require("./domains/tenant/routes");
 
 const templatesRoutes = require("./domains/whatsapp/templates/routes");
 const webhookRoutes = require("./domains/whatsapp/webhooks/routes");
@@ -19,7 +28,7 @@ const campaignRoutes = require("./domains/whatsapp/campaigns/routes");
 const preferenceRoutes = require("./domains/whatsapp/preferences/routes");
 
 const fmRoutes = require("./domains/integration/filemaker/routes");
-const logsRoutes = require("./domains/tenant/logs/routes");
+const logsRoutes = require("./core/logs/routes");
 
 const app = express();
 app.set("trust proxy", "loopback");
@@ -71,15 +80,23 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(requestLogger);
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
+app.use(requestLogger);
+//app.use(rateLimiter.globalLimiter);
+
+// Autenticación y tenant (debe ir antes de rutas protegidas)
+app.use(authMiddleware);
+app.use(tenantMiddleware);
 
 // ----------------------
 // Rutas
 // ----------------------
 app.use("/auth", authRoutes);
+app.use("/tenants", tenantRoutes);
+
 app.use("/webhook", webhookRoutes);
+
 app.use("/api/preferences", rateLimiter.apiLimiter, preferenceRoutes);
 app.use("/api/users", rateLimiter.apiLimiter, userRoutes);
 app.use("/api/fm", rateLimiter.apiLimiter, fmRoutes);
@@ -90,5 +107,10 @@ app.use("/api/messages", rateLimiter.apiLimiter, messageRoutes);
 app.use("/api/campaigns", rateLimiter.apiLimiter, campaignRoutes);
 app.use("/api/media", rateLimiter.apiLimiter, mediaRoutes);
 app.use("/api/logs", logsRoutes);
+
+// ----------------------
+// Manejador de errores
+// ----------------------
+app.use(errorHandler);
 
 module.exports = app;

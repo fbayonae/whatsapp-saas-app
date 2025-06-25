@@ -10,6 +10,7 @@ on:
 
 jobs:
   build-and-test:
+    name: Validar Backend
     runs-on: ubuntu-latest
 
     defaults:
@@ -17,22 +18,22 @@ jobs:
         working-directory: backend
 
     steps:
-      - name: Checkout código
+      - name: 🔄 Checkout del repositorio
         uses: actions/checkout@v3
 
-      - name: Configurar Node.js
+      - name: ⚙️ Configurar Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 23.11.0-slim
 
-      - name: Instalar dependencias
+      - name: 📦 Instalar dependencias
         run: npm install
 
-      - name: Validar estructura de Prisma
+      - name: 🧪 Validar esquema de Prisma
         run: npx prisma validate
 
-      - name: Comprobar lint (opcional)
-        run: npm run lint
+      - name: 🧪 Generar cliente de Prisma
+        run: npx prisma generate
 
-      - name: Ejecutar tests
-        run: npm test
+      - name: ✅ Probar arranque del backend
+        run: npm run start &

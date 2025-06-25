@@ -1,14 +1,10 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 const { isWithin24Hours } = require('../utils/timeUtils');
-
-
 
 /*******************************************************
  * CONVERSATIONS
  *******************************************************/
 
-const getConversationsByContactFromDB = async ({ id, phoneNumber }) => {
+const getConversationsByContactFromDB = async (prisma, { id, phoneNumber }) => {
     try {
         // Buscar contacto por ID o phoneNumber
         const contact = await prisma.contact.findFirst({
@@ -35,7 +31,7 @@ const getConversationsByContactFromDB = async ({ id, phoneNumber }) => {
     }
 };
 
-const getConversationsFromDB = async () => {
+const getConversationsFromDB = async (prisma) => {
     return await prisma.conversation.findMany({
         orderBy: { lastMessageAt: 'desc' },
         include: {
@@ -44,7 +40,7 @@ const getConversationsFromDB = async () => {
     });
 };
 
-const getConversationFromDB = async (conversationId) => {
+const getConversationFromDB = async (prisma, conversationId) => {
     return await prisma.conversation.findUnique({
         where: { id: parseInt(conversationId) },
         include: {
@@ -53,7 +49,7 @@ const getConversationFromDB = async (conversationId) => {
     });
 };
 
-const createConversationFromDB = async (contactId) => {
+const createConversationFromDB = async (prisma, contactId) => {
     try {
         const conversation = await prisma.conversation.create({
             data: {
@@ -71,14 +67,14 @@ const createConversationFromDB = async (contactId) => {
  * MESSAGES
  *******************************************************/
 
-const getMessagesFromDB = async (conversationId) => {
+const getMessagesFromDB = async (prisma, conversationId) => {
     return await prisma.message.findMany({
         where: { conversationId: parseInt(conversationId) },
         orderBy: { timestamp: 'asc' }
     });
 };
 
-const createMessageToDB = async ({ conversationId, type, content, id_meta, contextId, status, media_id, media_mimeType, media_sha256, header_type, header, footer, action, metadata }) => {
+const createMessageToDB = async (prisma, { conversationId, type, content, id_meta, contextId, status, media_id, media_mimeType, media_sha256, header_type, header, footer, action, metadata }) => {
     try {
         const savedMessage = await prisma.message.create({
             data: {
@@ -107,7 +103,7 @@ const createMessageToDB = async ({ conversationId, type, content, id_meta, conte
     }
 };
 
-const checkConversationWindow = async ({ conversationId }) => {
+const checkConversationWindow = async (prisma, { conversationId }) => {
     const lastMessage = await prisma.message.findFirst({
         where: { conversationId },
         orderBy: { createdAt: "desc" }

@@ -1,9 +1,15 @@
-const dbContacts = require('../services/contactService');
-const dbMessages = require('../../messages/services/messageService');
+const { getPrismaClient } = require("../../../prisma/client");
+
+// Services
+const contactService = require('../services/contactService');
+const messageService = require('../../messages/services/messageService');
 
 const getAllContacts = async (req, res) => {
+
+    const prisma = getPrismaClient(req.user.tenantId);
+
     try {
-        const contacts = await dbContacts.getContactsFromDB();
+        const contacts = await contactService.getContactsFromDB(prisma);
         res.json(contacts);
     } catch (error) {
         console.error('❌ Error obteniendo contactos:', error);
@@ -12,6 +18,7 @@ const getAllContacts = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
+    const prisma = getPrismaClient(req.user.tenantId);
     const { phoneNumber, name } = req.body;
 
     if (!phoneNumber || !name) {
@@ -19,7 +26,7 @@ const createContact = async (req, res) => {
     }
 
     try {
-        const contact = await dbContacts.createContactFromDB({ phoneNumber, name });
+        const contact = await contactService.createContactFromDB(prisma, { phoneNumber, name });
         res.status(201).json({ success: true, contact });
     } catch (error) {
         console.error("❌ Error al crear contacto:", error);
@@ -28,11 +35,12 @@ const createContact = async (req, res) => {
 };
 
 const updateContact = async (req, res) => {
+    const prisma = getPrismaClient(req.user.tenantId);
     const { id } = req.params;
     const { name, phoneNumber } = req.body;
 
     try {
-        const updated = await dbContacts.updateContactFromDB(id, { name, phoneNumber });
+        const updated = await contactService.updateContactFromDB(prisma, id, { name, phoneNumber });
         return res.status(200).json(updated);
     } catch (err) {
         console.error("❌ Error al actualizar contacto:", err);
@@ -41,6 +49,7 @@ const updateContact = async (req, res) => {
 };
 
 const deleteContact = async (req, res) => {
+    const prisma = getPrismaClient(req.user.tenantId);
     const { id } = req.params;
 
     if (!id || isNaN(parseInt(id))) {
@@ -48,7 +57,7 @@ const deleteContact = async (req, res) => {
     }
 
     try {
-        await dbContacts.deleteContactFromDB(parseInt(id));
+        await contactService.deleteContactFromDB(prisma, parseInt(id));
         res.json({ success: true, message: "Contacto eliminado correctamente" });
     } catch (error) {
         console.error("❌ Error al eliminar contacto:", error);
@@ -57,6 +66,7 @@ const deleteContact = async (req, res) => {
 };
 
 const getConversationsByContact = async (req, res) => {
+    const prisma = getPrismaClient(req.user.tenantId);
     const { id } = req.params;
 
     if (!id || isNaN(parseInt(id))) {
@@ -64,7 +74,7 @@ const getConversationsByContact = async (req, res) => {
     }
 
     try {
-        const conversations = await dbMessages.getConversationsByContactFromDB({ id: parseInt(id) });
+        const conversations = await messageService.getConversationsByContactFromDB(prisma, { id: parseInt(id) });
         res.json({ success: true, conversations });
     } catch (error) {
         console.error("❌ Error obteniendo conversaciones:", error);

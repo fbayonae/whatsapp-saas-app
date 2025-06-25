@@ -1,7 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
-const createCampaign = async ({ name, templateId }) => {
+const createCampaign = async (prisma, { name, templateId }) => {
     try {
         return await prisma.campaign.create({ data: { name, templateId } });
     } catch (error) {
@@ -10,7 +8,7 @@ const createCampaign = async ({ name, templateId }) => {
     }
 };
 
-const getAllCampaigns = async () => {
+const getAllCampaigns = async (prisma) => {
     try {
         return await prisma.campaign.findMany({
             orderBy: { createdAt: "desc" },
@@ -22,7 +20,7 @@ const getAllCampaigns = async () => {
     }
 };
 
-const getCampaignById = async (id) => {
+const getCampaignById = async (prisma, id) => {
     try {
         return await prisma.campaign.findUnique({
             where: { id },
@@ -43,7 +41,7 @@ const getCampaignById = async (id) => {
     }
 };
 
-const updateCampaign = async (id, data) => {
+const updateCampaign = async (prisma, id, data) => {
     try {
         return await prisma.campaign.update({ where: { id }, data });
     } catch (error) {
@@ -52,7 +50,7 @@ const updateCampaign = async (id, data) => {
     }
 };
 
-const deleteCampaign = async (id) => {
+const deleteCampaign = async (prisma, id) => {
     try {
         await prisma.campaignContact.deleteMany({ where: { campaignId: id } });
         return await prisma.campaign.delete({ where: { id } });
@@ -66,7 +64,7 @@ const deleteCampaign = async (id) => {
  * CAMPAIGN CONTACTS
  *******************************************************/
 
-const addContactsToCampaign = async (campaignId, contactIds) => {
+const addContactsToCampaign = async (prisma, campaignId, contactIds) => {
     try {
         const data = contactIds.map((contactId) => ({ campaignId, contactId }));
         return await prisma.campaignContact.createMany({ data, skipDuplicates: true });
@@ -76,7 +74,7 @@ const addContactsToCampaign = async (campaignId, contactIds) => {
     }
 };
 
-const removeContactFromCampaign = async (campaignId, contactId) => {
+const removeContactFromCampaign = async (prisma, campaignId, contactId) => {
     try {
         return await prisma.campaignContact.deleteMany({ where: { campaignId, contactId } });
     } catch (error) {
@@ -85,7 +83,7 @@ const removeContactFromCampaign = async (campaignId, contactId) => {
     }
 };
 
-const getCampaignContacts = async (campaignId) => {
+const getCampaignContacts = async (prisma, campaignId) => {
     try {
         return await prisma.campaignContact.findMany({
             where: { campaignId },
@@ -98,7 +96,7 @@ const getCampaignContacts = async (campaignId) => {
 };
 
 // Envío y seguimiento
-const getCampaignSendQueue = async (campaignId) => {
+const getCampaignSendQueue = async (prisma, campaignId) => {
     try {
         return await prisma.campaignContact.findMany({
             where: { campaignId, status: "pending" },
@@ -119,7 +117,7 @@ const getCampaignSendQueue = async (campaignId) => {
     }
 };
 
-const markContactAsSent = async (id, messageId = null) => {
+const markContactAsSent = async (prisma, id, messageId = null) => {
     try {
         return await prisma.campaignContact.update({
             where: { id },
@@ -134,7 +132,7 @@ const markContactAsSent = async (id, messageId = null) => {
     }
 };
 
-const markContactAsError = async (id, errorMsg) => {
+const markContactAsError = async (prisma, id, errorMsg) => {
     try {
         return await prisma.campaignContact.update({
             where: { id },
@@ -149,7 +147,7 @@ const markContactAsError = async (id, errorMsg) => {
     }
 };
 
-const getCampaignStatus = async (campaignId) => {
+const getCampaignStatus = async (prisma, campaignId) => {
     try {
         const result = await prisma.campaignContact.groupBy({
             by: ["status"],
@@ -169,7 +167,7 @@ const getCampaignStatus = async (campaignId) => {
     }
 };
 
-const checkAndMarkCampaignAsSent = async (campaignId) => {
+const checkAndMarkCampaignAsSent = async (prisma, campaignId) => {
     try {
         const remaining = await prisma.campaignContact.count({
             where: {
@@ -191,7 +189,7 @@ const checkAndMarkCampaignAsSent = async (campaignId) => {
     }
 };
 
-const getCampaignContactById = async (id) => {
+const getCampaignContactById = async (prisma, id) => {
     try {
         return await prisma.campaignContact.findUnique({
             where: { id },

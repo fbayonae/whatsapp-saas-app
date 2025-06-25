@@ -1,7 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
-const saveTemplateToDB = async (template) => {
+const saveTemplateToDB = async (prisma, template) => {
     console.log("saveTemplateToDB");
     try {
         const saved = await prisma.template.upsert({
@@ -27,7 +25,7 @@ const saveTemplateToDB = async (template) => {
     }
 };
 
-const saveComponentToDB = async (component, templateId) => {
+const saveComponentToDB = async (prisma, component, templateId) => {
     console.log("saveComponentToDB");
 
     // Evitar componentes duplicados
@@ -67,7 +65,7 @@ const saveComponentToDB = async (component, templateId) => {
     return savedComponent;
 };
 
-const getTemplatesFromDB = async () => {
+const getTemplatesFromDB = async (prisma) => {
     return await prisma.template.findMany({
         include: {
             components: {
@@ -79,7 +77,7 @@ const getTemplatesFromDB = async () => {
     });
 };
 
-const getTemplateByIdFromDB = async (id) => {
+const getTemplateByIdFromDB = async (prisma, id) => {
     return await prisma.template.findUnique({
         where: { id_meta: id },
         include: {
@@ -92,7 +90,7 @@ const getTemplateByIdFromDB = async (id) => {
     });
 };
 
-const deleteTemplateFromDB = async (id) => {
+const deleteTemplateFromDB = async (prisma, id) => {
     try {
         const template = await prisma.template.findUnique({
             where: { id_meta: id },

@@ -1,6 +1,8 @@
 const axios = require('axios');
 const fs = require("fs");
 
+const { getPrismaClient } = require("../../../prisma/client");
+
 const templateService = require('../../templates/services/messageService');
 const messageService = require('../services/messageService');
 const whatsappService = require('../../..infrastructure/whatsapp/whatsappService');
@@ -9,8 +11,9 @@ const mediaUtils = require("../../../utils/media");
 
 const sendMessage = async (req, res) => {
     const { conversationId, text } = req.body;
+    const prisma = getPrismaClient(req.user.tenantId);
 
-    const withinWindow = await messageService.checkConversationWindow(parseInt(conversationId));
+    const withinWindow = await messageService.checkConversationWindow(prisma, parseInt(conversationId));
 
     if (!withinWindow) {
         return res.status(403).json({
@@ -24,7 +27,7 @@ const sendMessage = async (req, res) => {
 
     try {
         // 1. Obtener conversación y número
-        const conversation = await messageService.getConversationFromDB(parseInt(conversationId));
+        const conversation = await messageService.getConversationFromDB(prisma, parseInt(conversationId));
 
         if (!conversation) {
             return res.status(404).json({ error: "Conversación no encontrada" });
@@ -34,7 +37,7 @@ const sendMessage = async (req, res) => {
 
         const response = await whatsappService.sendTextMessage(phoneNumber, text);
 
-        const savedMessage = await messageService.createMessageToDB({
+        const savedMessage = await messageService.createMessageToDB(prisma, {
             conversationId,
             type: "text",
             content: text,
@@ -50,6 +53,7 @@ const sendMessage = async (req, res) => {
 };
 
 const sendMessageTemplate = async (req, res) => {
+    const prisma = getPrismaClient(req.user.tenantId);
     const { conversationId, template, language, parameters } = req.body;
 
     if (!conversationId || !template || !language) {
@@ -57,11 +61,11 @@ const sendMessageTemplate = async (req, res) => {
     }
 
     try {
-        const conversation = await messageService.getConversationFromDB(parseInt(conversationId));
+        const conversation = await messageService.getConversationFromDB(prisma, parseInt(conversationId));
         if (!conversation) return res.status(404).json({ error: "Conversación no encontrada" });
 
         const phone = conversation.contact.phoneNumber;
-        const response_template = await templateService.getTemplateByIdFromDB(template);
+        const response_template = await templateService.getTemplateByIdFromDB(prisma, template);
         if (!response_template) return res.status(404).json({ error: "Plantilla no encontrada" });
 
         const template_name = response_template.name;
@@ -114,7 +118,7 @@ const sendMessageTemplate = async (req, res) => {
 
         const response = await whatsappService.sendTemplateMessage(payload);
 
-        const savedMessage = await messageService.createMessageToDB({
+        const savedMessage = await messageService.createMessageToDB(prisma, {
             conversationId,
             type: "template",
             content: finalText,
@@ -133,11 +137,12 @@ const sendMessageTemplate = async (req, res) => {
 };
 
 const sendMessageMedia = async (req, res) => {
+    const prisma = getPrismaClient(req.user.tenantId);
     try {
         const { conversationId, caption } = req.body;
         const file = req.file;
 
-        const withinWindow = await messageService.checkConversationWindow(parseInt(conversationId));
+        const withinWindow = await messageService.checkConversationWindow(prisma, parseInt(conversationId));
 
         if (!withinWindow) {
             return res.status(403).json({
@@ -146,7 +151,7 @@ const sendMessageMedia = async (req, res) => {
         }
 
         // 1. Obtener conversación y número
-        const conversation = await messageService.getConversationFromDB(parseInt(conversationId));
+        const conversation = await messageService.getConversationFromDB(prisma, parseInt(conversationId));
 
         if (!conversation) {
             return res.status(404).json({ error: "Conversación no encontrada" });
@@ -186,7 +191,7 @@ const sendMessageMedia = async (req, res) => {
         fs.unlinkSync(file.path);
 
         // 5. Guardar mensaje en la base de datos
-        const savedMessage = await messageService.createMessageToDB({
+        const savedMessage = await messageService.createMessageToDB(prisma, {
             conversationId: parseInt(conversationId),
             type: detectedMediaType,
             content: caption || '',
@@ -219,10 +224,10 @@ const sendMessageMedia = async (req, res) => {
 };
 
 const sendMessageCTA = async (req, res) => {
-
+    const prisma = getPrismaClient(req.user.tenantId);
     const { conversationId, header, header_type, body, footer, action } = req.body;
 
-    const withinWindow = await messageService.checkConversationWindow(parseInt(conversationId));
+    const withinWindow = await messageService.checkConversationWindow(prisma, parseInt(conversationId));
 
     if (!withinWindow) {
         return res.status(403).json({
@@ -238,7 +243,7 @@ const sendMessageCTA = async (req, res) => {
     try {
 
         // 1. Obtener conversación y número
-        const conversation = await messageService.getConversationFromDB(parseInt(conversationId));
+        const conversation = await messageService.getConversationFromDB(prisma, parseInt(conversationId));
 
         if (!conversation) {
             return res.status(404).json({ error: "Conversación no encontrada" });
@@ -252,7 +257,7 @@ const sendMessageCTA = async (req, res) => {
 
         const response = await whatsappService.sendCTAMessage({ phone, header_type, header, body, footer, action });
 
-        const savedMessage = await messageService.createMessageToDB({
+        const savedMessage = await messageService.createMessageToDB(prisma,{
             conversationId: parseInt(conversationId),
             type: "cta",
             content: body,
@@ -278,9 +283,10 @@ const sendMessageCTA = async (req, res) => {
 
 const sendMessageReply = async (req, res) => {
 
+    const prisma = getPrismaClient(req.user.tenantId);
     const { conversationId, header, body, footer, buttons, metadata } = req.body;
-    console.log("PASA");
-    const withinWindow = await messageService.checkConversationWindow(parseInt(conversationId));
+
+    const withinWindow = await messageService.checkConversationWindow(prisma, parseInt(conversationId));
 
     if (!withinWindow) {
         return res.status(403).json({
@@ -323,7 +329,7 @@ const sendMessageReply = async (req, res) => {
         }
 
         // 1. Obtener conversación y número
-        const conversation = await messageService.getConversationFromDB(parseInt(conversationId));
+        const conversation = await messageService.getConversationFromDB(prisma, parseInt(conversationId));
 
         if (!conversation) {
             return res.status(404).json({ error: "Conversación no encontrada" });
@@ -340,7 +346,7 @@ const sendMessageReply = async (req, res) => {
         const parsedButtons = typeof buttons === 'string' ? JSON.parse(buttons) : buttons;
         const parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
 
-        const savedMessage = await messageService.createMessageToDB({
+        const savedMessage = await messageService.createMessageToDB(prisma, {
             conversationId: parseInt(conversationId),
             type: "reply",
             content: body,

@@ -1,13 +1,13 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const getContactsFromDB = async () => {
+const getContactsFromDB = async (prisma) => {
     return await prisma.contact.findMany({
         orderBy: { createdAt: 'desc' }
     });
 };
 
-const createContactFromDB = async ({ phoneNumber, name }) => {
+const createContactFromDB = async (prisma, { phoneNumber, name }) => {
     try {
         const contact = await prisma.contact.create({
             data: {
@@ -22,7 +22,7 @@ const createContactFromDB = async ({ phoneNumber, name }) => {
     }
 };
 
-const deleteContactFromDB = async ({ id }) => {
+const deleteContactFromDB = async (prisma, { id }) => {
     try {
         // Obtener el contacto
         const contact = await prisma.contact.findFirst({
@@ -73,7 +73,7 @@ const deleteContactFromDB = async ({ id }) => {
 };
 
 
-const updateContactFromDB = async (id, data) => {
+const updateContactFromDB = async (prisma, id, data) => {
     try {
         const updated = await prisma.contact.update({
             where: { id: parseInt(id) },

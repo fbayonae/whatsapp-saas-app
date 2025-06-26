@@ -1,8 +1,9 @@
 class AppError extends Error {
-    constructor(message = "Error interno", statusCode = 500) {
+    constructor(message = "Error interno", statusCode = 500, details = {}) {
         super(message);
         this.name = this.constructor.name;
         this.statusCode = statusCode;
+        this.details = details; // Objeto para información adicional
         Error.captureStackTrace(this, this.constructor);
     }
 }
@@ -43,6 +44,13 @@ class TooManyRequestsError extends AppError {
     }
 }
 
+class DatabaseError extends AppError {
+  constructor(message = "Error de base de datos", details = {}) {
+    super(message, 500);
+    this.details = details;
+  }
+}
+
 module.exports = {
     AppError,
     ValidationError,
@@ -51,4 +59,5 @@ module.exports = {
     ForbiddenError,
     ConflictError,
     TooManyRequestsError,
+    DatabaseError
 };

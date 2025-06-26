@@ -7,18 +7,38 @@ const messageService = require('../../messages/services/messageService');
 const getAllContacts = async (req, res) => {
 
     const prisma = getPrismaClient(req.user.tenantId);
+    const tenantId = req.user.tenantId;
+    const userId = req.user.id;
 
     try {
         const contacts = await contactService.getContactsFromDB(prisma);
         res.json(contacts);
     } catch (error) {
         console.error('❌ Error obteniendo contactos:', error);
-        res.status(500).json({ error: 'Error al obtener las contactos' });
+
+        logger.error(`[Tenant: ${tenantId}] [User: ${userId}] Error obteniendo contactos`, {
+            error: error.message,
+            stack: error.stack,
+            context: { tenantId, userId }
+        });
+
+        if (error instanceof AppError) {
+            return next(error);
+        }
+
+        next(new AppError('Error al obtener los contactos', 500, {
+            originalError: error.message,
+            tenantId,
+            userId
+        }));
+        //res.status(500).json({ error: 'Error al obtener las contactos' });
     }
 };
 
 const createContact = async (req, res) => {
     const prisma = getPrismaClient(req.user.tenantId);
+    const tenantId = req.user.tenantId;
+    const userId = req.user.id;
     const { phoneNumber, name } = req.body;
 
     if (!phoneNumber || !name) {
@@ -30,12 +50,31 @@ const createContact = async (req, res) => {
         res.status(201).json({ success: true, contact });
     } catch (error) {
         console.error("❌ Error al crear contacto:", error);
-        res.status(500).json({ error: "Error al crear contacto" });
+
+        logger.error(`[Tenant: ${tenantId}] [User: ${userId}] Error al crear contacto`, {
+            error: error.message,
+            stack: error.stack,
+            context: { tenantId, userId, phoneNumber, name }
+        });
+
+        if (error instanceof AppError) {
+            return next(error);
+        }
+
+        next(new AppError('Error al crear contacto', 500, {
+            originalError: error.message,
+            tenantId,
+            userId,
+            inputData: { phoneNumber, name }
+        }));
+        //res.status(500).json({ error: "Error al crear contacto" });
     }
 };
 
 const updateContact = async (req, res) => {
     const prisma = getPrismaClient(req.user.tenantId);
+    const tenantId = req.user.tenantId;
+    const userId = req.user.id;
     const { id } = req.params;
     const { name, phoneNumber } = req.body;
 
@@ -44,12 +83,30 @@ const updateContact = async (req, res) => {
         return res.status(200).json(updated);
     } catch (err) {
         console.error("❌ Error al actualizar contacto:", err);
-        return res.status(500).json({ error: "No se pudo actualizar el contacto" });
+        logger.error(`[Tenant: ${tenantId}] [User: ${userId}] Error al actualizar contacto ID: ${id}`, {
+            error: error.message,
+            stack: error.stack,
+            context: { tenantId, userId, contactId: id, updateData: { name, phoneNumber } }
+        });
+
+        if (error instanceof AppError) {
+            return next(error);
+        }
+
+        next(new AppError('No se pudo actualizar el contacto', 500, {
+            originalError: error.message,
+            tenantId,
+            userId,
+            contactId: id
+        }));
+        //return res.status(500).json({ error: "No se pudo actualizar el contacto" });
     }
 };
 
 const deleteContact = async (req, res) => {
     const prisma = getPrismaClient(req.user.tenantId);
+    const tenantId = req.user.tenantId;
+    const userId = req.user.id;
     const { id } = req.params;
 
     if (!id || isNaN(parseInt(id))) {
@@ -61,16 +118,35 @@ const deleteContact = async (req, res) => {
         res.json({ success: true, message: "Contacto eliminado correctamente" });
     } catch (error) {
         console.error("❌ Error al eliminar contacto:", error);
-        res.status(500).json({ error: "Error al eliminar contacto" });
+        logger.error(`[Tenant: ${tenantId}] [User: ${userId}] Error al eliminar contacto ID: ${id}`, {
+            error: error.message,
+            stack: error.stack,
+            context: { tenantId, userId, contactId: id }
+        });
+
+        if (error instanceof AppError) {
+            return next(error);
+        }
+
+        next(new AppError('Error al eliminar contacto', 500, {
+            originalError: error.message,
+            tenantId,
+            userId,
+            contactId: id
+        }));
+        //res.status(500).json({ error: "Error al eliminar contacto" });
     }
 };
 
 const getConversationsByContact = async (req, res) => {
     const prisma = getPrismaClient(req.user.tenantId);
+    const tenantId = req.user.tenantId;
+    const userId = req.user.id;
     const { id } = req.params;
 
     if (!id || isNaN(parseInt(id))) {
-        return res.status(400).json({ error: "ID de contacto inválido" });
+        throw new ValidationError("ID de contacto inválido");
+        //return res.status(400).json({ error: "ID de contacto inválido" });
     }
 
     try {
@@ -78,7 +154,23 @@ const getConversationsByContact = async (req, res) => {
         res.json({ success: true, conversations });
     } catch (error) {
         console.error("❌ Error obteniendo conversaciones:", error);
-        res.status(500).json({ error: "Error al obtener conversaciones" });
+        logger.error(`[Tenant: ${tenantId}] [User: ${userId}] Error obteniendo conversaciones para contacto ID: ${id}`, {
+            error: error.message,
+            stack: error.stack,
+            context: { tenantId, userId, contactId: id }
+        });
+
+        if (error instanceof AppError) {
+            return next(error);
+        }
+
+        next(new AppError('Error al obtener conversaciones', 500, {
+            originalError: error.message,
+            tenantId,
+            userId,
+            contactId: id
+        }));
+        //res.status(500).json({ error: "Error al obtener conversaciones" });
     }
 };
 

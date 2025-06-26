@@ -55,6 +55,8 @@ model User {
   loginAttempts LoginAttempt[]
   sessions      Session[]
   refreshTokens RefreshToken[]
+
+  @@index([tenantId])
   
   @@map("users")
   @@schema("auth")
@@ -73,6 +75,9 @@ model LoginAttempt {
 
   userId        Int?
   user          User?    @relation(fields: [userId], references: [id])
+
+  @@index([email])
+  @@index([userId])
 
   @@map("login_attempts")
   @@schema("auth")
@@ -94,6 +99,9 @@ model Session {
   user      User     @relation(fields: [userId], references: [id])
   revoked   Boolean  @default(false)
 
+  @@index([userId])
+  @@index([refreshToken])
+
   @@map("sessions")
   @@schema("auth")
 }
@@ -107,6 +115,8 @@ model RefreshToken {
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
   revoked    Boolean  @default(false)
+
+  @@index([userId, revoked])
 
   @@map("refresh_tokens")
   @@schema("auth")
@@ -141,6 +151,8 @@ model Template {
 
   components  Component[]
   campaigns Campaign[] @relation("TemplateCampaigns")
+
+  @@index([status])
 
   @@map("templates")
   @@schema("whatsapp")
@@ -183,7 +195,8 @@ model Contact {
 
   conversations Conversation[]
   campaigns CampaignContact[] @relation("ContactCampaigns")
-
+ 
+  @@index([phoneNumber])
 
   @@map("contacts")
   @@schema("whatsapp")
@@ -197,6 +210,8 @@ model Conversation {
 
   contact    Contact   @relation(fields: [contactId], references: [id])
   messages   Message[]
+
+  @@index([contactId])
 
   @@map("conversations")
   @@schema("whatsapp")
@@ -228,7 +243,10 @@ model Message {
   campaignReference CampaignContact[] @relation("MessageCampaigns")
 
   @@index([conversationId, timestamp])
-
+  @@index([id_meta])
+  @@index([type])
+  @@index([status])
+  
   @@map("messages")
   @@schema("whatsapp")
 }
@@ -242,6 +260,8 @@ model Campaign {
 
   template Template @relation("TemplateCampaigns", fields: [templateId], references: [id])
   contacts    CampaignContact[]
+
+  @@index([status])
 
   @@map("campaigns")
   @@schema("whatsapp")
@@ -259,6 +279,9 @@ model CampaignContact {
   contact     Contact     @relation("ContactCampaigns", fields: [contactId], references: [id])
   message     Message?    @relation("MessageCampaigns", fields: [messageId], references: [id])
 
+  @@index([campaignId])
+  @@index([contactId])
+  @@index([status])
 
   @@map("campaign_contacts")
   @@schema("whatsapp")

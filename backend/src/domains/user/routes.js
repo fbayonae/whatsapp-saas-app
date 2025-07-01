@@ -8,6 +8,7 @@ const userController = require("./controllers/userController");
 
 // Middlewares
 const auth = require("../../../core/middleware/authMiddleware").auth;
+const checkLimit = require('../../../core/middleware/checkLimitMiddleware');
 //const validate = require("../utils/validators");
 
 router.get("/",
@@ -39,6 +40,7 @@ router.put("/:id",
 
 router.post("/register",
     auth,
+    checkLimit('users'),
     [
         body("name").notEmpty().withMessage("El nombre es obligatorio"),
         body("role").notEmpty().withMessage("El role es obligatorio"),

@@ -9,6 +9,7 @@ const contactController = require("../controllers/contactController");
 // Middlewares
 const auth = require("../../../core/middleware/auth").auth;
 const validate = require('../../core/middleware/validators');
+const checkLimit = require('../../../core/middleware/checkLimitMiddleware');
 
 router.get("/",
     auth,
@@ -17,6 +18,7 @@ router.get("/",
 
 router.post("/",
     auth,
+    checkLimit('contacts'),
     [
         body("phoneNumber")
             .notEmpty().withMessage("El número de teléfono es obligatorio")

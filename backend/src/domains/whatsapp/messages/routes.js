@@ -11,9 +11,11 @@ const messageController = require("../controllers/messageController");
 const upload = require("../../../core/middleware/multerUtils");
 const auth = require("../../../core/middleware/auth").auth;
 const validate = require('../../core/middleware/validators');
+const checkLimit = require('../../../core/middleware/checkLimitMiddleware');
 
 router.post("/send",
     auth,
+    checkLimit('messages'),
     [
         body("conversationId")
             .isInt({ gt: 0 })
@@ -29,6 +31,7 @@ router.post("/send",
 
 router.post("/send-media",
     auth,
+    checkLimit('messages'),
     upload.single("file"),
     [
         body("conversationId")
@@ -45,6 +48,7 @@ router.post("/send-media",
 
 router.post("/send-cta",
     auth,
+    checkLimit('messages'),
     [
         body("conversationId")
             .isInt({ gt: 0 })
@@ -68,6 +72,7 @@ router.post("/send-cta",
 
 router.post("/send-reply",
     auth,
+    checkLimit('messages'),
     upload.single("file"),
     [
         body("conversationId")
@@ -98,6 +103,7 @@ router.post("/send-reply",
 
 router.post("/send-template",
     auth,
+    checkLimit('messages'),
     [
         body("conversationId")
             .isInt({ gt: 0 })

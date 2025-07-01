@@ -4,6 +4,9 @@ const { getPrismaClient } = require("../../../prisma/client");
 const contactService = require('../services/contactService');
 const messageService = require('../../messages/services/messageService');
 
+// Middlewares
+const checkLimit = require('../../../core/utils/checkTenantLimit');
+
 const getAllContacts = async (req, res) => {
 
     const prisma = getPrismaClient(req.user.tenantId);
@@ -40,6 +43,9 @@ const createContact = async (req, res) => {
     const tenantId = req.user.tenantId;
     const userId = req.user.id;
     const { phoneNumber, name } = req.body;
+
+    //comprobamos el límite de contactos
+    await checkLimit(tenantId, 'contacts');
 
     if (!phoneNumber || !name) {
         return res.status(400).json({ error: "Faltan campos obligatorios" });

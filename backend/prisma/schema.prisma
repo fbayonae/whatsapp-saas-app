@@ -41,6 +41,20 @@ model Tenant {
   @@schema("auth")
 }
 
+model TenantLimit {
+  id         Int     @id @default(autoincrement())
+  tenantId   Int     @unique
+  maxUsers   Int     @default(5)
+  maxContacts Int    @default(1000)
+  maxMessagesPerMonth Int @default(1500)
+
+  tenant     Tenant  @relation(fields: [tenantId], references: [id])
+
+  @@map("tenant_limits")
+  @@schema("auth")
+}
+
+
 model User {
   id            Int       @id @default(autoincrement())
   email         String    @unique

@@ -1,5 +1,5 @@
 {
-    "name": "whatsapp-backend",
+    "name": "wha_saas-backend",
     "version": "1.0.0",
     "main": "src/server.js",
     "type": "commonjs",

@@ -32,6 +32,14 @@ function getPrismaClient(schema) {
   return prisma;
 }
 
+async function closeAllPrismaClients() {
+  for (const prisma of clients.values()) {
+    await prisma.$disconnect();
+  }
+  clients.clear();
+}
+
 module.exports = {
   getPrismaClient,
+  closeAllPrismaClients
 };

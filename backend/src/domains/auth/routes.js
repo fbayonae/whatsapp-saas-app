@@ -2,7 +2,7 @@ const express = require('express');
 const { body } = require("express-validator");
 
 // Controllers 
-const authController = require('../controllers/authController');
+const authController = require('./controllers/authController');
 
 // Middlewares
 const rateLimiter = require('../../core/middleware/rateLimiter');

@@ -7,8 +7,8 @@ const router = express.Router();
 const userController = require("./controllers/userController");
 
 // Middlewares
-const auth = require("../../core/middleware/authMiddleware").auth;
-const checkLimit = require('../../core/middleware/checkLimitMiddleware');
+const auth = require("../../core/middleware/auth").auth;
+const checkLimit = require('../../core/middleware/limitTenant');
 //const validate = require("../utils/validators");
 
 router.get("/",

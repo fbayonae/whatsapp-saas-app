@@ -32,7 +32,7 @@ services:
     image: nginx:alpine
     container_name: wha_saas_nginx
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt/live/technologygroup.es/technologygroup.es.fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
       - /etc/letsencrypt/live/technologygroup.es/technologygroup.es.key.pem:/etc/nginx/ssl/privkey.pem:ro
     ports:

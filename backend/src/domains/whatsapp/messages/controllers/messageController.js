@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const { getPrismaClient } = require("../../../../prisma/client");
 
-const templateService = require('../../templates/services/messageService');
+const templateService = require('../../templates/services/templateService');
 const messageService = require('../services/messageService');
 const whatsappService = require('../../../../infrastructure/whatsapp/whatsappService');
 const mediaUtils = require("../../../utils/media");

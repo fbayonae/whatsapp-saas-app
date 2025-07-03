@@ -1,6 +1,6 @@
 const { getPrismaClient } = require("../../../../prisma/client");
 
-const whatsappService = require('../../../infrastructure/whatsapp/whatsappService');
+const whatsappService = require('../../../../infrastructure/whatsapp/whatsappService');
 const templateService = require('../services/templateService');
 
 const syncTemplates = async (req, res) => {

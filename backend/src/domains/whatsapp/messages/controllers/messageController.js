@@ -5,7 +5,7 @@ const { getPrismaClient } = require("../../../../prisma/client");
 
 const templateService = require('../../templates/services/messageService');
 const messageService = require('../services/messageService');
-const whatsappService = require('../../..infrastructure/whatsapp/whatsappService');
+const whatsappService = require('../../../../infrastructure/whatsapp/whatsappService');
 const mediaUtils = require("../../../utils/media");
 
 

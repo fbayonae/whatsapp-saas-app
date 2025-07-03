@@ -8,7 +8,7 @@ const userController = require("./controllers/userController");
 
 // Middlewares
 const auth = require("../../core/middleware/auth").auth;
-const checkLimit = require('../../core/middleware/limitTenant');
+const checkLimit = require('../../core/middleware/limitTenant').checkLimitMiddleware;
 //const validate = require("../utils/validators");
 
 router.get("/",

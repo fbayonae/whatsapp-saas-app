@@ -5,7 +5,7 @@ const contactService = require('../services/contactService');
 const messageService = require('../../messages/services/messageService');
 
 // Middlewares
-const checkLimit = require('../../../core/utils/checkTenantLimit');
+const checkLimit = require('../../../../core/utils/checkTenantLimit');
 
 const getAllContacts = async (req, res) => {
 

@@ -10,7 +10,7 @@ const messageController = require("./controllers/messageController");
 // Middleware
 const upload = require("../../../core/middleware/multerUtils");
 const auth = require("../../../core/middleware/auth").auth;
-const validate = require('../../core/middleware/validators');
+const validate = require('../../../core/middleware/validators');
 const checkLimit = require('../../../core/middleware/checkLimitMiddleware');
 
 router.post("/send",

@@ -8,7 +8,7 @@ const chatController = require("./controllers/chatController");
 
 // Middleware
 const auth = require("../../../core/middleware/auth").auth;
-const validate = require('../../core/middleware/validators');
+const validate = require('../../../core/middleware/validators');
 
 router.get("/",
     auth,

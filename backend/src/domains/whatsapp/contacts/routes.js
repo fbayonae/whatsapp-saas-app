@@ -8,7 +8,7 @@ const contactController = require("./controllers/contactController");
 
 // Middlewares
 const auth = require("../../../core/middleware/auth").auth;
-const validate = require('../../core/middleware/validators');
+const validate = require('../../../core/middleware/validators');
 const checkLimit = require('../../../core/middleware/checkLimitMiddleware');
 
 router.get("/",

@@ -36,6 +36,7 @@ model Tenant {
   createdAt     DateTime @default(now())
 
   users         User[]
+  limits        TenantLimit[] 
 
   @@map("tenants")
   @@schema("auth")

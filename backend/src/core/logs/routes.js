@@ -5,7 +5,7 @@ const router = express.Router();
 const logsController = require("./controllers/logsController");
 
 // Middleware
-const auth = require("./middleware/auth").auth;
+const auth = require("../middleware/auth").auth;
 
 router.get("/",
     auth,

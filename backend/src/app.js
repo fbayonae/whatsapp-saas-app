@@ -9,9 +9,9 @@ const rateLimiter = require("./core/middleware/rateLimiter");
 const env = require("./config/env");
 const logger = require("./config/logger");
 
-const  error  = require('./core/middleware/error');
-const  auth  = require('./core/middleware/auth');
-const  tenant  = require('./core/middleware/tenant');
+const { error } = require('./core/middleware/error');
+const { auth } = require('./core/middleware/auth');
+const { tenant } = require('./core/middleware/tenant');
 
 // Rutas
 const authRoutes = require("./domains/auth/routes");

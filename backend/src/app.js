@@ -11,7 +11,7 @@ const logger = require("./config/logger");
 
 const { errorHandler } = require('./core/middleware/error');
 const { auth } = require('./core/middleware/auth');
-const { tenantMiddleware } = require('./core/middleware/tenant');
+const { tenant } = require('./core/middleware/tenant');
 
 // Rutas
 const authRoutes = require("./domains/auth/routes");
@@ -87,7 +87,7 @@ app.use(requestLogger);
 
 // Autenticación y tenant (debe ir antes de rutas protegidas)
 app.use(auth);
-app.use(tenantMiddleware);
+app.use(tenant);
 
 // ----------------------
 // Rutas

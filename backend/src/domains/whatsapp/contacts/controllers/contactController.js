@@ -1,4 +1,4 @@
-const { getPrismaClient } = require("../../../prisma/client");
+const { getPrismaClient } = require("../../../../prisma/client");
 
 // Services
 const contactService = require('../services/contactService');

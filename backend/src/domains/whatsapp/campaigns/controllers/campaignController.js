@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const { getPrismaClient } = require("../../../prisma/client");
+const { getPrismaClient } = require("../../../../prisma/client");
 
 const campaignService = require("../services/campaignsService");
 const CampaignSendQueue = require("../../../infrastructure/queues/campaignSendQueue");

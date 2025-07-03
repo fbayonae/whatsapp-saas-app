@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require("fs");
 
-const { getPrismaClient } = require("../../../prisma/client");
+const { getPrismaClient } = require("../../../../prisma/client");
 
 const templateService = require('../../templates/services/messageService');
 const messageService = require('../services/messageService');

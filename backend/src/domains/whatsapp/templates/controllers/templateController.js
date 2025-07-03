@@ -1,4 +1,4 @@
-const { getPrismaClient } = require("../../../prisma/client");
+const { getPrismaClient } = require("../../../../prisma/client");
 
 const whatsappService = require('../../../infrastructure/whatsapp/whatsappService');
 const templateService = require('../services/templateService');

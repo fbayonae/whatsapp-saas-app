@@ -1,5 +1,5 @@
 // chatController.js
-const { getPrismaClient } = require("../../../prisma/client");
+const { getPrismaClient } = require("../../../../prisma/client");
 
 const messageService = require('../../messages/services/messageService');
 

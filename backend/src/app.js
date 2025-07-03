@@ -9,7 +9,7 @@ const rateLimiter = require("./core/middleware/rateLimiter");
 const env = require("./config/env");
 const logger = require("./config/logger");
 
-const { error } = require('./core/middleware/error');
+const { errorHandler } = require('./core/middleware/error');
 const { auth } = require('./core/middleware/auth');
 const { tenantMiddleware } = require('./core/middleware/tenant');
 
@@ -111,6 +111,6 @@ app.use("/api/logs", logsRoutes);
 // ----------------------
 // Manejador de errores
 // ----------------------
-app.use(error);
+app.use(errorHandler);
 
 module.exports = app;

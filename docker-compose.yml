@@ -103,6 +103,5 @@ services:
 networks:
   wha_saas-net:
 
-
 volumes:
   pgdata:

@@ -3,7 +3,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 //const whatsappService = require("../services/whatsappService");
-const messageQueue = require("../../../infrastructure/queues/messageQueue");
+const messageQueue = require("../../../../infrastructure/queues/messageQueue");
 
 //const VERIFY_TOKEN = process.env.VERIFY_TOKEN; // defínelo en tu .env
 

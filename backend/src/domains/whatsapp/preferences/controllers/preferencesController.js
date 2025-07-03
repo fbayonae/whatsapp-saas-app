@@ -1,4 +1,4 @@
-const preferenceService = require('../../..shared/services/preferenceService');
+const preferenceService = require('../../../shared/services/preferenceService');
 
 const getPreferences = async (req, res) => {
     try {

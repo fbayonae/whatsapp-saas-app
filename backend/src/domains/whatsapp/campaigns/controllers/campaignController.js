@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator");
 const { getPrismaClient } = require("../../../../prisma/client");
 
 const campaignService = require("../services/campaignsService");
-const CampaignSendQueue = require("../../../infrastructure/queues/campaignSendQueue");
+const CampaignSendQueue = require("../../../../infrastructure/queues/campaignSendQueue");
 
 const getAllCampaigns = async (req, res) => {
     const prisma = getPrismaClient(req.user.tenantId);

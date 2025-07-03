@@ -8,7 +8,7 @@ const router = express.Router();
 const auth = require("../../../core/middleware/auth").auth;
 
 //Controllers
-const campaignsController = require("../controllers/campaignController");
+const campaignsController = require("./controllers/campaignController");
 
 // Campañas
 router.get("/",

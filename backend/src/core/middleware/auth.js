@@ -24,6 +24,13 @@ const auth = (req, res, next) => {
   }
 };
 
+const isSuperAdmin = (req, res, next) => {
+  if (req.user?.role === "superadmin") {
+    return next();
+  }
+  return res.status(403).json({ error: "Acceso denegado: requiere rol superadmin" });
+};
+
 const isAdmin = (req, res, next) => {
   if (req.user?.role === "admin") {
     return next();
@@ -42,6 +49,7 @@ const isClient = (req, res, next) => {
 
 module.exports = {
   auth,
+  isSuperAdmin,
   isAdmin,
   isClient
 };

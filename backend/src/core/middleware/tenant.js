@@ -1,5 +1,5 @@
 // backend/src/core/middleware/tenant.js
-module.exports.detectTenant = (req, res, next) => {
+module.exports = (req, res, next) => {
   const tenantId =
     req.headers["x-tenant-id"] ||
     req.cookies?.tenantId ||

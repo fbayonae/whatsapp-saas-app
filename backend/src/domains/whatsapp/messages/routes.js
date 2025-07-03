@@ -5,7 +5,7 @@ const { body } = require("express-validator");
 const router = express.Router();
 
 // Controllers
-const messageController = require("../controllers/messageController");
+const messageController = require("./controllers/messageController");
 
 // Middleware
 const upload = require("../../../core/middleware/multerUtils");

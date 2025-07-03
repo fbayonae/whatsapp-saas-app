@@ -7,7 +7,7 @@ const path = require("path");
 const fs = require("fs");
 
 // Middleware
-const validate = require('../../core/middleware/validators');
+const validate = require('../../../core/middleware/validators');
 
 router.get("/:mediaId",
   [

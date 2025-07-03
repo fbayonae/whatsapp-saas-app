@@ -2,7 +2,7 @@ const express = require('express');
 const { param } = require('express-validator');
 
 // Controllers
-const preferencesController = require('../controllers/preferencesController');
+const preferencesController = require('./controllers/preferencesController');
 
 // Middleware 
 const auth = require("../../../core/middleware/auth").auth;

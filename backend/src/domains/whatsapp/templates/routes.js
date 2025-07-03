@@ -2,7 +2,7 @@ const express = require('express');
 const { param } = require('express-validator');
 
 // Controllers
-const templateController = require('../controllers/templateController');
+const templateController = require('./controllers/templateController');
 
 // Middleware
 const auth = require("../../../core/middleware/auth").auth;

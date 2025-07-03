@@ -10,7 +10,7 @@ const env = require("./config/env");
 const logger = require("./config/logger");
 
 const { errorHandler } = require('./core/middleware/error');
-const { authMiddleware } = require('./core/middleware/auth').auth;
+const { auth } = require('./core/middleware/auth');
 const { tenantMiddleware } = require('./core/middleware/tenant');
 
 // Rutas
@@ -86,7 +86,7 @@ app.use(requestLogger);
 //app.use(rateLimiter.globalLimiter);
 
 // Autenticación y tenant (debe ir antes de rutas protegidas)
-app.use(authMiddleware);
+app.use(auth);
 app.use(tenantMiddleware);
 
 // ----------------------

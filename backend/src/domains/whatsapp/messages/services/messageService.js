@@ -1,4 +1,4 @@
-const { isWithin24Hours } = require('../utils/timeUtils');
+const { isWithin24Hours } = require('../../../../core/utils/time');
 
 /*******************************************************
  * CONVERSATIONS

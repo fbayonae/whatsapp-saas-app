@@ -10,7 +10,7 @@ const env = require("./config/env");
 const logger = require("./config/logger");
 
 const { errorHandler } = require('./core/middleware/error');
-const { authMiddleware } = require('./core/middleware/auth');
+const { authMiddleware } = require('./core/middleware/auth').auth;
 const { tenantMiddleware } = require('./core/middleware/tenant');
 
 // Rutas

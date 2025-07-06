@@ -5,17 +5,19 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 # Instalar dependencias con apk (no apt-get)
-RUN apk add --no-cache \
+RUN apk update && apk add --no-cache \
     python3 \
     make \
     g++ \
-    curl \
-    # Agrega librerías para Prisma:
-    openssl
+    openssl \
+    libstdc++ \
+    libc6-compat
 
 RUN mkdir -p uploads downloads
+
 COPY package*.json ./
 RUN npm install --omit=dev
+
 COPY . .
 
 # Generar Prisma Client (maneja errores)

@@ -1,14 +1,14 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import SidebarLayout from "./components/utils/SidebarLayout.jsx";
-import Templates from "@pages/Templates.jsx";
-import Contacts from "@pages/Contacts.jsx";
-import Chats from "@pages/Chats.jsx";
-import Campaigns from "@pages/Campaigns.jsx";
-import Login from "@pages/Login.jsx";
-import Config from "@pages/Config.jsx";
-import PrivateRoute from "@components/utils/PrivateRoute.jsx";
-import Welcome from "@pages/Welcome.jsx";
+import SidebarLayout from "@components/layouts/SidebarLayout.jsx";
+import Templates from "@pages/whatsapp/templates/TemplatesPage.jsx";
+import Contacts from "@pages/whatsapp/contacts/ContactsPage.jsx";
+import Chats from "@pages/whatsapp/chats/ChatsPage.jsx";
+import Campaigns from "@pages/whatsapp/campaigns/CampaignsPage.jsx";
+import Login from "@pages/auth/LoginPage.jsx";
+import Config from "@pages/tenant/config/ConfigPage.jsx";
+import PrivateRoute from "@routes/PrivateRoute.jsx";
+import Welcome from "@pages/whatsapp/WelcomePage.jsx";
 
 export default function App() {
   return (

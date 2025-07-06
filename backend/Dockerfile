@@ -1,5 +1,5 @@
 # backend/Dockerfile
-FROM node:23.11.0-alpine3.19
+FROM node:20-alpine3.19 
 
 ENV NODE_ENV=production
 WORKDIR /app

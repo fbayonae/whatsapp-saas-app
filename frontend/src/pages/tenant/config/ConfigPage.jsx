@@ -1,6 +1,6 @@
 // SettingsPage.jsx
 import React, { useState } from "react";
-import axios from "@api/core/axiosInstance.jsx";
+//import axios from "@api/core/axiosInstance.jsx";
 import ConfigMenuBar from "@components/modules/tenant/config/ConfigMenuBar.jsx";
 import ConfigSettings from "@components/modules/tenant/config/ConfigSettings.jsx";
 import ConfigUsers from "@components/modules/tenant/config/ConfigUsers.jsx";

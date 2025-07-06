@@ -9,6 +9,14 @@ WORKDIR /app
 # Crear carpetas necesarias
 RUN mkdir -p uploads downloads
 
+#  Añadir gnupg para evitar errores de firmas
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  gnupg \
+  ca-certificates
+
+# Solución de firmas inválidas (opcional pero seguro)
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xA1BC6A3CF7E4CD5E || true
+
 # Instalar dependencias necesarias para ciertos paquetes nativos (opcional)
 # Solo si usas librerías que necesitan compilación como sharp, bcrypt, etc.
 RUN apt-get update && apt-get install -y \

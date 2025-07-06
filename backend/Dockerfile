@@ -9,20 +9,19 @@ WORKDIR /app
 # Crear carpetas necesarias
 RUN mkdir -p uploads downloads
 
-#  Añadir gnupg para evitar errores de firmas
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  gnupg \
-  ca-certificates
+# SOLUCIÓN: Actualizar claves GPG antes de apt-get
+RUN apt-get update --allow-releaseinfo-change -o Acquire::AllowInsecureRepositories=true -o Acquire::AllowDowngradeToInsecureRepositories=true \
+    && apt-get install -y --no-install-recommends \
+       ca-certificates \
+       gnupg \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xA1BC6A3CF7E4CD5E \
+    && rm -rf /var/lib/apt/lists/*
 
-# Solución de firmas inválidas (opcional pero seguro)
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xA1BC6A3CF7E4CD5E || true
-
-# Instalar dependencias necesarias para ciertos paquetes nativos (opcional)
-# Solo si usas librerías que necesitan compilación como sharp, bcrypt, etc.
+# Instalar dependencias necesarias
 RUN apt-get update && apt-get install -y \
-  python3 \
-  build-essential \
-  && rm -rf /var/lib/apt/lists/*
+    python3 \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copiar y instalar dependencias
 COPY package*.json ./

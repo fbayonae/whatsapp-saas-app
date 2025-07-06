@@ -1,4 +1,4 @@
-FROM node:23.11.0-bookworm-slim AS build
+FROM node:23.11.0-alpine3.19 AS build
 WORKDIR /app
 
 COPY package.json ./
@@ -10,4 +10,5 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/dist /usr/share/nginx/html
 
-CMD ["nginx", "-g", "daemon off;"]
+# Configuración para el panel admin
+COPY infra/nginx/nginx.conf /etc/nginx/conf.d/

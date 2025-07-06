@@ -1,18 +1,28 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+
+// Layouts
 import SidebarLayout from "@components/layouts/SidebarLayout.jsx";
+import AdminSidebarLayout from "@components/layouts/AdminSidebarLayout.jsx";
+
+// Pages
 import Templates from "@pages/whatsapp/templates/TemplatesPage.jsx";
 import Contacts from "@pages/whatsapp/contacts/ContactsPage.jsx";
 import Chats from "@pages/whatsapp/chats/ChatsPage.jsx";
 import Campaigns from "@pages/whatsapp/campaigns/CampaignsPage.jsx";
 import Login from "@pages/auth/LoginPage.jsx";
 import Config from "@pages/tenant/config/ConfigPage.jsx";
-import PrivateRoute from "@routes/PrivateRoute.jsx";
 import Welcome from "@pages/whatsapp/WelcomePage.jsx";
 
+// Admin Pages and Routes
 import AdminLoginPage from "@pages/admin/AdminLoginPage.jsx";
 import AdminDashboard from "@pages/admin/AdminDashboard.jsx";
-import AdminRoute from "@routes/AdminRoute.jsx"; // lo crearás ahora
+import TenantsPage from "@pages/admin/tenants/TenantsPage.jsx";
+import UsersPage from "@pages/admin/users/UsersPage.jsx";
+
+// Routes
+import AdminRoute from "@routes/AdminRoute.jsx"; 
+import PrivateRoute from "@routes/PrivateRoute.jsx";
 
 
 export default function App() {
@@ -26,13 +36,17 @@ export default function App() {
 
       {/* Ruta protegida para superadmin */}
       <Route
-        path="/ges-inter-admin/dashboard"
+        path="/ges-inter-admin"
         element={
           <AdminRoute>
-            <AdminDashboard />
+            <AdminSidebarLayout />
           </AdminRoute>
         }
-      />
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="tenants" element={<TenantsPage />} />
+        <Route path="usuarios" element={<UsersPage />} />
+      </Route>
 
       {/* Rutas protegidas */}
       <Route

@@ -1,33 +1,25 @@
+# backend/Dockerfile
 FROM node:23.11.0-alpine3.19
 
-# Establecer variables de entorno
 ENV NODE_ENV=production
-
-# Directorio de trabajo
 WORKDIR /app
 
-# Crear carpetas necesarias
-RUN mkdir -p uploads downloads
-
-# Instalar dependencias necesarias
+# Instalar dependencias con apk (no apt-get)
 RUN apk add --no-cache \
     python3 \
     make \
     g++ \
-    curl
+    curl \
+    # Agrega librerías para Prisma:
+    openssl
 
-# Copiar y instalar dependencias
+RUN mkdir -p uploads downloads
 COPY package*.json ./
-RUN npm install --omit=dev && npm install -g nodemon
-
-# Copiar el resto del código
+RUN npm install --omit=dev
 COPY . .
 
-# Generar Prisma Client
-RUN npx prisma generate || echo "No Prisma schema yet"
+# Generar Prisma Client (maneja errores)
+RUN npx prisma generate || echo "Prisma skip"
 
-# Exponer puerto
 EXPOSE 3001
-
-# Comando por defecto
 CMD ["node", "src/server.js"]

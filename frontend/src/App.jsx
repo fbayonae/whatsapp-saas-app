@@ -10,11 +10,29 @@ import Config from "@pages/tenant/config/ConfigPage.jsx";
 import PrivateRoute from "@routes/PrivateRoute.jsx";
 import Welcome from "@pages/whatsapp/WelcomePage.jsx";
 
+import AdminLoginPage from "@pages/admin/AdminLoginPage.jsx";
+import AdminDashboard from "@pages/admin/AdminDashboard.jsx";
+import AdminRoute from "@routes/AdminRoute.jsx"; // lo crearás ahora
+
+
 export default function App() {
   return (
     <Routes>
       {/* Ruta pública para login */}
       <Route path="/login" element={<Login />} />
+
+      {/* Ruta interna gestion tenants */}
+      <Route path="/ges-inter-admin" element={<AdminLoginPage />} />
+
+      {/* Ruta protegida para superadmin */}
+      <Route
+        path="/ges-inter-admin/dashboard"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
+      />
 
       {/* Rutas protegidas */}
       <Route

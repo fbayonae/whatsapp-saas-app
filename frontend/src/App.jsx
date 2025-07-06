@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 // Layouts
 import SidebarLayout from "@components/layouts/SidebarLayout.jsx";
-import AdminSidebarLayout from "@components/layouts/AdminSidebarLayout.jsx";
+import AdminSidebarLayout from "@components/layouts/SidebarLayoutAdmin.jsx";
 
 // Pages
 import Templates from "@pages/whatsapp/templates/TemplatesPage.jsx";

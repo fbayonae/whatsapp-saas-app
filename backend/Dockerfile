@@ -1,4 +1,5 @@
-FROM node:23.11.0-slim
+#FROM node:23.11.0-slim
+FROM node:23.11.0-bookworm-slim
 
 # Establecer variables de entorno para no tener prompts en instalaciones
 ENV NODE_ENV=production
